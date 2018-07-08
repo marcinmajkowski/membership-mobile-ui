@@ -22,7 +22,7 @@ export class BarcodeScannerPage {
     this.barcodeScanner.scan(options).then(
       result => {
         if (!result.cancelled) {
-          this.checkInService.createCheckIn(result.text).subscribe();
+          this.checkInService.createCheckIn(result.text).subscribe(() => this.navCtrl.parent.select(1));
         }
         this.scanResult = result;
       },
