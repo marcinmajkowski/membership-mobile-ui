@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { BarcodeScanner, BarcodeScannerOptions } from '@ionic-native/barcode-scanner';
+import { CheckInService } from '../../services/check-in.service';
 
 @Component({
   selector: 'page-barcode-scanner',
@@ -12,12 +13,19 @@ export class BarcodeScannerPage {
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
-              private barcodeScanner: BarcodeScanner) {
+              private barcodeScanner: BarcodeScanner,
+              private checkInService: CheckInService) {
   }
 
   ionViewDidEnter() {
-    this.barcodeScanner.scan().then(
-      result => this.scanResult = result,
+    const options: BarcodeScannerOptions = {showTorchButton: true};
+    this.barcodeScanner.scan(options).then(
+      result => {
+        if (!result.cancelled) {
+          this.checkInService.createCheckIn(result.text).subscribe();
+        }
+        this.scanResult = result;
+      },
       error => this.scanResult = error
     );
   }
