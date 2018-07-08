@@ -11,7 +11,7 @@
     <ion-item *ngFor="let checkIn of checkIns$ | async">
       <h2>Nieznany</h2>
       <h3>{{checkIn.cardCode}}</h3>
-      <p>{{checkIn.creationInstant}}</p>
+      <p>{{checkIn.creationInstant.format('MM.DD.YYYY, H:mm')}}</p>
     </ion-item>
   </ion-list>
 </ion-content>
