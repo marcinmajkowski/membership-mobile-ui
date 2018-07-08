@@ -14,7 +14,7 @@ export class CheckInListPage {
               private checkInService: CheckInService) {
   }
 
-  ionViewDidEnter() {
+  ionViewDidLoad() {
     this.checkInService.loadCheckIns().subscribe();
   }
 }

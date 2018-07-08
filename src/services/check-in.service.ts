@@ -21,7 +21,9 @@ export class CheckInService {
 
   createCheckIn(cardCode: string): Observable<CheckIn> {
     const createCheckInRequest = {cardCode};
-    return this.httpClient.post<CheckIn>('/api/check-ins', createCheckInRequest);
+    return this.httpClient.post<CheckIn>('/api/check-ins', createCheckInRequest).pipe(
+      tap(checkIn => this.checkInsSubject.next([checkIn, ...this.checkInsSubject.getValue()]))
+    );
   }
 
   loadCheckIns(): Observable<CheckIn[]> {
