@@ -15,7 +15,7 @@ export class BarcodeScannerPage {
               private barcodeScanner: BarcodeScanner) {
   }
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
     this.barcodeScanner.scan().then(
       result => this.scanResult = result,
       error => this.scanResult = error
