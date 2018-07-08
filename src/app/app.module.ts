@@ -12,6 +12,7 @@ import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { BarcodeScannerPage } from '../pages/barcode-scanner/barcode-scanner';
 import { LoginPage } from '../pages/login/login';
+import { CheckInListPage } from '../pages/check-in-list/check-in-list';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -30,6 +31,7 @@ import { XhrInterceptor } from '../services/xhr.interceptor';
     TabsPage,
     BarcodeScannerPage,
     LoginPage,
+    CheckInListPage,
   ],
   imports: [
     BrowserModule,
@@ -47,6 +49,7 @@ import { XhrInterceptor } from '../services/xhr.interceptor';
     TabsPage,
     BarcodeScannerPage,
     LoginPage,
+    CheckInListPage,
   ],
   providers: [
     StatusBar,
