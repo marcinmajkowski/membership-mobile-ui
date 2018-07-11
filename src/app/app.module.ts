@@ -7,7 +7,7 @@ import { NgxErrorsModule } from '@ultimate/ngxerrors';
 import { MyApp } from './app.component';
 
 import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
+import { CustomerListPage } from '../pages/customer-list/customer-list';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { BarcodeScannerPage } from '../pages/barcode-scanner/barcode-scanner';
@@ -26,7 +26,7 @@ import { XhrInterceptor } from '../services/xhr.interceptor';
   declarations: [
     MyApp,
     AboutPage,
-    ContactPage,
+    CustomerListPage,
     HomePage,
     TabsPage,
     BarcodeScannerPage,
@@ -44,7 +44,7 @@ import { XhrInterceptor } from '../services/xhr.interceptor';
   entryComponents: [
     MyApp,
     AboutPage,
-    ContactPage,
+    CustomerListPage,
     HomePage,
     TabsPage,
     BarcodeScannerPage,

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { AboutPage } from '../about/about';
-import { ContactPage } from '../contact/contact';
+import { CustomerListPage } from '../customer-list/customer-list';
 import { HomePage } from '../home/home';
 import { BarcodeScannerPage } from '../barcode-scanner/barcode-scanner';
 import { CheckInListPage } from '../check-in-list/check-in-list';
@@ -15,7 +15,7 @@ export class TabsPage {
   checkInListTabRoot = CheckInListPage;
   barcodeScannerTabRoot = BarcodeScannerPage;
   aboutTabRoot = AboutPage;
-  contactTabRoot = ContactPage;
+  customerListTabRoot = CustomerListPage;
 
   constructor() {
 
