@@ -8,6 +8,7 @@ import { MyApp } from './app.component';
 
 import { AboutPage } from '../pages/about/about';
 import { CustomerListPage } from '../pages/customer-list/customer-list';
+import { CustomerFormPage } from '../pages/customer-form/customer-form';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { BarcodeScannerPage } from '../pages/barcode-scanner/barcode-scanner';
@@ -27,6 +28,7 @@ import { XhrInterceptor } from '../services/xhr.interceptor';
     MyApp,
     AboutPage,
     CustomerListPage,
+    CustomerFormPage,
     HomePage,
     TabsPage,
     BarcodeScannerPage,
@@ -45,6 +47,7 @@ import { XhrInterceptor } from '../services/xhr.interceptor';
     MyApp,
     AboutPage,
     CustomerListPage,
+    CustomerFormPage,
     HomePage,
     TabsPage,
     BarcodeScannerPage,

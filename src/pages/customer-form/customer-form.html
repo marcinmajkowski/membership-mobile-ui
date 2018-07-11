@@ -1,0 +1,39 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Nowy Klient</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="save()" [disabled]="!form.valid">
+        Zapisz
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <form (ngSubmit)="save()" [formGroup]="form">
+    <ion-list inset>
+
+      <ion-item [class.invalid]="firstNameErrors.hasError('*', ['touched', 'dirty'])">
+        <ion-input type="text" placeholder="Imię" formControlName="firstName"></ion-input>
+      </ion-item>
+
+      <div ngxErrors="firstName" #firstNameErrors="ngxErrors">
+        <div [ngxError]="['firstName', 'required']" [when]="['touched', 'dirty']">Imię jest wymagane</div>
+      </div>
+
+      <ion-item>
+        <ion-input type="text" placeholder="Nazwisko" formControlName="lastName"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input type="text" placeholder="Numer karty" formControlName="cardCode"></ion-input>
+      </ion-item>
+
+      <button type="submit" hidden [disabled]="!form.valid"></button>
+
+    </ion-list>
+  </form>
+</ion-content>
