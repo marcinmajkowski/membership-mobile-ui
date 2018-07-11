@@ -22,6 +22,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { AuthService } from '../services/auth.service';
 import { CheckInService } from '../services/check-in.service';
 import { XhrInterceptor } from '../services/xhr.interceptor';
+import { CustomerService } from '../services/customer.service';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { XhrInterceptor } from '../services/xhr.interceptor';
     BarcodeScanner,
     AuthService,
     CheckInService,
+    CustomerService,
     {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
   ]
 })

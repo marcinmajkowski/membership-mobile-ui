@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CustomerService } from '../../services/customer.service';
 
 @Component({
   selector: 'page-customer-form',
@@ -10,7 +11,11 @@ export class CustomerFormPage {
 
   form: FormGroup;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private fb: FormBuilder) {
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              private fb: FormBuilder,
+              private customerService: CustomerService,
+  ) {
     this.form = this.fb.group({
       firstName: ['', Validators.required],
       lastName: '',
@@ -23,7 +28,11 @@ export class CustomerFormPage {
   }
 
   save(): void {
-    this.navCtrl.pop();
+    this.customerService.createCustomer(
+      this.form.value.firstName,
+      this.form.value.lastName,
+      this.form.value.cardCode,
+    ).subscribe(() => this.navCtrl.pop());
   }
 
 }
