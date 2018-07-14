@@ -36,14 +36,16 @@ export class TabsPage {
   }
 
   private handleCardCode(cardCode: string): void {
-    this.customerService.findCustomersByCardCode(cardCode)
-      .subscribe(customers => {
-        if (customers.length === 1) {
-          const customer = customers[0];
-          this.tabs.getSelected().push(CustomerPage, {customer});
-        } else {
-          this.navCtrl.push(CustomerFormPage, {cardCode});
-        }
-      });
+    this.tabs.select(4).then(() => {
+      this.customerService.findCustomersByCardCode(cardCode)
+        .subscribe(customers => {
+          if (customers.length === 1) {
+            const customer = customers[0];
+            this.tabs.getSelected().push(CustomerPage, {customer});
+          } else {
+            this.navCtrl.push(CustomerFormPage, {cardCode});
+          }
+        });
+    });
   }
 }
