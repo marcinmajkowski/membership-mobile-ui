@@ -21,6 +21,7 @@ export class CustomerFormPage {
     this.form = this.fb.group({
       firstName: ['', Validators.required],
       lastName: '',
+      // TODO async uniqueness validation
       cardCode: '',
     });
   }

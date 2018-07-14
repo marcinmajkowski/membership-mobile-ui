@@ -4,11 +4,31 @@ import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+interface CardData {
+  id: number;
+  code: string;
+}
+
+export class Card {
+  private constructor(
+    public id: number,
+    public code: string,
+  ) {
+  }
+
+  static fromData(data: CardData): Card {
+    return new Card(
+      data.id,
+      data.code,
+    );
+  }
+}
+
 interface CustomerData {
   id: number;
   firstName: string;
   lastName: string;
-  cardCode: string;
+  cards: CardData[];
 }
 
 export class Customer {
@@ -16,8 +36,16 @@ export class Customer {
     public id: number,
     public firstName: string,
     public lastName: string,
-    public cardCode: string,
+    public cards: Card[],
   ) {
+  }
+
+  getFullName(): string {
+    if (this.lastName.length > 0) {
+      return `${this.firstName} ${this.lastName}`;
+    } else {
+      return this.firstName;
+    }
   }
 
   static fromData(data: CustomerData): Customer {
@@ -25,7 +53,7 @@ export class Customer {
       data.id,
       data.firstName,
       data.lastName,
-      data.cardCode,
+      data.cards.map(Card.fromData),
     );
   }
 }

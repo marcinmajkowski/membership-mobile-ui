@@ -12,4 +12,9 @@
 </ion-header>
 
 <ion-content>
+  <ion-list>
+    <ion-item *ngFor="let customer of customers$ | async" (click)="showCustomer(customer)">
+      <h2>{{customer.getFullName()}}</h2>
+    </ion-item>
+  </ion-list>
 </ion-content>

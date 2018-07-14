@@ -9,6 +9,7 @@ import { MyApp } from './app.component';
 import { AboutPage } from '../pages/about/about';
 import { CustomerListPage } from '../pages/customer-list/customer-list';
 import { CustomerFormPage } from '../pages/customer-form/customer-form';
+import { CustomerPage } from '../pages/customer/customer';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { BarcodeScannerPage } from '../pages/barcode-scanner/barcode-scanner';
@@ -30,6 +31,7 @@ import { CustomerService } from '../services/customer.service';
     AboutPage,
     CustomerListPage,
     CustomerFormPage,
+    CustomerPage,
     HomePage,
     TabsPage,
     BarcodeScannerPage,
@@ -49,6 +51,7 @@ import { CustomerService } from '../services/customer.service';
     AboutPage,
     CustomerListPage,
     CustomerFormPage,
+    CustomerPage,
     HomePage,
     TabsPage,
     BarcodeScannerPage,
