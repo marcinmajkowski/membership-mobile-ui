@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { Customer } from '../../services/customer.service';
 import { CheckInService } from '../../services/check-in.service';
 
@@ -11,14 +11,23 @@ export class CustomerPage {
 
   customer: Customer = this.navParams.get('customer');
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private checkInService: CheckInService) {
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              private checkInService: CheckInService,
+              private toastController: ToastController) {
   }
 
   createCheckIn() {
     this.checkInService.createCheckIn(this.customer.id)
       .subscribe(() => {
-        this.navCtrl.parent.select(1);
         this.navCtrl.pop();
+        this.toastController.create({
+          message: `Wejście ${this.customer.fullName} zostało zarejestrowane`,
+          duration: 2000,
+          position: 'bottom',
+          showCloseButton: true,
+          closeButtonText: 'Ok',
+        }).present();
       });
   }
 }
