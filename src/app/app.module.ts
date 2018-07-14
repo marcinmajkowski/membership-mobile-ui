@@ -23,6 +23,7 @@ import { AuthService } from '../services/auth.service';
 import { CheckInService } from '../services/check-in.service';
 import { XhrInterceptor } from '../services/xhr.interceptor';
 import { CustomerService } from '../services/customer.service';
+import { BarcodeScannerService } from '../services/barcode-scanner.service';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { CustomerService } from '../services/customer.service';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     BarcodeScanner,
+    BarcodeScannerService,
     AuthService,
     CheckInService,
     CustomerService,

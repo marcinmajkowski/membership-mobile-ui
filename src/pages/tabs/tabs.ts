@@ -5,9 +5,10 @@ import { CustomerListPage } from '../customer-list/customer-list';
 import { HomePage } from '../home/home';
 import { CheckInListPage } from '../check-in-list/check-in-list';
 import { CustomerPage } from '../customer/customer';
-import { BarcodeScanner, BarcodeScannerOptions } from '@ionic-native/barcode-scanner';
+import { BarcodeScannerOptions } from '@ionic-native/barcode-scanner';
 import { NavController, Tabs } from 'ionic-angular';
 import { CustomerService } from '../../services/customer.service';
+import { BarcodeScannerService } from '../../services/barcode-scanner.service';
 
 @Component({
   templateUrl: 'tabs.html'
@@ -16,30 +17,22 @@ export class TabsPage {
 
   @ViewChild('tabs') tabs: Tabs;
 
-  // TODO check availability
-  private barcodeScannerAvailable = true;
+  barcodeScannerEnabled$ = this.barcodeScannerService.enabled$;
 
   homeTabRoot = HomePage;
   checkInListTabRoot = CheckInListPage;
   aboutTabRoot = AboutPage;
   customerListTabRoot = CustomerListPage;
 
-  constructor(private barcodeScanner: BarcodeScanner,
+  constructor(private barcodeScannerService: BarcodeScannerService,
               private customerService: CustomerService,
               private navCtrl: NavController) {
   }
 
   scanBarcode(): void {
-    const options: BarcodeScannerOptions = {showTorchButton: true};
-    // TODO error handling
-    this.barcodeScanner.scan(options).then(
-      result => {
-        if (!result.cancelled) {
-          this.handleCardCode(result.text);
-        }
-      },
-      error => this.barcodeScannerAvailable = false,
-    );
+    this.barcodeScannerService.scan()
+      .then(result => this.handleCardCode(result))
+      .catch(() => {});
   }
 
   private handleCardCode(cardCode: string): void {
