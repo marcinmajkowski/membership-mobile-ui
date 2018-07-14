@@ -5,10 +5,10 @@ import { CustomerListPage } from '../customer-list/customer-list';
 import { HomePage } from '../home/home';
 import { CheckInListPage } from '../check-in-list/check-in-list';
 import { CustomerPage } from '../customer/customer';
-import { BarcodeScannerOptions } from '@ionic-native/barcode-scanner';
 import { NavController, Tabs } from 'ionic-angular';
 import { CustomerService } from '../../services/customer.service';
 import { BarcodeScannerService } from '../../services/barcode-scanner.service';
+import { CustomerFormPage } from '../customer-form/customer-form';
 
 @Component({
   templateUrl: 'tabs.html'
@@ -40,9 +40,9 @@ export class TabsPage {
       .subscribe(customers => {
         if (customers.length === 1) {
           const customer = customers[0];
-          this.navCtrl.push(CustomerPage, {customer});
+          this.tabs.getSelected().push(CustomerPage, {customer});
         } else {
-          // TODO customer form redirect with card code input filled
+          this.navCtrl.push(CustomerFormPage, {cardCode});
         }
       });
   }

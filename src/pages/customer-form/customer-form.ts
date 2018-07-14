@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Tabs } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomerService } from '../../services/customer.service';
 import { BarcodeScannerService } from '../../services/barcode-scanner.service';
+import { CustomerPage } from '../customer/customer';
 
 @Component({
   selector: 'page-customer-form',
@@ -24,7 +25,7 @@ export class CustomerFormPage {
       firstName: ['', Validators.required],
       lastName: '',
       // TODO async uniqueness validation
-      cardCode: '',
+      cardCode: this.navParams.get('cardCode') || '',
     });
   }
 
@@ -33,7 +34,11 @@ export class CustomerFormPage {
       this.form.value.firstName,
       this.form.value.lastName,
       this.form.value.cardCode,
-    ).subscribe(() => this.navCtrl.pop());
+    ).subscribe(customer => {
+      this.navCtrl.pop();
+      const tabs: Tabs = this.navCtrl.getActiveChildNav();
+      tabs.getSelected().push(CustomerPage, {customer});
+    });
   }
 
   scanBarcode(): void {
