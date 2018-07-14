@@ -16,6 +16,9 @@ export class TabsPage {
 
   @ViewChild('tabs') tabs: Tabs;
 
+  // TODO check availability
+  private barcodeScannerAvailable = true;
+
   homeTabRoot = HomePage;
   checkInListTabRoot = CheckInListPage;
   aboutTabRoot = AboutPage;
@@ -34,7 +37,8 @@ export class TabsPage {
         if (!result.cancelled) {
           this.handleCardCode(result.text);
         }
-      }
+      },
+      error => this.barcodeScannerAvailable = false,
     );
   }
 
