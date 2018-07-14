@@ -24,9 +24,15 @@
     </ion-row>
   </ion-grid>
   <h2>Karty</h2>
-  <ion-list>
+  <ion-list *ngIf="customer.cards.length > 0">
     <ion-item *ngFor="let card of customer.cards">
       <h2>{{card.code}}</h2>
     </ion-item>
   </ion-list>
+  <p *ngIf="customer.cards.length === 0">
+    Ten klient nie ma przypisanej żadnej karty.
+  </p>
+  <h2>Wejścia</h2>
+  <h2>Płatności</h2>
+  <p>Ten klient nie dokonał żadnej płatności.</p>
 </ion-content>
