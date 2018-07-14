@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -32,20 +32,16 @@ interface CustomerData {
 }
 
 export class Customer {
+
+  public fullName: string;
+
   private constructor(
     public id: number,
     public firstName: string,
     public lastName: string,
     public cards: Card[],
   ) {
-  }
-
-  getFullName(): string {
-    if (this.lastName.length > 0) {
-      return `${this.firstName} ${this.lastName}`;
-    } else {
-      return this.firstName;
-    }
+    this.fullName = lastName.length > 0 ? `${firstName} ${lastName}` : firstName;
   }
 
   static fromData(data: CustomerData): Customer {
@@ -89,6 +85,14 @@ export class CustomerService {
     return this.httpClient.get<{ customers: CustomerData[] }>('/api/customers').pipe(
       map(response => response.customers.map(Customer.fromData)),
       tap(customers => this.customersSubject.next(customers))
+    );
+  }
+
+  findCustomersByCardCode(cardCode: string): Observable<Customer[]> {
+    const params = new HttpParams()
+      .append('card_code', cardCode);
+    return this.httpClient.get<{ customers: CustomerData[] }>('/api/customers', {params}).pipe(
+      map(response => response.customers.map(Customer.fromData)),
     );
   }
 }

@@ -12,7 +12,6 @@ import { CustomerFormPage } from '../pages/customer-form/customer-form';
 import { CustomerPage } from '../pages/customer/customer';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
-import { BarcodeScannerPage } from '../pages/barcode-scanner/barcode-scanner';
 import { LoginPage } from '../pages/login/login';
 import { CheckInListPage } from '../pages/check-in-list/check-in-list';
 
@@ -34,7 +33,6 @@ import { CustomerService } from '../services/customer.service';
     CustomerPage,
     HomePage,
     TabsPage,
-    BarcodeScannerPage,
     LoginPage,
     CheckInListPage,
   ],
@@ -54,7 +52,6 @@ import { CustomerService } from '../services/customer.service';
     CustomerPage,
     HomePage,
     TabsPage,
-    BarcodeScannerPage,
     LoginPage,
     CheckInListPage,
   ],

@@ -5,25 +5,53 @@ import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import moment from 'moment';
 
+interface CheckInCustomerData {
+  id: number;
+  firstName: string;
+  lastName: string;
+}
+
+export class CheckInCustomer {
+
+  public fullName: string;
+
+  private constructor(
+    public id: number,
+    public firstName: string,
+    public lastName: string,
+  ) {
+    this.fullName = lastName.length > 0 ? `${firstName} ${lastName}` : firstName;
+  }
+
+  static fromData(data: CheckInCustomerData) {
+    return new CheckInCustomer(
+      data.id,
+      data.firstName,
+      data.lastName,
+    );
+  }
+}
+
 interface CheckInData {
   id: number;
-  cardCode: string;
-  creationInstant: string;
+  customer: CheckInCustomerData;
+  timestamp: string;
 }
 
 export class CheckIn {
+
   private constructor(
     public id: number,
-    public cardCode: string,
-    public creationInstant: moment.Moment,
+    public customer: CheckInCustomer,
+    public timestamp: moment.Moment,
   ) {
   }
 
   static fromData(data: CheckInData): CheckIn {
     return new CheckIn(
       data.id,
-      data.cardCode,
-      moment(data.creationInstant),
+      CheckInCustomer.fromData(data.customer),
+      moment(data.timestamp),
     );
   }
 }
@@ -37,10 +65,10 @@ export class CheckInService {
   constructor(private httpClient: HttpClient) {
   }
 
-  createCheckIn(cardCode: string): Observable<CheckIn> {
-    const createCheckInRequest = {cardCode};
-    return this.httpClient.post<CheckInData>('/api/check-ins', createCheckInRequest).pipe(
+  createCheckIn(customerId: number): Observable<CheckIn> {
+    return this.httpClient.post<CheckInData>(`/api/customers/${customerId}/check-ins`, {}).pipe(
       map(CheckIn.fromData),
+      // TODO sorting
       tap(checkIn => this.checkInsSubject.next([checkIn, ...this.checkInsSubject.getValue()]))
     );
   }
