@@ -20,9 +20,9 @@ export class TabsPage {
 
   barcodeScannerEnabled$ = this.barcodeScannerService.enabled$;
 
+  customerListTabRoot = CustomerListPage;
   checkInListTabRoot = CheckInListPage;
   paymentListTabRoot = PaymentListPage;
-  customerListTabRoot = CustomerListPage;
   settingsTabRoot = SettingsPage;
 
   constructor(private barcodeScannerService: BarcodeScannerService,
