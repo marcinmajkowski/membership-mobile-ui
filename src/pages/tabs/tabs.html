@@ -1,7 +1,7 @@
 <ion-tabs #tabs>
-  <ion-tab [root]="homeTabRoot" tabTitle="Home" tabIcon="home"></ion-tab>
   <ion-tab [root]="checkInListTabRoot" tabTitle="Wejścia" tabIcon="clipboard"></ion-tab>
+  <ion-tab [root]="homeTabRoot" tabTitle="Home" tabIcon="home"></ion-tab>
   <ion-tab (ionSelect)="scanBarcode()" tabTitle="Skanuj Kod" tabIcon="barcode" [enabled]="barcodeScannerEnabled$ | async"></ion-tab>
+  <ion-tab [root]="customerListTabRoot" tabTitle="Klienci" tabIcon="contacts" #customerListTab></ion-tab>
   <ion-tab [root]="aboutTabRoot" tabTitle="About" tabIcon="information-circle"></ion-tab>
-  <ion-tab [root]="customerListTabRoot" tabTitle="Klienci" tabIcon="contacts"></ion-tab>
 </ion-tabs>

@@ -5,7 +5,7 @@ import { CustomerListPage } from '../customer-list/customer-list';
 import { HomePage } from '../home/home';
 import { CheckInListPage } from '../check-in-list/check-in-list';
 import { CustomerPage } from '../customer/customer';
-import { NavController, Tabs } from 'ionic-angular';
+import { NavController, Tab, Tabs } from 'ionic-angular';
 import { CustomerService } from '../../services/customer.service';
 import { BarcodeScannerService } from '../../services/barcode-scanner.service';
 import { CustomerFormPage } from '../customer-form/customer-form';
@@ -16,13 +16,14 @@ import { CustomerFormPage } from '../customer-form/customer-form';
 export class TabsPage {
 
   @ViewChild('tabs') tabs: Tabs;
+  @ViewChild('customerListTab') customerListTab: Tab;
 
   barcodeScannerEnabled$ = this.barcodeScannerService.enabled$;
 
-  homeTabRoot = HomePage;
   checkInListTabRoot = CheckInListPage;
-  aboutTabRoot = AboutPage;
+  homeTabRoot = HomePage;
   customerListTabRoot = CustomerListPage;
+  aboutTabRoot = AboutPage;
 
   constructor(private barcodeScannerService: BarcodeScannerService,
               private customerService: CustomerService,
@@ -36,7 +37,10 @@ export class TabsPage {
   }
 
   private handleCardCode(cardCode: string): void {
-    this.tabs.select(4).then(() => {
+    if (cardCode === '') {
+      return;
+    }
+    this.tabs.select(this.customerListTab).then(() => {
       this.customerService.findCustomersByCardCode(cardCode)
         .subscribe(customers => {
           if (customers.length === 1) {
