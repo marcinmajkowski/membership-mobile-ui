@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { Customer } from '../../services/customer.service';
-import { CheckInService } from '../../services/check-in.service';
+import { CheckIn, CheckInService } from '../../services/check-in.service';
 import { PaymentFormPage } from '../payment-form/payment-form';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'page-customer',
@@ -11,10 +12,12 @@ import { PaymentFormPage } from '../payment-form/payment-form';
 export class CustomerPage {
 
   customer: Customer = this.navParams.get('customer');
+  checkIns$: Observable<CheckIn[]>;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private checkInService: CheckInService) {
+    this.checkIns$ = this.checkInService.getCustomerCheckIns(this.customer);
   }
 
   createCheckIn() {

@@ -26,13 +26,18 @@
   <h2>Karty</h2>
   <ion-list *ngIf="customer.cards.length > 0">
     <ion-item *ngFor="let card of customer.cards">
-      <h2>{{card.code}}</h2>
+      <p>{{card.code}}</p>
     </ion-item>
   </ion-list>
   <p *ngIf="customer.cards.length === 0">
     Ten klient nie ma przypisanej żadnej karty.
   </p>
   <h2>Wejścia</h2>
+  <ion-list>
+    <ion-item *ngFor="let checkIn of checkIns$ | async">
+      <p>{{checkIn.timestamp.format('MM.DD.YYYY, H:mm')}}</p>
+    </ion-item>
+  </ion-list>
   <h2>Płatności</h2>
   <p>Ten klient nie dokonał żadnej płatności.</p>
 </ion-content>

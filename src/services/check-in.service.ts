@@ -84,6 +84,12 @@ export class CheckInService {
     );
   }
 
+  getCustomerCheckIns(customer: Customer): Observable<CheckIn[]> {
+    return this.httpClient.get<{ checkIns: CheckInData[] }>(`/api/customers/${customer.id}/check-ins`).pipe(
+      map(response => response.checkIns.map(CheckIn.fromData)),
+    );
+  }
+
   private presentToast(customer: Customer): void {
     this.toastController.create({
       message: `Wejście ${customer.fullName} zostało zarejestrowane`,
