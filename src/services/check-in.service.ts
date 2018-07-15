@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import moment from 'moment';
+import { Customer } from './customer.service';
+import { ToastController } from 'ionic-angular';
 
 interface CheckInCustomerData {
   id: number;
@@ -62,14 +64,16 @@ export class CheckInService {
   private checkInsSubject = new BehaviorSubject<CheckIn[]>([]);
   checkIns$ = this.checkInsSubject.asObservable();
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient,
+              private toastController: ToastController) {
   }
 
-  createCheckIn(customerId: number): Observable<CheckIn> {
-    return this.httpClient.post<CheckInData>(`/api/customers/${customerId}/check-ins`, {}).pipe(
+  createCheckIn(customer: Customer): Observable<CheckIn> {
+    return this.httpClient.post<CheckInData>(`/api/customers/${customer.id}/check-ins`, {}).pipe(
       map(CheckIn.fromData),
       // TODO sorting
-      tap(checkIn => this.checkInsSubject.next([checkIn, ...this.checkInsSubject.getValue()]))
+      tap(checkIn => this.checkInsSubject.next([checkIn, ...this.checkInsSubject.getValue()])),
+      tap(() => this.presentToast(customer)),
     );
   }
 
@@ -78,5 +82,15 @@ export class CheckInService {
       map(response => response.checkIns.map(CheckIn.fromData)),
       tap(checkIns => this.checkInsSubject.next(checkIns))
     );
+  }
+
+  private presentToast(customer: Customer): void {
+    this.toastController.create({
+      message: `Wejście ${customer.fullName} zostało zarejestrowane`,
+      duration: 2000,
+      position: 'bottom',
+      showCloseButton: true,
+      closeButtonText: 'Ok',
+    }).present();
   }
 }

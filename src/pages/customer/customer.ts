@@ -14,23 +14,12 @@ export class CustomerPage {
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
-              private checkInService: CheckInService,
-              private toastController: ToastController) {
+              private checkInService: CheckInService) {
   }
 
   createCheckIn() {
-    this.checkInService.createCheckIn(this.customer.id)
-      .subscribe(() => {
-        this.navCtrl.pop();
-        // FIXME move to checkInService
-        this.toastController.create({
-          message: `Wejście ${this.customer.fullName} zostało zarejestrowane`,
-          duration: 2000,
-          position: 'bottom',
-          showCloseButton: true,
-          closeButtonText: 'Ok',
-        }).present();
-      });
+    this.checkInService.createCheckIn(this.customer)
+      .subscribe(() => this.navCtrl.pop());
   }
 
   createPayment() {

@@ -4,6 +4,9 @@ import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import moment from 'moment';
+import { Customer } from './customer.service';
+import { ToastController } from 'ionic-angular';
+import { CurrencyPipe } from '@angular/common';
 
 interface PaymentCustomerData {
   id: number;
@@ -69,15 +72,17 @@ export class PaymentService {
   private paymentsSubject = new BehaviorSubject<Payment[]>([]);
   payments$ = this.paymentsSubject.asObservable();
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient,
+              private toastController: ToastController,
+              private currencyPipe: CurrencyPipe) {
   }
 
-  createPayment(customerId: number, createPaymentForm: CreatePaymentForm): Observable<Payment> {
-    return this.httpClient.post<PaymentData>(`/api/customers/${customerId}/payments`, createPaymentForm).pipe(
+  createPayment(customer: Customer, createPaymentForm: CreatePaymentForm): Observable<Payment> {
+    return this.httpClient.post<PaymentData>(`/api/customers/${customer.id}/payments`, createPaymentForm).pipe(
       map(Payment.fromData),
       // TODO sorting
-      tap(payment => this.paymentsSubject.next([payment, ...this.paymentsSubject.getValue()]))
-      // TODO toast
+      tap(payment => this.paymentsSubject.next([payment, ...this.paymentsSubject.getValue()])),
+      tap(payment => this.presentToast(customer, payment))
     );
   }
 
@@ -86,5 +91,16 @@ export class PaymentService {
       map(response => response.payments.map(Payment.fromData)),
       tap(payments => this.paymentsSubject.next(payments))
     );
+  }
+
+  private presentToast(customer: Customer, payment: Payment): void {
+    const amountDisplayValue = this.currencyPipe.transform(payment.amount, 'PLN', 'symbol-narrow');
+    this.toastController.create({
+      message: `Płatność ${amountDisplayValue} przez ${customer.fullName} została zarejestrowana`,
+      duration: 2000,
+      position: 'bottom',
+      showCloseButton: true,
+      closeButtonText: 'Ok',
+    }).present();
   }
 }

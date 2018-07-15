@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { NgxErrorsModule } from '@ultimate/ngxerrors';
 import { MyApp } from './app.component';
-import { registerLocaleData } from '@angular/common';
+import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import localePl from '@angular/common/locales/pl';
 
 import { SettingsPage } from '../pages/settings/settings';
@@ -76,6 +76,7 @@ registerLocaleData(localePl, 'pl');
     CustomerService,
     {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
     {provide: LOCALE_ID, useValue: 'pl'},
+    CurrencyPipe,
   ]
 })
 export class AppModule {

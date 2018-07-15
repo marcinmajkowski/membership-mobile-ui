@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Tabs } from 'ionic-angular';
 import { ControlsConfig } from '../../util/controls-config';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CreatePaymentForm, PaymentService } from '../../services/payment.service';
@@ -27,9 +27,11 @@ export class PaymentFormPage {
   }
 
   save(): void {
-    this.paymentService.createPayment(this.customer.id, this.form.value)
+    this.paymentService.createPayment(this.customer, this.form.value)
       .subscribe(() => {
-        this.navCtrl.pop();
+        const tabs: Tabs = this.navCtrl.getActiveChildNav();
+        tabs.getSelected().popToRoot({animate: false})
+          .then(() => this.navCtrl.pop());
       });
   }
 }
