@@ -25,6 +25,7 @@ import { XhrInterceptor } from '../services/xhr.interceptor';
 import { CustomerService } from '../services/customer.service';
 import { BarcodeScannerService } from '../services/barcode-scanner.service';
 import { PaymentFormPage } from '../pages/payment-form/payment-form';
+import { PaymentService } from '../services/payment.service';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { PaymentFormPage } from '../pages/payment-form/payment-form';
     BarcodeScannerService,
     AuthService,
     CheckInService,
+    PaymentService,
     CustomerService,
     {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
   ]
