@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 
 import { SettingsPage } from '../settings/settings';
 import { CustomerListPage } from '../customer-list/customer-list';
-import { HomePage } from '../home/home';
+import { PaymentListPage } from '../payment-list/payment-list';
 import { CheckInListPage } from '../check-in-list/check-in-list';
 import { CustomerPage } from '../customer/customer';
 import { NavController, Tab, Tabs } from 'ionic-angular';
@@ -21,7 +21,7 @@ export class TabsPage {
   barcodeScannerEnabled$ = this.barcodeScannerService.enabled$;
 
   checkInListTabRoot = CheckInListPage;
-  homeTabRoot = HomePage;
+  paymentListTabRoot = PaymentListPage;
   customerListTabRoot = CustomerListPage;
   settingsTabRoot = SettingsPage;
 

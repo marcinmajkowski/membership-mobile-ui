@@ -1,6 +1,6 @@
 <ion-tabs #tabs>
   <ion-tab [root]="checkInListTabRoot" tabTitle="Wejścia" tabIcon="clipboard"></ion-tab>
-  <ion-tab [root]="homeTabRoot" tabTitle="Home" tabIcon="home"></ion-tab>
+  <ion-tab [root]="paymentListTabRoot" tabTitle="Płatności" tabIcon="cash"></ion-tab>
   <ion-tab (ionSelect)="scanBarcode()" tabTitle="Skanuj Kod" tabIcon="barcode" [enabled]="barcodeScannerEnabled$ | async"></ion-tab>
   <ion-tab [root]="customerListTabRoot" tabTitle="Klienci" tabIcon="contacts" #customerListTab></ion-tab>
   <ion-tab [root]="settingsTabRoot" tabTitle="Ustawienia" tabIcon="settings"></ion-tab>
