@@ -4,7 +4,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
-interface User {
+export interface User {
   authorities: any[];
   details: any;
   authenticated: boolean;
@@ -16,7 +16,7 @@ interface User {
 @Injectable()
 export class AuthService {
 
-  private user: User;
+  public user: User;
 
   constructor(private httpClient: HttpClient) {
   }
