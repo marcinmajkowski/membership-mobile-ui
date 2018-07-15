@@ -54,10 +54,10 @@ export class Customer {
   }
 }
 
-interface CreateCustomerRequest {
+export interface CreateCustomerForm {
   firstName: string;
-  lastName?: string;
-  cardCode?: string;
+  lastName: string;
+  cardCode: string;
 }
 
 @Injectable()
@@ -69,13 +69,8 @@ export class CustomerService {
   constructor(private httpClient: HttpClient) {
   }
 
-  createCustomer(firstName: string, lastName?: string, cardCode?: string): Observable<Customer> {
-    const createCustomerRequest: CreateCustomerRequest = {
-      firstName,
-      lastName,
-      cardCode,
-    };
-    return this.httpClient.post<CustomerData>('/api/customers', createCustomerRequest).pipe(
+  createCustomer(createCustomerForm: CreateCustomerForm): Observable<Customer> {
+    return this.httpClient.post<CustomerData>('/api/customers', createCustomerForm).pipe(
       map(Customer.fromData),
       tap(customer => this.customersSubject.next([customer, ...this.customersSubject.getValue()]))
     );
