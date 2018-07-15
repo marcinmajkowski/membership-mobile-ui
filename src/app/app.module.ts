@@ -24,6 +24,7 @@ import { CheckInService } from '../services/check-in.service';
 import { XhrInterceptor } from '../services/xhr.interceptor';
 import { CustomerService } from '../services/customer.service';
 import { BarcodeScannerService } from '../services/barcode-scanner.service';
+import { PaymentFormPage } from '../pages/payment-form/payment-form';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { BarcodeScannerService } from '../services/barcode-scanner.service';
     CustomerFormPage,
     CustomerPage,
     PaymentListPage,
+    PaymentFormPage,
     TabsPage,
     LoginPage,
     CheckInListPage,
@@ -52,6 +54,7 @@ import { BarcodeScannerService } from '../services/barcode-scanner.service';
     CustomerFormPage,
     CustomerPage,
     PaymentListPage,
+    PaymentFormPage,
     TabsPage,
     LoginPage,
     CheckInListPage,
