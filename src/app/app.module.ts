@@ -6,7 +6,7 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { NgxErrorsModule } from '@ultimate/ngxerrors';
 import { MyApp } from './app.component';
 
-import { AboutPage } from '../pages/about/about';
+import { SettingsPage } from '../pages/settings/settings';
 import { CustomerListPage } from '../pages/customer-list/customer-list';
 import { CustomerFormPage } from '../pages/customer-form/customer-form';
 import { CustomerPage } from '../pages/customer/customer';
@@ -28,7 +28,7 @@ import { BarcodeScannerService } from '../services/barcode-scanner.service';
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
+    SettingsPage,
     CustomerListPage,
     CustomerFormPage,
     CustomerPage,
@@ -47,7 +47,7 @@ import { BarcodeScannerService } from '../services/barcode-scanner.service';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
+    SettingsPage,
     CustomerListPage,
     CustomerFormPage,
     CustomerPage,

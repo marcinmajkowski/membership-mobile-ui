@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { AboutPage } from '../about/about';
+import { SettingsPage } from '../settings/settings';
 import { CustomerListPage } from '../customer-list/customer-list';
 import { HomePage } from '../home/home';
 import { CheckInListPage } from '../check-in-list/check-in-list';
@@ -23,7 +23,7 @@ export class TabsPage {
   checkInListTabRoot = CheckInListPage;
   homeTabRoot = HomePage;
   customerListTabRoot = CustomerListPage;
-  aboutTabRoot = AboutPage;
+  settingsTabRoot = SettingsPage;
 
   constructor(private barcodeScannerService: BarcodeScannerService,
               private customerService: CustomerService,
