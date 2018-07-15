@@ -1,12 +1,32 @@
 <ion-header>
-
   <ion-navbar>
     <ion-title>Nowa płatność</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="save()" [disabled]="!form.valid">
+        Zapisz
+      </button>
+    </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content padding>
+  <form (ngSubmit)="save()" [formGroup]="form">
+    <ion-list inset>
 
+      <ion-item>
+        <ion-input type="text" placeholder="Klient" [value]="customer.fullName"></ion-input>
+      </ion-item>
+
+      <ion-item [class.invalid]="amountErrors.hasError('*', ['touched', 'dirty'])">
+        <ion-input type="number" step="0.01" placeholder="Kwota" formControlName="amount"></ion-input>
+      </ion-item>
+
+      <div ngxErrors="amount" #amountErrors="ngxErrors">
+        <div [ngxError]="['amount', 'required']" [when]="['touched', 'dirty']">Kwota jest wymagana</div>
+      </div>
+
+      <button type="submit" hidden [disabled]="!form.valid"></button>
+
+    </ion-list>
+  </form>
 </ion-content>

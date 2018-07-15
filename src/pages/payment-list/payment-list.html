@@ -4,5 +4,12 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let payment of payments$ | async">
+      <h2>{{payment.customer.fullName}}</h2>
+      <h3>{{payment.amount | currency:'PLN':'symbol-narrow'}}</h3>
+      <p>{{payment.timestamp.format('MM.DD.YYYY, H:mm')}}</p>
+    </ion-item>
+  </ion-list>
 </ion-content>

@@ -60,7 +60,7 @@ export class Payment {
 }
 
 export interface CreatePaymentForm {
-  amount: number;
+  amount: string;
 }
 
 @Injectable()
@@ -73,10 +73,11 @@ export class PaymentService {
   }
 
   createPayment(customerId: number, createPaymentForm: CreatePaymentForm): Observable<Payment> {
-    return this.httpClient.post<PaymentData>(`/api/customers/${customerId}/payments`, {}).pipe(
+    return this.httpClient.post<PaymentData>(`/api/customers/${customerId}/payments`, createPaymentForm).pipe(
       map(Payment.fromData),
       // TODO sorting
       tap(payment => this.paymentsSubject.next([payment, ...this.paymentsSubject.getValue()]))
+      // TODO toast
     );
   }
 

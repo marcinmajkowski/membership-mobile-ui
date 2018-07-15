@@ -22,6 +22,7 @@ export class CustomerPage {
     this.checkInService.createCheckIn(this.customer.id)
       .subscribe(() => {
         this.navCtrl.pop();
+        // FIXME move to checkInService
         this.toastController.create({
           message: `Wejście ${this.customer.fullName} zostało zarejestrowane`,
           duration: 2000,

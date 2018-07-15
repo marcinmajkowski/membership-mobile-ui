@@ -1,10 +1,12 @@
-import { ErrorHandler, NgModule } from '@angular/core';
+import { ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { NgxErrorsModule } from '@ultimate/ngxerrors';
 import { MyApp } from './app.component';
+import { registerLocaleData } from '@angular/common';
+import localePl from '@angular/common/locales/pl';
 
 import { SettingsPage } from '../pages/settings/settings';
 import { CustomerListPage } from '../pages/customer-list/customer-list';
@@ -26,6 +28,8 @@ import { CustomerService } from '../services/customer.service';
 import { BarcodeScannerService } from '../services/barcode-scanner.service';
 import { PaymentFormPage } from '../pages/payment-form/payment-form';
 import { PaymentService } from '../services/payment.service';
+
+registerLocaleData(localePl, 'pl');
 
 @NgModule({
   declarations: [
@@ -71,6 +75,7 @@ import { PaymentService } from '../services/payment.service';
     PaymentService,
     CustomerService,
     {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
+    {provide: LOCALE_ID, useValue: 'pl'},
   ]
 })
 export class AppModule {
