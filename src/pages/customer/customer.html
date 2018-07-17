@@ -10,13 +10,21 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <button ion-button icon-start outline block (click)="createCheckIn()">
+        <button ion-button
+                icon-start
+                outline
+                block
+                (click)="createCheckIn()">
           <ion-icon name="checkmark"></ion-icon>
           Wejście
         </button>
       </ion-col>
       <ion-col>
-        <button ion-button icon-start outline block (click)="createPayment()">
+        <button ion-button
+                icon-start
+                outline
+                block
+                (click)="createPayment()">
           <ion-icon name="basket"></ion-icon>
           Płatność
         </button>
@@ -24,20 +32,37 @@
     </ion-row>
   </ion-grid>
   <h2>Karty</h2>
-  <ion-list *ngIf="customer.cards.length > 0">
+  <ion-list *ngIf="customer.cards.length > 0; else noCards">
     <ion-item *ngFor="let card of customer.cards">
       <p>{{card.code}}</p>
     </ion-item>
   </ion-list>
-  <p *ngIf="customer.cards.length === 0">
-    Ten klient nie ma przypisanej żadnej karty.
-  </p>
+  <ng-template #noCards>
+    <p>
+      Ten klient nie ma przypisanej żadnej karty.
+    </p>
+  </ng-template>
   <h2>Wejścia</h2>
-  <ion-list>
-    <ion-item *ngFor="let checkIn of checkIns$ | async">
-      <p>{{checkIn.timestamp.format('MM.DD.YYYY, H:mm')}}</p>
-    </ion-item>
-  </ion-list>
+  <ng-container *ngIf="checkIns$ | async as checkIns">
+    <ion-list *ngIf="checkIns.length > 0; else noCheckIns">
+      <ion-item *ngFor="let checkIn of checkIns">
+        <p>{{checkIn.timestamp.format('MM.DD.YYYY, H:mm')}}</p>
+      </ion-item>
+    </ion-list>
+    <ng-template #noCheckIns>
+      <p>Ten klient nie ma zarejestrowanych żadnych wejść.</p>
+    </ng-template>
+  </ng-container>
   <h2>Płatności</h2>
-  <p>Ten klient nie dokonał żadnej płatności.</p>
+  <ng-container *ngIf="payments$ | async as payments">
+    <ion-list *ngIf="payments.length > 0; else noPayments">
+      <ion-item *ngFor="let payment of payments">
+        <h3>{{payment.amount | currency:'PLN':'symbol-narrow'}}</h3>
+        <p>{{payment.timestamp.format('MM.DD.YYYY, H:mm')}}</p>
+      </ion-item>
+    </ion-list>
+    <ng-template #noPayments>
+      <p>Ten klient nie dokonał żadnej płatności.</p>
+    </ng-template>
+  </ng-container>
 </ion-content>

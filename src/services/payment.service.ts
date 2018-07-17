@@ -93,6 +93,12 @@ export class PaymentService {
     );
   }
 
+  getCustomerPayments(customer: Customer): Observable<Payment[]> {
+    return this.httpClient.get<{ payments: PaymentData[] }>(`/api/customers/${customer.id}/payments`).pipe(
+      map(response => response.payments.map(Payment.fromData)),
+    );
+  }
+
   private presentToast(customer: Customer, payment: Payment): void {
     const amountDisplayValue = this.currencyPipe.transform(payment.amount, 'PLN', 'symbol-narrow');
     this.toastController.create({
