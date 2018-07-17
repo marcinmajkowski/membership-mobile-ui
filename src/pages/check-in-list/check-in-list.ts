@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { CheckInService } from '../../services/check-in.service';
+import { CheckIn, CheckInService } from '../../services/check-in.service';
 
 @Component({
   selector: 'page-check-in-list',
@@ -12,6 +12,10 @@ export class CheckInListPage {
 
   constructor(public navCtrl: NavController,
               private checkInService: CheckInService) {
+  }
+
+  delete(checkIn: CheckIn) {
+    this.checkInService.deleteCheckIn(checkIn).subscribe();
   }
 
   ionViewDidLoad() {

@@ -73,7 +73,7 @@ export class CheckInService {
       map(CheckIn.fromData),
       // TODO sorting
       tap(checkIn => this.checkInsSubject.next([checkIn, ...this.checkInsSubject.getValue()])),
-      tap(() => this.presentToast(customer)),
+      tap(() => this.presentToast(`Wejście ${customer.fullName} zostało zarejestrowane`)),
     );
   }
 
@@ -90,9 +90,17 @@ export class CheckInService {
     );
   }
 
-  private presentToast(customer: Customer): void {
+  deleteCheckIn(checkIn: CheckIn): Observable<{}> {
+    // FIXME remove from already loaded customer view (ngrx will solve this)
+    return this.httpClient.delete(`/api/check-ins/${checkIn.id}`).pipe(
+      tap(() => this.checkInsSubject.next(this.checkInsSubject.value.filter(value => value.id !== checkIn.id))),
+      tap(() => this.presentToast(`Wejście ${checkIn.customer.fullName} zostało usunięte`))
+    );
+  }
+
+  private presentToast(message: string): void {
     this.toastController.create({
-      message: `Wejście ${customer.fullName} zostało zarejestrowane`,
+      message,
       duration: 2000,
       position: 'bottom',
       showCloseButton: true,
