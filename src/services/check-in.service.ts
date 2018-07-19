@@ -7,31 +7,24 @@ import moment from 'moment';
 import { Customer } from './customer.service';
 import { ToastController } from 'ionic-angular';
 
+export interface CheckIn {
+  id: number;
+  customer: CheckInCustomer;
+  // TODO keep formatted timestamp instead
+  timestamp: moment.Moment;
+}
+
+export interface CheckInCustomer {
+  id: number;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+}
+
 interface CheckInCustomerData {
   id: number;
   firstName: string;
   lastName: string;
-}
-
-export class CheckInCustomer {
-
-  public fullName: string;
-
-  private constructor(
-    public id: number,
-    public firstName: string,
-    public lastName: string,
-  ) {
-    this.fullName = lastName.length > 0 ? `${firstName} ${lastName}` : firstName;
-  }
-
-  static fromData(data: CheckInCustomerData) {
-    return new CheckInCustomer(
-      data.id,
-      data.firstName,
-      data.lastName,
-    );
-  }
 }
 
 interface CheckInData {
@@ -40,23 +33,21 @@ interface CheckInData {
   timestamp: string;
 }
 
-export class CheckIn {
+const createFullName = (firstName: string, lastName: string): string =>
+  lastName.length > 0 ? `${firstName} ${lastName}` : firstName;
 
-  private constructor(
-    public id: number,
-    public customer: CheckInCustomer,
-    public timestamp: moment.Moment,
-  ) {
-  }
+const createCheckInCustomer = (data: CheckInCustomerData): CheckInCustomer => ({
+  id: data.id,
+  firstName: data.firstName,
+  lastName: data.lastName,
+  fullName: createFullName(data.firstName, data.lastName),
+});
 
-  static fromData(data: CheckInData): CheckIn {
-    return new CheckIn(
-      data.id,
-      CheckInCustomer.fromData(data.customer),
-      moment(data.timestamp),
-    );
-  }
-}
+const createCheckIn = (data: CheckInData): CheckIn => ({
+  id: data.id,
+  customer: createCheckInCustomer(data.customer),
+  timestamp: moment(data.timestamp),
+});
 
 @Injectable()
 export class CheckInService {
@@ -70,7 +61,7 @@ export class CheckInService {
 
   createCheckIn(customer: Customer): Observable<CheckIn> {
     return this.httpClient.post<CheckInData>(`/api/customers/${customer.id}/check-ins`, {}).pipe(
-      map(CheckIn.fromData),
+      map(createCheckIn),
       // TODO sorting
       tap(checkIn => this.checkInsSubject.next([checkIn, ...this.checkInsSubject.getValue()])),
       tap(() => this.presentToast(`Wejście ${customer.fullName} zostało zarejestrowane`)),
@@ -79,14 +70,14 @@ export class CheckInService {
 
   loadCheckIns(): Observable<CheckIn[]> {
     return this.httpClient.get<{ checkIns: CheckInData[] }>('/api/check-ins').pipe(
-      map(response => response.checkIns.map(CheckIn.fromData)),
+      map(response => response.checkIns.map(createCheckIn)),
       tap(checkIns => this.checkInsSubject.next(checkIns))
     );
   }
 
   getCustomerCheckIns(customer: Customer): Observable<CheckIn[]> {
     return this.httpClient.get<{ checkIns: CheckInData[] }>(`/api/customers/${customer.id}/check-ins`).pipe(
-      map(response => response.checkIns.map(CheckIn.fromData)),
+      map(response => response.checkIns.map(createCheckIn)),
     );
   }
 
