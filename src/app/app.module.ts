@@ -1,4 +1,4 @@
-import { ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
+import { ErrorHandler, LOCALE_ID, NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -7,6 +7,11 @@ import { NgxErrorsModule } from '@ultimate/ngxerrors';
 import { MyApp } from './app.component';
 import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import localePl from '@angular/common/locales/pl';
+import { MetaReducer, StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { storeFreeze } from 'ngrx-store-freeze';
+import { reducers, effects } from './store';
 
 import { SettingsPage } from '../pages/settings/settings';
 import { CustomerListPage } from '../pages/customer-list/customer-list';
@@ -28,8 +33,11 @@ import { CustomerService } from '../services/customer.service';
 import { BarcodeScannerService } from '../services/barcode-scanner.service';
 import { PaymentFormPage } from '../pages/payment-form/payment-form';
 import { PaymentService } from '../services/payment.service';
+import { MembershipModule } from '../membership/membership.module';
 
 registerLocaleData(localePl, 'pl');
+
+export const metaReducers: MetaReducer<any>[] = isDevMode() ? [storeFreeze] : [];
 
 @NgModule({
   declarations: [
@@ -49,7 +57,11 @@ registerLocaleData(localePl, 'pl');
     ReactiveFormsModule,
     NgxErrorsModule,
     HttpClientModule,
-    IonicModule.forRoot(MyApp)
+    MembershipModule,
+    IonicModule.forRoot(MyApp),
+    StoreModule.forRoot(reducers, {metaReducers}),
+    EffectsModule.forRoot(effects),
+    isDevMode() ? StoreDevtoolsModule.instrument() : [],
   ],
   bootstrap: [IonicApp],
   entryComponents: [

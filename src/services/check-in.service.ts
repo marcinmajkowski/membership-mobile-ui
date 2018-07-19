@@ -7,6 +7,7 @@ import moment from 'moment';
 import { Customer } from './customer.service';
 import { ToastController } from 'ionic-angular';
 
+// TODO move to model
 export interface CheckIn {
   id: number;
   customer: CheckInCustomer;
@@ -52,11 +53,18 @@ const createCheckIn = (data: CheckInData): CheckIn => ({
 @Injectable()
 export class CheckInService {
 
+  // FIXME move state to ngrx store
   private checkInsSubject = new BehaviorSubject<CheckIn[]>([]);
   checkIns$ = this.checkInsSubject.asObservable();
 
   constructor(private httpClient: HttpClient,
               private toastController: ToastController) {
+  }
+
+  getCheckIns(): Observable<CheckIn[]> {
+    return this.httpClient.get<{ checkIns: CheckInData[] }>('/api/check-ins').pipe(
+      map(response => response.checkIns.map(createCheckIn)),
+    );
   }
 
   createCheckIn(customer: Customer): Observable<CheckIn> {

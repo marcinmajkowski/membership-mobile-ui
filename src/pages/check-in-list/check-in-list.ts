@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { CheckIn, CheckInService } from '../../services/check-in.service';
+import { Store } from '@ngrx/store';
+import * as fromStore from '../../membership/store';
 
 @Component({
   selector: 'page-check-in-list',
@@ -8,10 +10,11 @@ import { CheckIn, CheckInService } from '../../services/check-in.service';
 })
 export class CheckInListPage {
 
-  checkIns$ = this.checkInService.checkIns$;
+  checkIns$ = this.store.select(fromStore.getCheckInList);
 
   constructor(public navCtrl: NavController,
-              private checkInService: CheckInService) {
+              private checkInService: CheckInService,
+              private store: Store<fromStore.MembershipState>) {
   }
 
   delete(checkIn: CheckIn) {
@@ -19,6 +22,8 @@ export class CheckInListPage {
   }
 
   ionViewDidLoad() {
+    this.store.dispatch(new fromStore.CheckInListPageLoadCheckIns());
+    // TODO this will be unnecessary after going full ngrx
     this.checkInService.loadCheckIns().subscribe();
   }
 }
