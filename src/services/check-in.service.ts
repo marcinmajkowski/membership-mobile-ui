@@ -70,8 +70,7 @@ export class CheckInService {
   createCheckIn(customer: Customer): Observable<CheckIn> {
     return this.httpClient.post<CheckInData>(`/api/customers/${customer.id}/check-ins`, {}).pipe(
       map(createCheckIn),
-      // TODO sorting
-      tap(checkIn => this.checkInsSubject.next([checkIn, ...this.checkInsSubject.getValue()])),
+      // TODO move toasts to ngrx
       tap(() => this.presentToast(`Wejście ${customer.fullName} zostało zarejestrowane`)),
     );
   }

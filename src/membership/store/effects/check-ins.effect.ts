@@ -15,13 +15,20 @@ export class CheckInsEffects {
   }
 
   @Effect()
-  loadCheckIns$ = this.actions$.ofType(checkInsActions.CHECK_IN_LIST_PAGE_LOAD_CHECK_INS).pipe(
-    switchMap(() => this.checkInService
-      .getCheckIns()
-      .pipe(
-        map(checkIns => new checkInsActions.LoadCheckInsSuccess(checkIns)),
-        // TODO catchError
-      )
-    )
-  );
+  loadCheckIns$ = this.actions$
+    .ofType<checkInsActions.CheckInListPageLoadCheckIns>(checkInsActions.CHECK_IN_LIST_PAGE_LOAD_CHECK_INS)
+    .pipe(
+      switchMap(() => this.checkInService.getCheckIns()),
+      map(checkIns => new checkInsActions.LoadCheckInsSuccess(checkIns)),
+      // TODO catchError
+    );
+
+  @Effect()
+  createCheckIn$ = this.actions$
+    .ofType<checkInsActions.CustomerPageCreateCheckIn>(checkInsActions.CUSTOMER_PAGE_CREATE_CHECK_IN)
+    .pipe(
+      switchMap(action => this.checkInService.createCheckIn(action.payload)),
+      map(checkIn => new checkInsActions.CreateCheckInSuccess(checkIn)),
+      // TODO catchError
+    );
 }

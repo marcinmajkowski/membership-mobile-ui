@@ -18,6 +18,8 @@ export function reducer(
   switch (action.type) {
     case fromCheckIns.LOAD_CHECK_INS_SUCCESS:
       return loadCheckInsSuccessReducer(state, action);
+    case fromCheckIns.CREATE_CHECK_IN_SUCCESS:
+      return createCheckInSuccessReducer(state, action);
   }
   return state;
 }
@@ -25,6 +27,7 @@ export function reducer(
 function loadCheckInsSuccessReducer(state: CheckInsState, action: fromCheckIns.LoadCheckInsSuccess): CheckInsState {
   const checkIns: CheckIn[] = action.payload;
   return {
+    ...state,
     entities: checkIns.reduce(
       (entities, checkIn) => {
         return {
@@ -37,6 +40,22 @@ function loadCheckInsSuccessReducer(state: CheckInsState, action: fromCheckIns.L
       }
     ),
     idList: checkIns.map(checkIn => checkIn.id),
+  }
+}
+
+function createCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.CreateCheckInSuccess): CheckInsState {
+  const checkIn: CheckIn = action.payload;
+  return {
+    ...state,
+    entities: {
+      ...state.entities,
+      [checkIn.id]: checkIn,
+    },
+    // TODO sorting
+    idList: [
+      checkIn.id,
+      ...state.idList,
+    ],
   }
 }
 
