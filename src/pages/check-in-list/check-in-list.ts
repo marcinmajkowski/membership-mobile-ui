@@ -23,7 +23,5 @@ export class CheckInListPage {
 
   ionViewDidLoad() {
     this.store.dispatch(new fromStore.CheckInListPageLoadCheckIns());
-    // TODO this will be unnecessary after going full ngrx
-    this.checkInService.loadCheckIns().subscribe();
   }
 }

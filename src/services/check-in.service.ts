@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import moment from 'moment';
 import { Customer } from './customer.service';
 import { ToastController } from 'ionic-angular';
@@ -53,10 +52,6 @@ const createCheckIn = (data: CheckInData): CheckIn => ({
 @Injectable()
 export class CheckInService {
 
-  // FIXME move state to ngrx store
-  private checkInsSubject = new BehaviorSubject<CheckIn[]>([]);
-  checkIns$ = this.checkInsSubject.asObservable();
-
   constructor(private httpClient: HttpClient,
               private toastController: ToastController) {
   }
@@ -75,13 +70,6 @@ export class CheckInService {
     );
   }
 
-  loadCheckIns(): Observable<CheckIn[]> {
-    return this.httpClient.get<{ checkIns: CheckInData[] }>('/api/check-ins').pipe(
-      map(response => response.checkIns.map(createCheckIn)),
-      tap(checkIns => this.checkInsSubject.next(checkIns))
-    );
-  }
-
   getCustomerCheckIns(customer: Customer): Observable<CheckIn[]> {
     return this.httpClient.get<{ checkIns: CheckInData[] }>(`/api/customers/${customer.id}/check-ins`).pipe(
       map(response => response.checkIns.map(createCheckIn)),
@@ -91,7 +79,6 @@ export class CheckInService {
   deleteCheckIn(checkIn: CheckIn): Observable<{}> {
     // FIXME remove from already loaded customer view (ngrx will solve this)
     return this.httpClient.delete(`/api/check-ins/${checkIn.id}`).pipe(
-      tap(() => this.checkInsSubject.next(this.checkInsSubject.value.filter(value => value.id !== checkIn.id))),
       tap(() => this.presentToast(`Wejście ${checkIn.customer.fullName} zostało usunięte`))
     );
   }
