@@ -6,6 +6,8 @@ export const CHECK_IN_LIST_PAGE_LOAD_CHECK_INS = '[CheckInListPage][CheckIns] Lo
 export const LOAD_CHECK_INS_SUCCESS = '[CheckIns] Load Check-Ins Success';
 export const CUSTOMER_PAGE_CREATE_CHECK_IN = '[CustomerPage][CheckIns] Create Check-In';
 export const CREATE_CHECK_IN_SUCCESS = '[CheckIns] Create Check-In Success';
+export const CUSTOMER_PAGE_LOAD_CUSTOMER_CHECK_INS = '[CustomerPage][CheckIns] Load Customer Check-Ins';
+export const LOAD_CUSTOMER_CHECK_INS_SUCCESS = '[CheckIns] Load Customer Check-Ins Success';
 
 export class CheckInListPageLoadCheckIns implements Action {
   readonly type = CHECK_IN_LIST_PAGE_LOAD_CHECK_INS;
@@ -32,9 +34,25 @@ export class CreateCheckInSuccess implements Action {
   }
 }
 
+export class CustomerPageLoadCustomerCheckIns implements Action {
+  readonly type = CUSTOMER_PAGE_LOAD_CUSTOMER_CHECK_INS;
+
+  constructor(public payload: Customer) {
+  }
+}
+
+export class LoadCustomerCheckInsSuccess implements Action {
+  readonly type = LOAD_CUSTOMER_CHECK_INS_SUCCESS;
+
+  constructor(public payload: { checkIns: CheckIn[]; customer: Customer }) {
+  }
+}
+
 export type CheckInsAction =
   | CheckInListPageLoadCheckIns
   | LoadCheckInsSuccess
   | CustomerPageCreateCheckIn
   | CreateCheckInSuccess
+  | CustomerPageLoadCustomerCheckIns
+  | LoadCustomerCheckInsSuccess
   ;

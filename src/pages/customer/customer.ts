@@ -29,7 +29,7 @@ export class CustomerPage {
               private actions$: Actions,
               private checkInService: CheckInService,
               private paymentService: PaymentService) {
-    this.checkIns$ = this.checkInService.getCustomerCheckIns(this.customer);
+    this.checkIns$ = this.store.select(fromStore.getCustomerCheckInList(this.customer.id));
     this.payments$ = this.paymentService.getCustomerPayments(this.customer);
   }
 
@@ -44,6 +44,10 @@ export class CustomerPage {
 
   createPayment() {
     this.navCtrl.parent.parent.push(PaymentFormPage, {customer: this.customer});
+  }
+
+  ionViewWillEnter(): void {
+    this.store.dispatch(new fromStore.CustomerPageLoadCustomerCheckIns(this.customer));
   }
 
   ionViewWillLeave(): void {

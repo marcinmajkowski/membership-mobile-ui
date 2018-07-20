@@ -43,7 +43,7 @@
     </p>
   </ng-template>
   <h2>Wejścia</h2>
-  <ng-container *ngIf="checkIns$ | async as checkIns">
+  <ng-container *ngIf="checkIns$ | async as checkIns; else spinner">
     <ion-list *ngIf="checkIns.length > 0; else noCheckIns">
       <ion-item *ngFor="let checkIn of checkIns">
         <p>{{checkIn.timestamp.format('MM.DD.YYYY, H:mm')}}</p>
@@ -66,3 +66,9 @@
     </ng-template>
   </ng-container>
 </ion-content>
+
+<ng-template #spinner>
+  <p text-center>
+    <ion-spinner name="dots"></ion-spinner>
+  </p>
+</ng-template>

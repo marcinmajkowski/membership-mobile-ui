@@ -24,6 +24,19 @@ export class CheckInsEffects {
     );
 
   @Effect()
+  loadCustomerCheckIns$ = this.actions$
+    .ofType<checkInsActions.CustomerPageLoadCustomerCheckIns>(checkInsActions.CUSTOMER_PAGE_LOAD_CUSTOMER_CHECK_INS)
+    .pipe(
+      map(action => action.payload),
+      switchMap(customer => this.checkInService.getCustomerCheckIns(customer)
+        .pipe(
+          map(checkIns => new checkInsActions.LoadCustomerCheckInsSuccess({checkIns, customer})),
+        )
+      ),
+      // TODO catchError
+    );
+
+  @Effect()
   createCheckIn$ = this.actions$
     .ofType<checkInsActions.CustomerPageCreateCheckIn>(checkInsActions.CUSTOMER_PAGE_CREATE_CHECK_IN)
     .pipe(
