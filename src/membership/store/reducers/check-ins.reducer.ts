@@ -9,7 +9,7 @@ export interface CheckInsState {
 
 export const initialState: CheckInsState = {
   entities: {},
-  idList: [],
+  idList: undefined,
   idListByCustomerId: {},
 };
 
@@ -63,7 +63,7 @@ function createCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.
       [checkIn.id]: checkIn,
     },
     // TODO sorting
-    idList: [
+    idList: !state.idList ? state.idList : [
       checkIn.id,
       ...state.idList,
     ],
@@ -80,7 +80,7 @@ function deleteCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.
   const customerId = checkIn.customer.id;
   return {
     ...state,
-    idList: state.idList.filter(id => id !== checkIn.id),
+    idList: !state.idList ? state.idList : state.idList.filter(id => id !== checkIn.id),
     idListByCustomerId: !state.idListByCustomerId[customerId] ? state.idListByCustomerId : {
       ...state.idListByCustomerId,
       [customerId]: state.idListByCustomerId[customerId].filter(id => id !== checkIn.id),

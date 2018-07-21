@@ -1,13 +1,5 @@
-<ng-container *ngIf="checkIns; else spinner">
-  <ion-list *ngIf="checkIns.length > 0; else noCheckIns">
-    <ion-item *ngFor="let checkIn of checkIns">
-      <p>{{checkIn.timestamp.format('MM.DD.YYYY, H:mm')}}</p>
-    </ion-item>
-  </ion-list>
-  <ng-template #noCheckIns>
-    <p padding-left>{{ placeholder }}</p>
-  </ng-template>
-</ng-container>
-<ng-template #spinner>
-  <list-spinner></list-spinner>
-</ng-template>
+<ion-list>
+  <ion-item *ngFor="let checkIn of checkIns">
+    <p>{{checkIn.timestamp.format('MM.DD.YYYY, H:mm')}}</p>
+  </ion-item>
+</ion-list>

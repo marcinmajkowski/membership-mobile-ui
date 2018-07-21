@@ -37,15 +37,12 @@
       <p>{{card.code}}</p>
     </ion-item>
   </ion-list>
-  <ng-template #noCards>
-    <p>
-      Ten klient nie ma przypisanej żadnej karty.
-    </p>
-  </ng-template>
   <h2>Wejścia</h2>
-  <check-in-list [checkIns]="checkIns$ | async"
-                 [placeholder]="'Ten klient nie ma zarejestrowanych żadnych wejść.'">
-  </check-in-list>
+  <ng-container *ngIf="checkIns$ | async as checkIns; else spinner">
+    <check-in-list *ngIf="checkIns.length > 0; else noCheckIns"
+                   [checkIns]="checkIns">
+    </check-in-list>
+  </ng-container>
   <h2>Płatności</h2>
   <ng-container *ngIf="payments$ | async as payments">
     <ion-list *ngIf="payments.length > 0; else noPayments">
@@ -54,8 +51,21 @@
         <p>{{payment.timestamp.format('MM.DD.YYYY, H:mm')}}</p>
       </ion-item>
     </ion-list>
-    <ng-template #noPayments>
-      <p>Ten klient nie dokonał żadnej płatności.</p>
-    </ng-template>
   </ng-container>
 </ion-content>
+
+<ng-template #noCards>
+  <p>Ten klient nie ma przypisanej żadnej karty.</p>
+</ng-template>
+
+<ng-template #noCheckIns>
+  <p>Ten klient nie ma zarejestrowanych żadnych wejść.</p>
+</ng-template>
+
+<ng-template #noPayments>
+  <p>Ten klient nie dokonał żadnej płatności.</p>
+</ng-template>
+
+<ng-template #spinner>
+  <list-spinner></list-spinner>
+</ng-template>

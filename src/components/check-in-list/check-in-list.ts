@@ -8,5 +8,4 @@ import { CheckIn } from '../../services/check-in.service';
 export class CheckInListComponent {
 
   @Input() checkIns: CheckIn[];
-  @Input() placeholder: string;
 }

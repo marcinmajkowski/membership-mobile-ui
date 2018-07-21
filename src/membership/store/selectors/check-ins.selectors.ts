@@ -21,7 +21,7 @@ const getCheckInsIdList = createSelector(
 export const getCheckInList = createSelector(
   getCheckInsEntities,
   getCheckInsIdList,
-  (checkInsEntities, checkInsIdList) => checkInsIdList.map(id => checkInsEntities[id])
+  (checkInsEntities, checkInsIdList) => checkInsIdList && checkInsIdList.map(id => checkInsEntities[id])
 );
 
 const getCheckInsIdListByCustomerId = createSelector(
