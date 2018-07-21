@@ -4,12 +4,12 @@ import { mapById } from '../../../util/redux';
 
 export interface CustomersState {
   entities: { [id: number]: Customer };
-  allIds: number[];
+  idList: number[];
 }
 
 export const initialState: CustomersState = {
   entities: {},
-  allIds: undefined,
+  idList: undefined,
 };
 
 export function reducer(
@@ -32,6 +32,6 @@ function loadCustomersSuccessReducer(state: CustomersState, action: fromCustomer
       ...state.entities,
       ...mapById(customers),
     },
-    allIds: customers.map(customer => customer.id),
+    idList: customers.map(customer => customer.id),
   };
 }
