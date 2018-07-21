@@ -1,5 +1,6 @@
 import { CheckIn } from '../../../services/check-in.service';
 import * as fromCheckIns from '../actions/check-ins.action';
+import { mapById } from '../../../util/redux';
 
 export interface CheckInsState {
   entities: { [id: number]: CheckIn };
@@ -35,7 +36,10 @@ function loadCheckInsSuccessReducer(state: CheckInsState, action: fromCheckIns.L
   const checkIns: CheckIn[] = action.payload.checkIns;
   return {
     ...state,
-    entities: addToEntities(state.entities, checkIns),
+    entities: {
+      ...state.entities,
+      ...mapById(checkIns),
+    },
     idList: checkIns.map(checkIn => checkIn.id),
     // FIXME maintain idListByCustomerId
   };
@@ -45,7 +49,10 @@ function loadCustomerCheckInsSuccessReducer(state: CheckInsState, action: fromCh
   const {checkIns, customer} = action.payload;
   return {
     ...state,
-    entities: addToEntities(state.entities, checkIns),
+    entities: {
+      ...state.entities,
+      ...mapById(checkIns),
+    },
     idListByCustomerId: {
       ...state.idListByCustomerId,
       [customer.id]: checkIns.map(checkIn => checkIn.id),
@@ -86,20 +93,6 @@ function deleteCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.
       [customerId]: state.idListByCustomerId[customerId].filter(id => id !== checkIn.id),
     },
   };
-}
-
-function addToEntities(entities: { [id: number]: CheckIn }, checkIns: CheckIn[]) {
-  return checkIns.reduce(
-    (entities, checkIn) => {
-      return {
-        ...entities,
-        [checkIn.id]: checkIn,
-      }
-    },
-    {
-      ...entities
-    }
-  );
 }
 
 export const getCheckInsEntities = (state: CheckInsState) => state.entities;
