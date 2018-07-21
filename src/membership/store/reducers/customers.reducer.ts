@@ -35,3 +35,6 @@ function loadCustomersSuccessReducer(state: CustomersState, action: fromCustomer
     idList: customers.map(customer => customer.id),
   };
 }
+
+export const getCustomersEntities = (state: CustomersState) => state.entities;
+export const getCustomersIdList = (state: CustomersState) => state.idList;

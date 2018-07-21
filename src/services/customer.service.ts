@@ -63,23 +63,12 @@ export interface CreateCustomerForm {
 @Injectable()
 export class CustomerService {
 
-  private customersSubject = new BehaviorSubject<Customer[]>([]);
-  customers$ = this.customersSubject.asObservable();
-
   constructor(private httpClient: HttpClient) {
   }
 
   createCustomer(createCustomerForm: CreateCustomerForm): Observable<Customer> {
     return this.httpClient.post<CustomerData>('/api/customers', createCustomerForm).pipe(
       map(Customer.fromData),
-      tap(customer => this.customersSubject.next([customer, ...this.customersSubject.getValue()]))
-    );
-  }
-
-  loadCustomers(): Observable<Customer[]> {
-    return this.httpClient.get<{ customers: CustomerData[] }>('/api/customers').pipe(
-      map(response => response.customers.map(Customer.fromData)),
-      tap(customers => this.customersSubject.next(customers))
     );
   }
 

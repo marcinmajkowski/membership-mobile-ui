@@ -12,9 +12,19 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let customer of customers$ | async" (click)="showCustomer(customer)">
-      <h2>{{customer.fullName}}</h2>
-    </ion-item>
-  </ion-list>
+  <ng-container *ngIf="customers$ | async as customers; else spinner">
+    <ion-list *ngIf="customers.length > 0; else noCustomers">
+      <ion-item *ngFor="let customer of customers" (click)="showCustomer(customer)">
+        <h2>{{customer.fullName}}</h2>
+      </ion-item>
+    </ion-list>
+  </ng-container>
 </ion-content>
+
+<ng-template #noCustomers>
+  <p padding>Nie zarejestrowano żadnych klientów.</p>
+</ng-template>
+
+<ng-template #spinner>
+  <list-spinner></list-spinner>
+</ng-template>

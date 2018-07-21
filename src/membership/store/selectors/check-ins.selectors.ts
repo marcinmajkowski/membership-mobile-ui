@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import * as fromFeature from '../reducers/index';
+import * as fromFeature from '../reducers';
 import * as fromCheckIns from '../reducers/check-ins.reducer';
 
 const getCheckInsState = createSelector(
