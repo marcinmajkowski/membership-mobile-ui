@@ -3,6 +3,8 @@ import { NavController } from 'ionic-angular';
 import { CustomerFormPage } from '../customer-form/customer-form';
 import { Customer, CustomerService } from '../../services/customer.service';
 import { CustomerPage } from '../customer/customer';
+import { Store } from '@ngrx/store';
+import * as fromStore from '../../membership/store';
 
 @Component({
   selector: 'page-customer-list',
@@ -13,8 +15,8 @@ export class CustomerListPage {
   customers$ = this.customerService.customers$;
 
   constructor(public navCtrl: NavController,
+              private store: Store<fromStore.MembershipState>,
               private customerService: CustomerService) {
-
   }
 
   addCustomer(): void {
@@ -26,6 +28,7 @@ export class CustomerListPage {
   }
 
   ionViewDidLoad() {
+    this.store.dispatch(new fromStore.CustomerListPageLoadCustomers());
     this.customerService.loadCustomers().subscribe();
   }
 }

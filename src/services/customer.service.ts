@@ -83,6 +83,12 @@ export class CustomerService {
     );
   }
 
+  getCustomers(): Observable<Customer[]> {
+    return this.httpClient.get<{ customers: CustomerData[] }>('/api/customers').pipe(
+      map(response => response.customers.map(Customer.fromData)),
+    );
+  }
+
   findCustomersByCardCode(cardCode: string): Observable<Customer[]> {
     const params = new HttpParams()
       .append('card_code', cardCode);
