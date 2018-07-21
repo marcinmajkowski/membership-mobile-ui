@@ -8,8 +8,8 @@ import { Payment, PaymentService } from '../../services/payment.service';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../membership/store';
 import { Subject } from 'rxjs/Subject';
-import { Actions } from '@ngrx/effects';
-import { takeUntil } from 'rxjs/operators';
+import { Actions, ofType } from '@ngrx/effects';
+import { take, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'page-customer',
@@ -37,8 +37,10 @@ export class CustomerPage {
   createCheckIn() {
     this.store.dispatch(new fromStore.CustomerPageCreateCheckIn({customer: this.customer}));
     // TODO involve state into navigation
-    this.actions$.ofType(fromStore.CREATE_CHECK_IN_SUCCESS).pipe(
-      takeUntil(this.ionViewWillLeave$)
+    this.actions$.pipe(
+      ofType(fromStore.CREATE_CHECK_IN_SUCCESS),
+      take(1),
+      takeUntil(this.ionViewWillLeave$),
     ).subscribe(() => this.navCtrl.pop());
   }
 
