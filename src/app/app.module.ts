@@ -21,6 +21,7 @@ import { PaymentListPage } from '../pages/payment-list/payment-list';
 import { TabsPage } from '../pages/tabs/tabs';
 import { LoginPage } from '../pages/login/login';
 import { CheckInListPage } from '../pages/check-in-list/check-in-list';
+import { PaymentFormPage } from '../pages/payment-form/payment-form';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -31,9 +32,10 @@ import { CheckInService } from '../services/check-in.service';
 import { XhrInterceptor } from '../services/xhr.interceptor';
 import { CustomerService } from '../services/customer.service';
 import { BarcodeScannerService } from '../services/barcode-scanner.service';
-import { PaymentFormPage } from '../pages/payment-form/payment-form';
 import { PaymentService } from '../services/payment.service';
+
 import { MembershipModule } from '../membership/membership.module';
+import { ComponentsModule } from '../components/components.module';
 
 registerLocaleData(localePl, 'pl');
 
@@ -58,6 +60,7 @@ export const metaReducers: MetaReducer<any>[] = isDevMode() ? [storeFreeze] : []
     NgxErrorsModule,
     HttpClientModule,
     MembershipModule,
+    ComponentsModule,
     IonicModule.forRoot(MyApp),
     StoreModule.forRoot(reducers, {metaReducers}),
     EffectsModule.forRoot(effects),
