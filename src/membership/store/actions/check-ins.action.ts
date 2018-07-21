@@ -8,6 +8,8 @@ export const CUSTOMER_PAGE_CREATE_CHECK_IN = '[CustomerPage][CheckIns] Create Ch
 export const CREATE_CHECK_IN_SUCCESS = '[CheckIns] Create Check-In Success';
 export const CUSTOMER_PAGE_LOAD_CUSTOMER_CHECK_INS = '[CustomerPage][CheckIns] Load Customer Check-Ins';
 export const LOAD_CUSTOMER_CHECK_INS_SUCCESS = '[CheckIns] Load Customer Check-Ins Success';
+export const CHECK_IN_LIST_PAGE_DELETE_CHECK_IN = '[CheckInListPage][CheckIns] Delete Check-In';
+export const DELETE_CHECK_IN_SUCCESS = '[CheckIns] Delete Check-In Success';
 
 export class CheckInListPageLoadCheckIns implements Action {
   readonly type = CHECK_IN_LIST_PAGE_LOAD_CHECK_INS;
@@ -48,6 +50,20 @@ export class LoadCustomerCheckInsSuccess implements Action {
   }
 }
 
+export class CheckInListPageDeleteCheckIn implements Action {
+  readonly type = CHECK_IN_LIST_PAGE_DELETE_CHECK_IN;
+
+  constructor(public payload: CheckIn) {
+  }
+}
+
+export class DeleteCheckInSuccess implements Action {
+  readonly type = DELETE_CHECK_IN_SUCCESS;
+
+  constructor(public payload: CheckIn) {
+  }
+}
+
 export type CheckInsAction =
   | CheckInListPageLoadCheckIns
   | LoadCheckInsSuccess
@@ -55,4 +71,6 @@ export type CheckInsAction =
   | CreateCheckInSuccess
   | CustomerPageLoadCustomerCheckIns
   | LoadCustomerCheckInsSuccess
+  | CheckInListPageDeleteCheckIn
+  | DeleteCheckInSuccess
   ;

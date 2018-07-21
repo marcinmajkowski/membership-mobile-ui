@@ -24,6 +24,8 @@ export function reducer(
       return loadCustomerCheckInsSuccessReducer(state, action);
     case fromCheckIns.CREATE_CHECK_IN_SUCCESS:
       return createCheckInSuccessReducer(state, action);
+    case fromCheckIns.DELETE_CHECK_IN_SUCCESS:
+      return deleteCheckInSuccessReducer(state, action);
     default:
       return state;
   }
@@ -71,6 +73,19 @@ function createCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.
       [customerId]: [checkIn.id, ...state.idListByCustomerId[customerId]],
     },
   }
+}
+
+function deleteCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.DeleteCheckInSuccess): CheckInsState {
+  const checkIn: CheckIn = action.payload;
+  const customerId = checkIn.customer.id;
+  return {
+    ...state,
+    idList: state.idList.filter(id => id !== checkIn.id),
+    idListByCustomerId: !state.idListByCustomerId[customerId] ? state.idListByCustomerId : {
+      ...state.idListByCustomerId,
+      [customerId]: state.idListByCustomerId[customerId].filter(id => id !== checkIn.id),
+    },
+  };
 }
 
 function addToEntities(entities: { [id: number]: CheckIn }, checkIns: CheckIn[]) {

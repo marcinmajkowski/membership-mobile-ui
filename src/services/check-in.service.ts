@@ -77,8 +77,8 @@ export class CheckInService {
   }
 
   deleteCheckIn(checkIn: CheckIn): Observable<{}> {
-    // FIXME remove from already loaded customer view (ngrx will solve this)
     return this.httpClient.delete(`/api/check-ins/${checkIn.id}`).pipe(
+      // TODO move toasts to ngrx
       tap(() => this.presentToast(`Wejście ${checkIn.customer.fullName} zostało usunięte`))
     );
   }

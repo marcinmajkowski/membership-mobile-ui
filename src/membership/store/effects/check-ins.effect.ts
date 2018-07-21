@@ -44,4 +44,17 @@ export class CheckInsEffects {
       map(checkIn => new checkInsActions.CreateCheckInSuccess(checkIn)),
       // TODO catchError
     );
+
+  @Effect()
+  deleteCheckIn$ = this.actions$
+    .ofType<checkInsActions.CheckInListPageDeleteCheckIn>(checkInsActions.CHECK_IN_LIST_PAGE_DELETE_CHECK_IN)
+    .pipe(
+      map(action => action.payload),
+      switchMap(checkIn => this.checkInService.deleteCheckIn(checkIn)
+        .pipe(
+          map(() => new checkInsActions.DeleteCheckInSuccess(checkIn)),
+        )
+      ),
+      // TODO catchError
+    );
 }

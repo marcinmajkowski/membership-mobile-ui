@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { CheckIn, CheckInService } from '../../services/check-in.service';
+import { CheckIn } from '../../services/check-in.service';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../membership/store';
 
@@ -12,16 +11,14 @@ export class CheckInListPage {
 
   checkIns$ = this.store.select(fromStore.getCheckInList);
 
-  constructor(public navCtrl: NavController,
-              private checkInService: CheckInService,
-              private store: Store<fromStore.MembershipState>) {
-  }
-
-  delete(checkIn: CheckIn) {
-    this.checkInService.deleteCheckIn(checkIn).subscribe();
+  constructor(private store: Store<fromStore.MembershipState>) {
   }
 
   ionViewDidLoad() {
     this.store.dispatch(new fromStore.CheckInListPageLoadCheckIns());
+  }
+
+  delete(checkIn: CheckIn) {
+    this.store.dispatch(new fromStore.CheckInListPageDeleteCheckIn(checkIn));
   }
 }
