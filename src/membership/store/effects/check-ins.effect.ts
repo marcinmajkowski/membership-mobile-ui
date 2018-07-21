@@ -3,7 +3,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { CheckInService } from '../../../services/check-in.service';
 
 import * as checkInsActions from '../actions/check-ins.action';
-import { map, switchMap } from 'rxjs/operators';
+import { map, mapTo, switchMap, switchMapTo } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Action } from '@ngrx/store';
 
@@ -17,7 +17,7 @@ export class CheckInsEffects {
   @Effect()
   loadCheckIns$: Observable<Action> = this.actions$.pipe(
     ofType<checkInsActions.CheckInListPageLoadCheckIns>(checkInsActions.CHECK_IN_LIST_PAGE_LOAD_CHECK_INS),
-    switchMap(() => this.checkInService.getCheckIns()),
+    switchMapTo(this.checkInService.getCheckIns()),
     map(checkIns => new checkInsActions.LoadCheckInsSuccess({checkIns})),
     // TODO catchError
   );
@@ -48,7 +48,7 @@ export class CheckInsEffects {
     ),
     map(action => action.payload.checkIn),
     switchMap(checkIn => this.checkInService.deleteCheckIn(checkIn).pipe(
-      map(() => new checkInsActions.DeleteCheckInSuccess({checkIn})),
+      mapTo(new checkInsActions.DeleteCheckInSuccess({checkIn})),
     )),
     // TODO catchError
   );
