@@ -5,8 +5,8 @@
 
 </ion-header>
 
-<ion-content padding>
-  <h1 text-center>{{customer.fullName}}</h1>
+<ion-content>
+  <h1 text-center padding-horizontal>{{customer.fullName}}</h1>
   <ion-grid>
     <ion-row>
       <ion-col>
@@ -31,19 +31,20 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <h2>Karty</h2>
+  <h2 padding-horizontal>Karty</h2>
   <ion-list *ngIf="customer.cards.length > 0; else noCards">
     <ion-item *ngFor="let card of customer.cards">
       <p>{{card.code}}</p>
     </ion-item>
   </ion-list>
-  <h2>Wejścia</h2>
+  <h2 padding-horizontal>Wejścia</h2>
   <ng-container *ngIf="checkIns$ | async as checkIns; else spinner">
     <check-in-list *ngIf="checkIns.length > 0; else noCheckIns"
-                   [checkIns]="checkIns">
+                   [checkIns]="checkIns"
+                   (checkInDelete)="deleteCheckIn($event)">
     </check-in-list>
   </ng-container>
-  <h2>Płatności</h2>
+  <h2 padding-horizontal>Płatności</h2>
   <ng-container *ngIf="payments$ | async as payments">
     <ion-list *ngIf="payments.length > 0; else noPayments">
       <ion-item *ngFor="let payment of payments">
@@ -55,15 +56,15 @@
 </ion-content>
 
 <ng-template #noCards>
-  <p>Ten klient nie ma przypisanej żadnej karty.</p>
+  <p padding>Ten klient nie ma przypisanej żadnej karty.</p>
 </ng-template>
 
 <ng-template #noCheckIns>
-  <p>Ten klient nie ma zarejestrowanych żadnych wejść.</p>
+  <p padding>Ten klient nie ma zarejestrowanych żadnych wejść.</p>
 </ng-template>
 
 <ng-template #noPayments>
-  <p>Ten klient nie dokonał żadnej płatności.</p>
+  <p padding>Ten klient nie dokonał żadnej płatności.</p>
 </ng-template>
 
 <ng-template #spinner>

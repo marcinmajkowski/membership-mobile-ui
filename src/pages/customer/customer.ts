@@ -42,6 +42,10 @@ export class CustomerPage {
     ).subscribe(() => this.navCtrl.pop());
   }
 
+  deleteCheckIn(checkIn: CheckIn): void {
+    this.store.dispatch(new fromStore.CustomerPageDeleteCheckIn(checkIn));
+  }
+
   createPayment() {
     this.navCtrl.parent.parent.push(PaymentFormPage, {customer: this.customer});
   }

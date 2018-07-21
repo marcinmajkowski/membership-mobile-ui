@@ -42,7 +42,10 @@ export class CheckInsEffects {
 
   @Effect()
   deleteCheckIn$: Observable<Action> = this.actions$.pipe(
-    ofType<checkInsActions.CheckInListPageDeleteCheckIn>(checkInsActions.CHECK_IN_LIST_PAGE_DELETE_CHECK_IN),
+    ofType<checkInsActions.DeleteCheckIn>(
+      checkInsActions.CHECK_IN_LIST_PAGE_DELETE_CHECK_IN,
+      checkInsActions.CUSTOMER_PAGE_DELETE_CHECK_IN,
+    ),
     map(action => action.payload),
     switchMap(checkIn => this.checkInService.deleteCheckIn(checkIn).pipe(
       map(() => new checkInsActions.DeleteCheckInSuccess(checkIn)),
