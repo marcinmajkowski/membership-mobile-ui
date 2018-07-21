@@ -19,6 +19,6 @@ export class CheckInListPage {
   }
 
   delete(checkIn: CheckIn) {
-    this.store.dispatch(new fromStore.CheckInListPageDeleteCheckIn(checkIn));
+    this.store.dispatch(new fromStore.CheckInListPageDeleteCheckIn({checkIn}));
   }
 }

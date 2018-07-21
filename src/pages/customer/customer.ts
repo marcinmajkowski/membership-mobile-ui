@@ -35,7 +35,7 @@ export class CustomerPage {
 
   // FIXME probably it should not be possible to dispatch twice
   createCheckIn() {
-    this.store.dispatch(new fromStore.CustomerPageCreateCheckIn(this.customer));
+    this.store.dispatch(new fromStore.CustomerPageCreateCheckIn({customer: this.customer}));
     // TODO involve state into navigation
     this.actions$.ofType(fromStore.CREATE_CHECK_IN_SUCCESS).pipe(
       takeUntil(this.ionViewWillLeave$)
@@ -43,7 +43,7 @@ export class CustomerPage {
   }
 
   deleteCheckIn(checkIn: CheckIn): void {
-    this.store.dispatch(new fromStore.CustomerPageDeleteCheckIn(checkIn));
+    this.store.dispatch(new fromStore.CustomerPageDeleteCheckIn({checkIn}));
   }
 
   createPayment() {
@@ -51,7 +51,7 @@ export class CustomerPage {
   }
 
   ionViewWillEnter(): void {
-    this.store.dispatch(new fromStore.CustomerPageLoadCustomerCheckIns(this.customer));
+    this.store.dispatch(new fromStore.CustomerPageLoadCustomerCheckIns({customer: this.customer}));
   }
 
   ionViewWillLeave(): void {

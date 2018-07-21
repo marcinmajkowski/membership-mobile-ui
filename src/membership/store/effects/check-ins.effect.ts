@@ -18,14 +18,14 @@ export class CheckInsEffects {
   loadCheckIns$: Observable<Action> = this.actions$.pipe(
     ofType<checkInsActions.CheckInListPageLoadCheckIns>(checkInsActions.CHECK_IN_LIST_PAGE_LOAD_CHECK_INS),
     switchMap(() => this.checkInService.getCheckIns()),
-    map(checkIns => new checkInsActions.LoadCheckInsSuccess(checkIns)),
+    map(checkIns => new checkInsActions.LoadCheckInsSuccess({checkIns})),
     // TODO catchError
   );
 
   @Effect()
   loadCustomerCheckIns$: Observable<Action> = this.actions$.pipe(
     ofType<checkInsActions.CustomerPageLoadCustomerCheckIns>(checkInsActions.CUSTOMER_PAGE_LOAD_CUSTOMER_CHECK_INS),
-    map(action => action.payload),
+    map(action => action.payload.customer),
     switchMap(customer => this.checkInService.getCustomerCheckIns(customer).pipe(
       map(checkIns => new checkInsActions.LoadCustomerCheckInsSuccess({checkIns, customer})),
     )),
@@ -35,8 +35,8 @@ export class CheckInsEffects {
   @Effect()
   createCheckIn$: Observable<Action> = this.actions$.pipe(
     ofType<checkInsActions.CustomerPageCreateCheckIn>(checkInsActions.CUSTOMER_PAGE_CREATE_CHECK_IN),
-    switchMap(action => this.checkInService.createCheckIn(action.payload)),
-    map(checkIn => new checkInsActions.CreateCheckInSuccess(checkIn)),
+    switchMap(action => this.checkInService.createCheckIn(action.payload.customer)),
+    map(checkIn => new checkInsActions.CreateCheckInSuccess({checkIn})),
     // TODO catchError
   );
 
@@ -46,9 +46,9 @@ export class CheckInsEffects {
       checkInsActions.CHECK_IN_LIST_PAGE_DELETE_CHECK_IN,
       checkInsActions.CUSTOMER_PAGE_DELETE_CHECK_IN,
     ),
-    map(action => action.payload),
+    map(action => action.payload.checkIn),
     switchMap(checkIn => this.checkInService.deleteCheckIn(checkIn).pipe(
-      map(() => new checkInsActions.DeleteCheckInSuccess(checkIn)),
+      map(() => new checkInsActions.DeleteCheckInSuccess({checkIn})),
     )),
     // TODO catchError
   );

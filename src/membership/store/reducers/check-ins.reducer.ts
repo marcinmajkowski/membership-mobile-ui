@@ -32,7 +32,7 @@ export function reducer(
 }
 
 function loadCheckInsSuccessReducer(state: CheckInsState, action: fromCheckIns.LoadCheckInsSuccess): CheckInsState {
-  const checkIns: CheckIn[] = action.payload;
+  const checkIns: CheckIn[] = action.payload.checkIns;
   return {
     ...state,
     entities: addToEntities(state.entities, checkIns),
@@ -54,7 +54,7 @@ function loadCustomerCheckInsSuccessReducer(state: CheckInsState, action: fromCh
 }
 
 function createCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.CreateCheckInSuccess): CheckInsState {
-  const checkIn: CheckIn = action.payload;
+  const checkIn: CheckIn = action.payload.checkIn;
   const customerId = checkIn.customer.id;
   return {
     ...state,
@@ -76,7 +76,7 @@ function createCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.
 }
 
 function deleteCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.DeleteCheckInSuccess): CheckInsState {
-  const checkIn: CheckIn = action.payload;
+  const checkIn: CheckIn = action.payload.checkIn;
   const customerId = checkIn.customer.id;
   return {
     ...state,

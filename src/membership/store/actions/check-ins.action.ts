@@ -19,28 +19,28 @@ export class CheckInListPageLoadCheckIns implements Action {
 export class LoadCheckInsSuccess implements Action {
   readonly type = LOAD_CHECK_INS_SUCCESS;
 
-  constructor(public payload: CheckIn[]) {
+  constructor(public payload: { checkIns: CheckIn[] }) {
   }
 }
 
 export class CustomerPageCreateCheckIn implements Action {
   readonly type = CUSTOMER_PAGE_CREATE_CHECK_IN;
 
-  constructor(public payload: Customer) {
+  constructor(public payload: { customer: Customer }) {
   }
 }
 
 export class CreateCheckInSuccess implements Action {
   readonly type = CREATE_CHECK_IN_SUCCESS;
 
-  constructor(public payload: CheckIn) {
+  constructor(public payload: { checkIn: CheckIn }) {
   }
 }
 
 export class CustomerPageLoadCustomerCheckIns implements Action {
   readonly type = CUSTOMER_PAGE_LOAD_CUSTOMER_CHECK_INS;
 
-  constructor(public payload: Customer) {
+  constructor(public payload: { customer: Customer }) {
   }
 }
 
@@ -54,14 +54,14 @@ export class LoadCustomerCheckInsSuccess implements Action {
 export class CheckInListPageDeleteCheckIn implements Action {
   readonly type = CHECK_IN_LIST_PAGE_DELETE_CHECK_IN;
 
-  constructor(public payload: CheckIn) {
+  constructor(public payload: { checkIn: CheckIn }) {
   }
 }
 
 export class CustomerPageDeleteCheckIn implements Action {
   readonly type = CUSTOMER_PAGE_DELETE_CHECK_IN;
 
-  constructor(public payload: CheckIn) {
+  constructor(public payload: { checkIn: CheckIn }) {
   }
 }
 
@@ -73,7 +73,7 @@ export type DeleteCheckIn =
 export class DeleteCheckInSuccess implements Action {
   readonly type = DELETE_CHECK_IN_SUCCESS;
 
-  constructor(public payload: CheckIn) {
+  constructor(public payload: { checkIn: CheckIn }) {
   }
 }
 
