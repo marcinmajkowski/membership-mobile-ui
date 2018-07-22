@@ -19,6 +19,8 @@ export function reducer(
   switch (action.type) {
     case fromCustomers.LOAD_CUSTOMERS_SUCCESS:
       return loadCustomersSuccessReducer(state, action);
+    case fromCustomers.CREATE_CUSTOMER_SUCCESS:
+      return createCustomerSuccessReducer(state, action);
     default:
       return state;
   }
@@ -33,6 +35,21 @@ function loadCustomersSuccessReducer(state: CustomersState, action: fromCustomer
       ...mapById(customers),
     },
     idList: customers.map(customer => customer.id),
+  };
+}
+
+function createCustomerSuccessReducer(state: CustomersState, action: fromCustomers.CreateCustomerSuccess) {
+  const customer = action.payload.customer;
+  return {
+    ...state,
+    entities: {
+      ...state.entities,
+      [customer.id]: customer,
+    },
+    idList: !state.idList ? state.idList : [
+      ...state.idList,
+      customer.id,
+    ],
   };
 }
 

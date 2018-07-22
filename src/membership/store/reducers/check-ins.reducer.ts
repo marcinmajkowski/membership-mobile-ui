@@ -79,7 +79,7 @@ function createCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.
       // TODO sorting
       [customerId]: [checkIn.id, ...state.idListByCustomerId[customerId]],
     },
-  }
+  };
 }
 
 function deleteCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.DeleteCheckInSuccess): CheckInsState {
