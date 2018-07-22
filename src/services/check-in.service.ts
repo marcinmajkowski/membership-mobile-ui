@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
-import { Customer } from './customer.service';
+import { Customer } from '../membership/models/customer.model';
 import { ToastController } from 'ionic-angular';
 import { CheckIn, CheckInCustomer } from '../membership/models/check-in.model';
 import { Iso8601String } from '../membership/models/iso-8601-string.model';

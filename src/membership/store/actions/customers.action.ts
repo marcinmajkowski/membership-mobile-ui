@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
-import { CreateCustomerForm, Customer } from '../../../services/customer.service';
+import { CreateCustomerForm} from '../../models/customer.model';
+import { Customer } from '../../models/customer.model';
 
 export const CUSTOMER_LIST_PAGE_LOAD_CUSTOMERS = '[CustomerListPage][Customers] Load Customers';
 export const LOAD_CUSTOMERS_SUCCESS = '[Customers] Load Customers Success';

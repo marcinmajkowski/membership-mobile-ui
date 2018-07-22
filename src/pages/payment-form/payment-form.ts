@@ -3,7 +3,7 @@ import { NavController, NavParams, Tabs } from 'ionic-angular';
 import { ControlsConfig } from '../../util/controls-config';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CreatePaymentForm, PaymentService } from '../../services/payment.service';
-import { Customer } from '../../services/customer.service';
+import { Customer } from '../../membership/models/customer.model';
 
 @Component({
   selector: 'page-payment-form',

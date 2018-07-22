@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Customer } from './customer.service';
+import { Customer } from '../membership/models/customer.model';
 import { ToastController } from 'ionic-angular';
 import { CurrencyPipe } from '@angular/common';
 import { Iso8601String } from '../membership/models/iso-8601-string.model';

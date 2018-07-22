@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { Customer } from '../../services/customer.service';
+import { Customer } from '../../membership/models/customer.model';
 import { CheckIn } from '../../membership/models/check-in.model';
 import { PaymentFormPage } from '../payment-form/payment-form';
 import { Observable } from 'rxjs/Observable';

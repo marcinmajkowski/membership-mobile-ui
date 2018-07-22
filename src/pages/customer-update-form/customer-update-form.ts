@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, Tabs } from 'ionic-angular';
-import { Customer } from '../../services/customer.service';
+import { Customer } from '../../membership/models/customer.model';
 import * as fromStore from '../../membership/store';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs/Subject';

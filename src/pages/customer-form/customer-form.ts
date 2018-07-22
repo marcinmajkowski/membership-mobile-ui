@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, Tabs } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CreateCustomerForm } from '../../services/customer.service';
+import { CreateCustomerForm } from '../../membership/models/customer.model';
 import { BarcodeScannerService } from '../../services/barcode-scanner.service';
 import { CustomerPage } from '../customer/customer';
 import { ControlsConfig } from '../../util/controls-config';

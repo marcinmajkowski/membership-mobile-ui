@@ -2,25 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
+import { Card, CreateCustomerForm, Customer } from '../membership/models/customer.model';
 
 interface CardData {
   id: number;
   code: string;
-}
-
-export class Card {
-  private constructor(
-    public id: number,
-    public code: string,
-  ) {
-  }
-
-  static fromData(data: CardData): Card {
-    return new Card(
-      data.id,
-      data.code,
-    );
-  }
 }
 
 interface CustomerData {
@@ -30,34 +16,21 @@ interface CustomerData {
   cards: CardData[];
 }
 
-export class Customer {
+const createFullName = (firstName: string, lastName: string): string =>
+  lastName.length > 0 ? `${firstName} ${lastName}` : firstName;
 
-  public fullName: string;
+const dataToCard = (data: CardData): Card => ({
+  id: data.id,
+  code: data.code,
+});
 
-  private constructor(
-    public id: number,
-    public firstName: string,
-    public lastName: string,
-    public cards: Card[],
-  ) {
-    this.fullName = lastName.length > 0 ? `${firstName} ${lastName}` : firstName;
-  }
-
-  static fromData(data: CustomerData): Customer {
-    return new Customer(
-      data.id,
-      data.firstName,
-      data.lastName,
-      data.cards.map(Card.fromData),
-    );
-  }
-}
-
-export interface CreateCustomerForm {
-  firstName: string;
-  lastName: string;
-  cardCode: string;
-}
+const dataToCustomer = (data: CustomerData): Customer => ({
+  id: data.id,
+  firstName: data.firstName,
+  lastName: data.lastName,
+  cards: data.cards.map(dataToCard),
+  fullName: createFullName(data.firstName, data.lastName),
+});
 
 @Injectable()
 export class CustomerService {
@@ -67,13 +40,13 @@ export class CustomerService {
 
   createCustomer(createCustomerForm: CreateCustomerForm): Observable<Customer> {
     return this.httpClient.post<CustomerData>('/api/customers', createCustomerForm).pipe(
-      map(Customer.fromData),
+      map(dataToCustomer),
     );
   }
 
   getCustomers(): Observable<Customer[]> {
     return this.httpClient.get<{ customers: CustomerData[] }>('/api/customers').pipe(
-      map(response => response.customers.map(Customer.fromData)),
+      map(response => response.customers.map(dataToCustomer)),
     );
   }
 
@@ -85,7 +58,7 @@ export class CustomerService {
     const params = new HttpParams()
       .append('card_code', cardCode);
     return this.httpClient.get<{ customers: CustomerData[] }>('/api/customers', {params}).pipe(
-      map(response => response.customers.map(Customer.fromData)),
+      map(response => response.customers.map(dataToCustomer)),
     );
   }
 }

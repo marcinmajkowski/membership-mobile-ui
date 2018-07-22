@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { CustomerFormPage } from '../customer-form/customer-form';
-import { Customer } from '../../services/customer.service';
+import { Customer } from '../../membership/models/customer.model';
 import { CustomerPage } from '../customer/customer';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../membership/store';

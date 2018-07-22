@@ -1,4 +1,4 @@
-import { Customer } from '../../../services/customer.service';
+import { Customer } from '../../models/customer.model';
 import * as fromCustomers from '../actions/customers.action';
 import { mapById, removeById } from '../../../util/redux';
 
