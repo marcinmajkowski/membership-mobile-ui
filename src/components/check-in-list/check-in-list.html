@@ -1,7 +1,7 @@
 <ion-list>
   <ion-item-sliding *ngFor="let checkIn of checkIns">
     <ion-item>
-      <p>{{checkIn.timestamp.format('MM.DD.YYYY, H:mm')}}</p>
+      <p>{{checkIn.timestamp | date:'d LLLL y, H:mm'}}</p>
     </ion-item>
     <ion-item-options side="right">
       <button ion-button color="danger" (click)="delete(checkIn)">

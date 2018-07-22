@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
-import moment from 'moment';
 import { Customer } from './customer.service';
 import { ToastController } from 'ionic-angular';
 import { CheckIn, CheckInCustomer } from '../membership/models/check-in.model';
+import { Iso8601String } from '../membership/models/iso-8601-string.model';
 
 interface CheckInCustomerData {
   id: number;
@@ -16,7 +16,7 @@ interface CheckInCustomerData {
 interface CheckInData {
   id: number;
   customer: CheckInCustomerData;
-  timestamp: string;
+  timestamp: Iso8601String;
 }
 
 const createFullName = (firstName: string, lastName: string): string =>
@@ -32,7 +32,7 @@ const createCheckInCustomer = (data: CheckInCustomerData): CheckInCustomer => ({
 const createCheckIn = (data: CheckInData): CheckIn => ({
   id: data.id,
   customer: data.customer && createCheckInCustomer(data.customer),
-  timestamp: moment(data.timestamp),
+  timestamp: data.timestamp,
 });
 
 @Injectable()

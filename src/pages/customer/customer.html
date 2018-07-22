@@ -54,7 +54,7 @@
     <ion-list *ngIf="payments.length > 0; else noPayments">
       <ion-item *ngFor="let payment of payments">
         <h3>{{payment.amount | currency:'PLN':'symbol-narrow'}}</h3>
-        <p>{{payment.timestamp.format('MM.DD.YYYY, H:mm')}}</p>
+        <p>{{payment.timestamp | date:'d LLLL y, H:mm'}}</p>
       </ion-item>
     </ion-list>
   </ng-container>

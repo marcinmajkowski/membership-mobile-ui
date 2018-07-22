@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import moment from 'moment';
 import { Customer } from './customer.service';
 import { ToastController } from 'ionic-angular';
 import { CurrencyPipe } from '@angular/common';
+import { Iso8601String } from '../membership/models/iso-8601-string.model';
 
 interface PaymentCustomerData {
   id: number;
@@ -39,7 +39,7 @@ interface PaymentData {
   id: number;
   customer: PaymentCustomerData;
   amount: number;
-  timestamp: string;
+  timestamp: Iso8601String;
 }
 
 export class Payment {
@@ -48,7 +48,7 @@ export class Payment {
     public id: number,
     public customer: PaymentCustomer,
     public amount: number,
-    public timestamp: moment.Moment,
+    public timestamp: Iso8601String,
   ) {
   }
 
@@ -57,7 +57,7 @@ export class Payment {
       data.id,
       data.customer && PaymentCustomer.fromData(data.customer),
       data.amount,
-      moment(data.timestamp),
+      data.timestamp,
     );
   }
 }

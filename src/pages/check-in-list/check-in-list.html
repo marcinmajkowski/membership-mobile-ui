@@ -12,7 +12,7 @@
       <ion-item-sliding *ngFor="let checkIn of checkIns">
         <ion-item>
           <h2 *ngIf="checkIn.customer; else deletedCustomer">{{checkIn.customer.fullName}}</h2>
-          <p>{{checkIn.timestamp.format('MM.DD.YYYY, H:mm')}}</p>
+          <p>{{checkIn.timestamp | date:'d LLLL y, H:mm'}}</p>
         </ion-item>
         <ion-item-options side="right">
           <button ion-button color="danger" (click)="delete(checkIn)">
@@ -29,7 +29,7 @@
 </ng-template>
 
 <ng-template #deletedCustomer>
-  <h2><del>Usunięty</del></h2>
+  <del><h2>Usunięty</h2></del>
 </ng-template>
 
 <ng-template #spinner>
