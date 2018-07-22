@@ -1,4 +1,4 @@
-import { CheckIn } from '../../../services/check-in.service';
+import { CheckIn } from '../../models/check-in.model';
 import * as fromCheckIns from '../actions/check-ins.action';
 import * as fromCustomers from '../actions/customers.action';
 import { mapById, mapEntries } from '../../../util/redux';

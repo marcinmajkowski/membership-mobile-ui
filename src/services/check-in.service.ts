@@ -5,22 +5,7 @@ import { map, tap } from 'rxjs/operators';
 import moment from 'moment';
 import { Customer } from './customer.service';
 import { ToastController } from 'ionic-angular';
-
-// TODO move to model
-export interface CheckIn {
-  id: number;
-  // FIXME keep only customerId here, use selector to get customer so it will become null after customer is deleted
-  customer: CheckInCustomer;
-  // TODO keep formatted timestamp instead
-  timestamp: moment.Moment;
-}
-
-export interface CheckInCustomer {
-  id: number;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-}
+import { CheckIn, CheckInCustomer } from '../membership/models/check-in.model';
 
 interface CheckInCustomerData {
   id: number;

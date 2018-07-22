@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CheckIn } from '../../services/check-in.service';
+import { CheckIn } from '../../membership/models/check-in.model';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../membership/store';
 

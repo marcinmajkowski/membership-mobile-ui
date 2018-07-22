@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { CheckIn } from '../../../services/check-in.service';
+import { CheckIn } from '../../models/check-in.model';
 import { Customer } from '../../../services/customer.service';
 
 export const CHECK_IN_LIST_PAGE_LOAD_CHECK_INS = '[CheckInListPage][CheckIns] Load Check-Ins';

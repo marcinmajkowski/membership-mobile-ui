@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CheckIn } from '../../services/check-in.service';
+import { CheckIn } from '../../membership/models/check-in.model';
 
 @Component({
   selector: 'check-in-list',
