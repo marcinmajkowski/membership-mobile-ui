@@ -4,7 +4,7 @@ import { CustomerService } from '../../../services/customer.service';
 
 import * as customersActions from '../actions/customers.action';
 import { Observable } from 'rxjs/Observable';
-import { map, switchMap, switchMapTo } from 'rxjs/operators';
+import { map, mapTo, switchMap, switchMapTo } from 'rxjs/operators';
 import { Action } from '@ngrx/store';
 
 @Injectable()
@@ -27,5 +27,15 @@ export class CustomersEffects {
     map(action => action.payload.createCustomerForm),
     switchMap(createCustomerForm => this.customerService.createCustomer(createCustomerForm)),
     map(customer => new customersActions.CreateCustomerSuccess({customer})),
+  );
+
+  @Effect()
+  deleteCustomer$: Observable<Action> = this.actions$.pipe(
+    ofType<customersActions.DeleteCustomer>(customersActions.CUSTOMER_UPDATE_FORM_PAGE_DELETE_CUSTOMER),
+    map(action => action.payload.customer),
+    switchMap(customer => this.customerService.deleteCustomer(customer).pipe(
+      mapTo(new customersActions.DeleteCustomerSuccess({customer})),
+    )),
+    // TODO catchError
   );
 }

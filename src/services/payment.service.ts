@@ -55,7 +55,7 @@ export class Payment {
   static fromData(data: PaymentData): Payment {
     return new Payment(
       data.id,
-      PaymentCustomer.fromData(data.customer),
+      data.customer && PaymentCustomer.fromData(data.customer),
       data.amount,
       moment(data.timestamp),
     );

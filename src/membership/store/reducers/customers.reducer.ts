@@ -1,6 +1,6 @@
 import { Customer } from '../../../services/customer.service';
 import * as fromCustomers from '../actions/customers.action';
-import { mapById } from '../../../util/redux';
+import { mapById, removeById } from '../../../util/redux';
 
 export interface CustomersState {
   entities: { [id: number]: Customer };
@@ -21,12 +21,15 @@ export function reducer(
       return loadCustomersSuccessReducer(state, action);
     case fromCustomers.CREATE_CUSTOMER_SUCCESS:
       return createCustomerSuccessReducer(state, action);
+    case fromCustomers.DELETE_CUSTOMER_SUCCESS:
+      // TODO remove customer from check-ins and payments as well or change check-in/payment model
+      return deleteCustomerSuccessReducer(state, action);
     default:
       return state;
   }
 }
 
-function loadCustomersSuccessReducer(state: CustomersState, action: fromCustomers.LoadCustomersSuccess) {
+function loadCustomersSuccessReducer(state: CustomersState, action: fromCustomers.LoadCustomersSuccess): CustomersState {
   const customers = action.payload.customers;
   return {
     ...state,
@@ -38,7 +41,7 @@ function loadCustomersSuccessReducer(state: CustomersState, action: fromCustomer
   };
 }
 
-function createCustomerSuccessReducer(state: CustomersState, action: fromCustomers.CreateCustomerSuccess) {
+function createCustomerSuccessReducer(state: CustomersState, action: fromCustomers.CreateCustomerSuccess): CustomersState {
   const customer = action.payload.customer;
   return {
     ...state,
@@ -50,6 +53,15 @@ function createCustomerSuccessReducer(state: CustomersState, action: fromCustome
       ...state.idList,
       customer.id,
     ],
+  };
+}
+
+function deleteCustomerSuccessReducer(state: CustomersState, action: fromCustomers.DeleteCustomerSuccess): CustomersState {
+  const customer = action.payload.customer;
+  return {
+    ...state,
+    entities: removeById(state.entities, customer),
+    idList: !state.idList ? state.idList : state.idList.filter(id => id !== customer.id),
   };
 }
 

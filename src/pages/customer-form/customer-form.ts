@@ -27,7 +27,7 @@ export class CustomerFormPage {
               public navParams: NavParams,
               private fb: FormBuilder,
               private barcodeScannerService: BarcodeScannerService,
-              private actions: Actions,
+              private actions$: Actions,
               private store: Store<fromStore.MembershipState>) {
     const controlsConfig: ControlsConfig<CreateCustomerForm> = {
       firstName: ['', Validators.required],
@@ -40,7 +40,7 @@ export class CustomerFormPage {
 
   save(): void {
     this.store.dispatch(new fromStore.CustomerFormPageCreateCustomer({createCustomerForm: this.form.value}));
-    this.actions.pipe(
+    this.actions$.pipe(
       ofType<fromStore.CreateCustomerSuccess>(fromStore.CREATE_CUSTOMER_SUCCESS),
       map(action => action.payload.customer),
       take(1),

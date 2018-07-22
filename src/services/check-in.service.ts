@@ -9,6 +9,7 @@ import { ToastController } from 'ionic-angular';
 // TODO move to model
 export interface CheckIn {
   id: number;
+  // FIXME keep only customerId here, use selector to get customer so it will become null after customer is deleted
   customer: CheckInCustomer;
   // TODO keep formatted timestamp instead
   timestamp: moment.Moment;
@@ -45,7 +46,7 @@ const createCheckInCustomer = (data: CheckInCustomerData): CheckInCustomer => ({
 
 const createCheckIn = (data: CheckInData): CheckIn => ({
   id: data.id,
-  customer: createCheckInCustomer(data.customer),
+  customer: data.customer && createCheckInCustomer(data.customer),
   timestamp: moment(data.timestamp),
 });
 
@@ -79,7 +80,7 @@ export class CheckInService {
   deleteCheckIn(checkIn: CheckIn): Observable<{}> {
     return this.httpClient.delete(`/api/check-ins/${checkIn.id}`).pipe(
       // TODO move toasts to ngrx
-      tap(() => this.presentToast(`Wejście ${checkIn.customer.fullName} zostało usunięte`))
+      tap(() => this.presentToast(deletedToastMessageOf(checkIn)))
     );
   }
 
@@ -91,5 +92,13 @@ export class CheckInService {
       showCloseButton: true,
       closeButtonText: 'Ok',
     }).present();
+  }
+}
+
+function deletedToastMessageOf(checkIn: CheckIn): string {
+  if (checkIn.customer) {
+    return `Wejście ${checkIn.customer.fullName} zostało usunięte`;
+  } else {
+    return 'Wejście zostało usunięte';
   }
 }

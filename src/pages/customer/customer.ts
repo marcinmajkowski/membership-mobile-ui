@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Customer } from '../../services/customer.service';
-import { CheckIn, CheckInService } from '../../services/check-in.service';
+import { CheckIn } from '../../services/check-in.service';
 import { PaymentFormPage } from '../payment-form/payment-form';
 import { Observable } from 'rxjs/Observable';
 import { Payment, PaymentService } from '../../services/payment.service';
@@ -10,6 +10,7 @@ import * as fromStore from '../../membership/store';
 import { Subject } from 'rxjs/Subject';
 import { Actions, ofType } from '@ngrx/effects';
 import { take, takeUntil } from 'rxjs/operators';
+import { CustomerUpdateFormPage } from '../customer-update-form/customer-update-form';
 
 @Component({
   selector: 'page-customer',
@@ -27,7 +28,6 @@ export class CustomerPage {
               public navParams: NavParams,
               private store: Store<fromStore.MembershipState>,
               private actions$: Actions,
-              private checkInService: CheckInService,
               private paymentService: PaymentService) {
     this.checkIns$ = this.store.select(fromStore.getCustomerCheckInList(this.customer.id));
     this.payments$ = this.paymentService.getCustomerPayments(this.customer);
@@ -50,6 +50,10 @@ export class CustomerPage {
 
   createPayment() {
     this.navCtrl.parent.parent.push(PaymentFormPage, {customer: this.customer});
+  }
+
+  updateCustomer() {
+    this.navCtrl.parent.parent.push(CustomerUpdateFormPage, {customer: this.customer});
   }
 
   ionViewWillEnter(): void {

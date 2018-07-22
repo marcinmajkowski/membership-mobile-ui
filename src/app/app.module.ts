@@ -16,6 +16,7 @@ import { reducers, effects } from './store';
 import { SettingsPage } from '../pages/settings/settings';
 import { CustomerListPage } from '../pages/customer-list/customer-list';
 import { CustomerFormPage } from '../pages/customer-form/customer-form';
+import { CustomerUpdateFormPage } from '../pages/customer-update-form/customer-update-form';
 import { CustomerPage } from '../pages/customer/customer';
 import { PaymentListPage } from '../pages/payment-list/payment-list';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -47,6 +48,7 @@ export const metaReducers: MetaReducer<any>[] = isDevMode() ? [storeFreeze] : []
     SettingsPage,
     CustomerListPage,
     CustomerFormPage,
+    CustomerUpdateFormPage,
     CustomerPage,
     PaymentListPage,
     PaymentFormPage,
@@ -72,6 +74,7 @@ export const metaReducers: MetaReducer<any>[] = isDevMode() ? [storeFreeze] : []
     SettingsPage,
     CustomerListPage,
     CustomerFormPage,
+    CustomerUpdateFormPage,
     CustomerPage,
     PaymentListPage,
     PaymentFormPage,

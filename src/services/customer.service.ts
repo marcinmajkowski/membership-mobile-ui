@@ -77,6 +77,10 @@ export class CustomerService {
     );
   }
 
+  deleteCustomer(customer: Customer): Observable<{}> {
+    return this.httpClient.delete(`/api/customers/${customer.id}`);
+  }
+
   findCustomersByCardCode(cardCode: string): Observable<Customer[]> {
     const params = new HttpParams()
       .append('card_code', cardCode);

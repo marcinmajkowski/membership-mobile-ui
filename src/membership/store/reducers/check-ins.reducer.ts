@@ -1,6 +1,7 @@
 import { CheckIn } from '../../../services/check-in.service';
 import * as fromCheckIns from '../actions/check-ins.action';
-import { mapById } from '../../../util/redux';
+import * as fromCustomers from '../actions/customers.action';
+import { mapById, mapEntries } from '../../../util/redux';
 
 export interface CheckInsState {
   entities: { [id: number]: CheckIn };
@@ -16,7 +17,7 @@ export const initialState: CheckInsState = {
 
 export function reducer(
   state = initialState,
-  action: fromCheckIns.CheckInsAction
+  action: fromCheckIns.CheckInsAction | fromCustomers.DeleteCustomerSuccess
 ): CheckInsState {
   switch (action.type) {
     case fromCheckIns.LOAD_CHECK_INS_SUCCESS:
@@ -27,6 +28,9 @@ export function reducer(
       return createCheckInSuccessReducer(state, action);
     case fromCheckIns.DELETE_CHECK_IN_SUCCESS:
       return deleteCheckInSuccessReducer(state, action);
+    // TODO not sure if it belongs here
+    case fromCustomers.DELETE_CUSTOMER_SUCCESS:
+      return deleteCustomerSuccessReducer(state, action);
     default:
       return state;
   }
@@ -84,14 +88,26 @@ function createCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.
 
 function deleteCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.DeleteCheckInSuccess): CheckInsState {
   const checkIn: CheckIn = action.payload.checkIn;
-  const customerId = checkIn.customer.id;
+  const customer = checkIn.customer;
   return {
     ...state,
     idList: !state.idList ? state.idList : state.idList.filter(id => id !== checkIn.id),
-    idListByCustomerId: !state.idListByCustomerId[customerId] ? state.idListByCustomerId : {
+    idListByCustomerId: !customer || !state.idListByCustomerId[customer.id] ? state.idListByCustomerId : {
       ...state.idListByCustomerId,
-      [customerId]: state.idListByCustomerId[customerId].filter(id => id !== checkIn.id),
+      [customer.id]: state.idListByCustomerId[customer.id].filter(id => id !== checkIn.id),
     },
+  };
+}
+
+function deleteCustomerSuccessReducer(state: CheckInsState, action: fromCustomers.DeleteCustomerSuccess): CheckInsState {
+  const customer = action.payload.customer;
+  const isDeletedCustomerCheckIn = checkIn => checkIn.customer && checkIn.customer.id === customer.id;
+  return {
+    ...state,
+    entities: mapEntries(
+      state.entities,
+      checkIn => isDeletedCustomerCheckIn(checkIn) ? {...checkIn, customer: null} : checkIn
+    ),
   };
 }
 
