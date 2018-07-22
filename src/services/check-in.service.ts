@@ -22,16 +22,16 @@ interface CheckInData {
 const createFullName = (firstName: string, lastName: string): string =>
   lastName.length > 0 ? `${firstName} ${lastName}` : firstName;
 
-const createCheckInCustomer = (data: CheckInCustomerData): CheckInCustomer => ({
+const dataToCheckInCustomer = (data: CheckInCustomerData): CheckInCustomer => ({
   id: data.id,
   firstName: data.firstName,
   lastName: data.lastName,
   fullName: createFullName(data.firstName, data.lastName),
 });
 
-const createCheckIn = (data: CheckInData): CheckIn => ({
+const dataToCheckIn = (data: CheckInData): CheckIn => ({
   id: data.id,
-  customer: data.customer && createCheckInCustomer(data.customer),
+  customer: data.customer && dataToCheckInCustomer(data.customer),
   timestamp: data.timestamp,
 });
 
@@ -44,13 +44,13 @@ export class CheckInService {
 
   getCheckIns(): Observable<CheckIn[]> {
     return this.httpClient.get<{ checkIns: CheckInData[] }>('/api/check-ins').pipe(
-      map(response => response.checkIns.map(createCheckIn)),
+      map(response => response.checkIns.map(dataToCheckIn)),
     );
   }
 
   createCheckIn(customer: Customer): Observable<CheckIn> {
     return this.httpClient.post<CheckInData>(`/api/customers/${customer.id}/check-ins`, {}).pipe(
-      map(createCheckIn),
+      map(dataToCheckIn),
       // TODO move toasts to ngrx
       tap(() => this.presentToast(`Wejście ${customer.fullName} zostało zarejestrowane`)),
     );
@@ -58,7 +58,7 @@ export class CheckInService {
 
   getCustomerCheckIns(customer: Customer): Observable<CheckIn[]> {
     return this.httpClient.get<{ checkIns: CheckInData[] }>(`/api/customers/${customer.id}/check-ins`).pipe(
-      map(response => response.checkIns.map(createCheckIn)),
+      map(response => response.checkIns.map(dataToCheckIn)),
     );
   }
 
