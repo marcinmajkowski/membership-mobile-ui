@@ -4,34 +4,26 @@ import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
 import { Customer } from '../membership/models/customer.model';
 import { ToastController } from 'ionic-angular';
-import { CheckIn, CheckInCustomer } from '../membership/models/check-in.model';
+import { CheckIn, CustomerReference } from '../membership/models/check-in.model';
 import { Iso8601String } from '../membership/models/iso-8601-string.model';
 
-interface CheckInCustomerData {
+interface CustomerReferenceData {
   id: number;
-  firstName: string;
-  lastName: string;
 }
 
 interface CheckInData {
   id: number;
-  customer: CheckInCustomerData;
+  customer: CustomerReferenceData;
   timestamp: Iso8601String;
 }
 
-const createFullName = (firstName: string, lastName: string): string =>
-  lastName.length > 0 ? `${firstName} ${lastName}` : firstName;
-
-const dataToCheckInCustomer = (data: CheckInCustomerData): CheckInCustomer => ({
+const dataToCustomerReference = (data: CustomerReferenceData): CustomerReference => ({
   id: data.id,
-  firstName: data.firstName,
-  lastName: data.lastName,
-  fullName: createFullName(data.firstName, data.lastName),
 });
 
 const dataToCheckIn = (data: CheckInData): CheckIn => ({
   id: data.id,
-  customer: data.customer && dataToCheckInCustomer(data.customer),
+  customer: data.customer && dataToCustomerReference(data.customer),
   timestamp: data.timestamp,
 });
 
@@ -43,6 +35,7 @@ export class CheckInService {
   }
 
   getCheckIns(): Observable<CheckIn[]> {
+    // FIXME handle received customers
     return this.httpClient.get<{ checkIns: CheckInData[] }>('/api/check-ins').pipe(
       map(response => response.checkIns.map(dataToCheckIn)),
     );
@@ -82,7 +75,8 @@ export class CheckInService {
 
 function deletedToastMessageOf(checkIn: CheckIn): string {
   if (checkIn.customer) {
-    return `Wejście ${checkIn.customer.fullName} zostało usunięte`;
+    const customer = checkIn.customer as Customer;
+    return `Wejście ${customer.fullName} zostało usunięte`;
   } else {
     return 'Wejście zostało usunięte';
   }

@@ -8,7 +8,7 @@ const getCustomersState = createSelector(
   (state: fromFeature.MembershipState) => state.customers,
 );
 
-const getCustomersEntities = createSelector(
+export const getCustomersEntities = createSelector(
   getCustomersState,
   fromCustomers.getCustomersEntities,
 );

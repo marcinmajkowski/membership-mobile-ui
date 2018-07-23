@@ -1,15 +1,13 @@
 import { Iso8601String } from './iso-8601-string.model';
+import { Customer } from './customer.model';
 
 export interface CheckIn {
   id: number;
-  // FIXME keep only customerId here, use selector to get customer so it will become null after customer is deleted
-  customer: CheckInCustomer;
+  // TODO consider separate interface for CheckIn state and CheckIn model
+  customer: CustomerReference | Customer;
   timestamp: Iso8601String;
 }
 
-export interface CheckInCustomer {
+export interface CustomerReference {
   id: number;
-  firstName: string;
-  lastName: string;
-  fullName: string;
 }
