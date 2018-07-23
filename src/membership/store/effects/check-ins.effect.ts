@@ -22,6 +22,7 @@ export class CheckInsEffects {
     // TODO catchError
   );
 
+  // TODO load and force load actions
   @Effect()
   loadCustomerCheckIns$: Observable<Action> = this.actions$.pipe(
     ofType<checkInsActions.CustomerPageLoadCustomerCheckIns>(checkInsActions.CUSTOMER_PAGE_LOAD_CUSTOMER_CHECK_INS),
