@@ -1,19 +1,19 @@
+import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { CheckIn } from '../../models/check-in.model';
 import * as fromCheckIns from '../actions/check-ins.action';
 import * as fromCustomers from '../actions/customers.action';
-import { mapById, mapEntries } from '../../../util/redux';
 
-export interface CheckInsState {
-  entities: { [id: number]: CheckIn };
+export interface CheckInsState extends EntityState<CheckIn> {
   idList: number[];
   idListByCustomerId: { [customerId: number]: number[] };
 }
 
-export const initialState: CheckInsState = {
-  entities: {},
+const adapter = createEntityAdapter<CheckIn>();
+
+const initialState: CheckInsState = adapter.getInitialState({
   idList: undefined,
   idListByCustomerId: {},
-};
+});
 
 export function reducer(
   state = initialState,
@@ -38,41 +38,29 @@ export function reducer(
 
 function loadCheckInsSuccessReducer(state: CheckInsState, action: fromCheckIns.LoadCheckInsSuccess): CheckInsState {
   const checkIns: CheckIn[] = action.payload.checkIns;
-  return {
+  return adapter.addMany(checkIns, {
     ...state,
-    entities: {
-      ...state.entities,
-      ...mapById(checkIns),
-    },
     idList: checkIns.map(checkIn => checkIn.id),
     // FIXME maintain idListByCustomerId
-  };
+  });
 }
 
 function loadCustomerCheckInsSuccessReducer(state: CheckInsState, action: fromCheckIns.LoadCustomerCheckInsSuccess): CheckInsState {
   const {checkIns, customer} = action.payload;
-  return {
+  return adapter.addMany(checkIns, {
     ...state,
-    entities: {
-      ...state.entities,
-      ...mapById(checkIns),
-    },
     idListByCustomerId: {
       ...state.idListByCustomerId,
       [customer.id]: checkIns.map(checkIn => checkIn.id),
     }
-  };
+  });
 }
 
 function createCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.CreateCheckInSuccess): CheckInsState {
   const checkIn: CheckIn = action.payload.checkIn;
   const customerId = checkIn.customer.id;
-  return {
+  return adapter.addOne(checkIn, {
     ...state,
-    entities: {
-      ...state.entities,
-      [checkIn.id]: checkIn,
-    },
     // TODO sorting
     idList: !state.idList ? state.idList : [
       checkIn.id,
@@ -83,34 +71,36 @@ function createCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.
       // TODO sorting
       [customerId]: [checkIn.id, ...state.idListByCustomerId[customerId]],
     },
-  };
+  });
 }
 
 function deleteCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.DeleteCheckInSuccess): CheckInsState {
   const checkIn: CheckIn = action.payload.checkIn;
   const customer = checkIn.customer;
-  return {
+  return adapter.removeOne(checkIn.id, {
     ...state,
     idList: !state.idList ? state.idList : state.idList.filter(id => id !== checkIn.id),
     idListByCustomerId: !customer || !state.idListByCustomerId[customer.id] ? state.idListByCustomerId : {
       ...state.idListByCustomerId,
       [customer.id]: state.idListByCustomerId[customer.id].filter(id => id !== checkIn.id),
     },
-  };
+  });
 }
 
 function deleteCustomerSuccessReducer(state: CheckInsState, action: fromCustomers.DeleteCustomerSuccess): CheckInsState {
   const customer = action.payload.customer;
   const isDeletedCustomerCheckIn = checkIn => checkIn.customer && checkIn.customer.id === customer.id;
-  return {
-    ...state,
-    entities: mapEntries(
-      state.entities,
-      checkIn => isDeletedCustomerCheckIn(checkIn) ? {...checkIn, customer: null} : checkIn
-    ),
-  };
+  let updates = selectAll(state)
+    .filter(isDeletedCustomerCheckIn)
+    .map(checkIn => ({id: checkIn.id, changes: {customer: null}}));
+  return adapter.updateMany(
+    updates,
+    state
+  );
 }
 
-export const getCheckInsEntities = (state: CheckInsState) => state.entities;
+const {selectEntities, selectAll} = adapter.getSelectors();
+
+export const getCheckInsEntities = selectEntities;
 export const getCheckInsIdList = (state: CheckInsState) => state.idList;
 export const getCheckInsIdListByCustomerId = (state: CheckInsState) => state.idListByCustomerId;
