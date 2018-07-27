@@ -9,7 +9,7 @@ import * as fromStore from '../../membership/store';
 })
 export class CheckInListPage {
 
-  checkIns$ = this.store.select(fromStore.getCheckInList);
+  checkIns$ = this.store.select(fromStore.getCheckInListPageCheckIns);
 
   constructor(private store: Store<fromStore.MembershipState>) {
   }

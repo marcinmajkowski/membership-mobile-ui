@@ -4,14 +4,14 @@ import * as fromCheckIns from '../actions/check-ins.action';
 import * as fromCustomers from '../actions/customers.action';
 
 export interface CheckInsState extends EntityState<CheckIn> {
-  idList: number[];
+  listPageIds: number[];
   idListByCustomerId: { [customerId: number]: number[] };
 }
 
 const adapter = createEntityAdapter<CheckIn>();
 
 const initialState: CheckInsState = adapter.getInitialState({
-  idList: undefined,
+  listPageIds: undefined,
   idListByCustomerId: {},
 });
 
@@ -40,7 +40,7 @@ function loadCheckInsSuccessReducer(state: CheckInsState, action: fromCheckIns.L
   const checkIns: CheckIn[] = action.payload.checkIns;
   return adapter.addMany(checkIns, {
     ...state,
-    idList: checkIns.map(checkIn => checkIn.id),
+    listPageIds: checkIns.map(checkIn => checkIn.id),
     // FIXME maintain idListByCustomerId
   });
 }
@@ -62,9 +62,9 @@ function createCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.
   return adapter.addOne(checkIn, {
     ...state,
     // TODO sorting
-    idList: !state.idList ? state.idList : [
+    listPageIds: !state.listPageIds ? state.listPageIds : [
       checkIn.id,
-      ...state.idList,
+      ...state.listPageIds,
     ],
     idListByCustomerId: !state.idListByCustomerId[customerId] ? state.idListByCustomerId : {
       ...state.idListByCustomerId,
@@ -79,7 +79,7 @@ function deleteCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.
   const customer = checkIn.customer;
   return adapter.removeOne(checkIn.id, {
     ...state,
-    idList: !state.idList ? state.idList : state.idList.filter(id => id !== checkIn.id),
+    listPageIds: !state.listPageIds ? state.listPageIds : state.listPageIds.filter(id => id !== checkIn.id),
     idListByCustomerId: !customer || !state.idListByCustomerId[customer.id] ? state.idListByCustomerId : {
       ...state.idListByCustomerId,
       [customer.id]: state.idListByCustomerId[customer.id].filter(id => id !== checkIn.id),
@@ -102,5 +102,5 @@ function deleteCustomerSuccessReducer(state: CheckInsState, action: fromCustomer
 const {selectEntities, selectAll} = adapter.getSelectors();
 
 export const getCheckInsEntities = selectEntities;
-export const getCheckInsIdList = (state: CheckInsState) => state.idList;
+export const getCheckInListPageIds = (state: CheckInsState) => state.listPageIds;
 export const getCheckInsIdListByCustomerId = (state: CheckInsState) => state.idListByCustomerId;

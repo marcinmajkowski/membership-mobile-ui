@@ -16,16 +16,16 @@ const getCheckInsEntities = createSelector(
   fromCheckIns.getCheckInsEntities,
 );
 
-const getCheckInsIdList = createSelector(
+const getCheckInListPageIds = createSelector(
   getCheckInsState,
-  fromCheckIns.getCheckInsIdList,
+  fromCheckIns.getCheckInListPageIds,
 );
 
-export const getCheckInList = createSelector(
+export const getCheckInListPageCheckIns = createSelector(
   getCheckInsEntities,
-  getCheckInsIdList,
+  getCheckInListPageIds,
   getCustomersEntities,
-  (checkInsEntities, checkInsIdList, customersEntities) => checkInsIdList && checkInsIdList
+  (checkInsEntities, checkInListPageIds, customersEntities) => checkInListPageIds && checkInListPageIds
     .map(id => checkInsEntities[id])
     .map(checkIn => setCustomer(checkIn, customersEntities))
 );
