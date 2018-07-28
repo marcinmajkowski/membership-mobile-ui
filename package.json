@@ -9,7 +9,8 @@
     "build": "ionic-app-scripts build",
     "lint": "ionic-app-scripts lint",
     "ionic:build": "ionic-app-scripts build",
-    "ionic:serve": "ionic-app-scripts serve"
+    "ionic:serve": "ionic-app-scripts serve",
+    "precommit": "pretty-quick --staged"
   },
   "dependencies": {
     "@angular/animations": "5.2.11",
@@ -40,8 +41,10 @@
   "devDependencies": {
     "@ionic/app-scripts": "3.1.10",
     "codelyzer": "^4.4.2",
+    "husky": "^0.14.3",
     "ngrx-store-freeze": "^0.2.4",
     "prettier": "1.13.7",
+    "pretty-quick": "^1.6.0",
     "typescript": "~2.6.2"
   },
   "description": "An Ionic project"
