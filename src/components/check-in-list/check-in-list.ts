@@ -2,11 +2,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CheckIn } from '../../membership/models/check-in.model';
 
 @Component({
-  selector: 'check-in-list',
-  templateUrl: 'check-in-list.html'
+  selector: 'app-check-in-list',
+  templateUrl: 'check-in-list.html',
 })
 export class CheckInListComponent {
-
   @Input() checkIns: CheckIn[];
   @Output() checkInDelete = new EventEmitter<CheckIn>();
 

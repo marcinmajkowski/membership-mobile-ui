@@ -21,13 +21,26 @@ const getCheckInListPageIds = createSelector(
   fromCheckIns.getCheckInListPageIds,
 );
 
+const setCustomer = (
+  checkIn: CheckIn,
+  customersEntities: { [id: number]: Customer },
+): CheckIn =>
+  checkIn.customer === null
+    ? checkIn
+    : {
+        ...checkIn,
+        customer: customersEntities[checkIn.customer.id],
+      };
+
 export const getCheckInListPageCheckIns = createSelector(
   getCheckInsEntities,
   getCheckInListPageIds,
   getCustomersEntities,
-  (checkInsEntities, checkInListPageIds, customersEntities) => checkInListPageIds && checkInListPageIds
-    .map(id => checkInsEntities[id])
-    .map(checkIn => setCustomer(checkIn, customersEntities))
+  (checkInsEntities, checkInListPageIds, customersEntities) =>
+    checkInListPageIds &&
+    checkInListPageIds
+      .map(id => checkInsEntities[id])
+      .map(checkIn => setCustomer(checkIn, customersEntities)),
 );
 
 const getCheckInsIdListByCustomerId = createSelector(
@@ -36,22 +49,20 @@ const getCheckInsIdListByCustomerId = createSelector(
 );
 
 // TODO get selected customerId from store
-const getCustomerCheckInIdList = (customerId: number) => createSelector(
-  getCheckInsIdListByCustomerId,
-  checkInsIdListByCustomerId => checkInsIdListByCustomerId[customerId],
-);
+const getCustomerCheckInIdList = (customerId: number) =>
+  createSelector(
+    getCheckInsIdListByCustomerId,
+    checkInsIdListByCustomerId => checkInsIdListByCustomerId[customerId],
+  );
 
-export const getCustomerCheckInList = (customerId: number) => createSelector(
-  getCheckInsEntities,
-  getCustomerCheckInIdList(customerId),
-  getCustomersEntities,
-  (checkInsEntities, customerCheckInIdList, customersEntities) => customerCheckInIdList && customerCheckInIdList
-    .map(id => checkInsEntities[id])
-    .map(checkIn => setCustomer(checkIn, customersEntities))
-);
-
-const setCustomer = (checkIn: CheckIn, customersEntities: { [id: number]: Customer }): CheckIn =>
-  checkIn.customer === null ? checkIn : {
-    ...checkIn,
-    customer: customersEntities[checkIn.customer.id]
-  };
+export const getCustomerCheckInList = (customerId: number) =>
+  createSelector(
+    getCheckInsEntities,
+    getCustomerCheckInIdList(customerId),
+    getCustomersEntities,
+    (checkInsEntities, customerCheckInIdList, customersEntities) =>
+      customerCheckInIdList &&
+      customerCheckInIdList
+        .map(id => checkInsEntities[id])
+        .map(checkIn => setCustomer(checkIn, customersEntities)),
+  );

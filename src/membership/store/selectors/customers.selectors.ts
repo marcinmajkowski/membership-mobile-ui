@@ -21,5 +21,5 @@ const getCustomersIdList = createSelector(
 export const getCustomerList = createSelector(
   getCustomersEntities,
   getCustomersIdList,
-  (entities, idList) => idList && idList.map(id => entities[id])
+  (entities, idList) => idList && idList.map(id => entities[id]),
 );

@@ -15,9 +15,17 @@ const initialState: CheckInsState = adapter.getInitialState({
   idListByCustomerId: {},
 });
 
+const { selectEntities, selectAll } = adapter.getSelectors();
+
+export const getCheckInsEntities = selectEntities;
+export const getCheckInListPageIds = (state: CheckInsState) =>
+  state.listPageIds;
+export const getCheckInsIdListByCustomerId = (state: CheckInsState) =>
+  state.idListByCustomerId;
+
 export function reducer(
   state = initialState,
-  action: fromCheckIns.CheckInsAction | fromCustomers.DeleteCustomerSuccess
+  action: fromCheckIns.CheckInsAction | fromCustomers.DeleteCustomerSuccess,
 ): CheckInsState {
   switch (action.type) {
     case fromCheckIns.LOAD_CHECK_INS_SUCCESS:
@@ -36,7 +44,10 @@ export function reducer(
   }
 }
 
-function loadCheckInsSuccessReducer(state: CheckInsState, action: fromCheckIns.LoadCheckInsSuccess): CheckInsState {
+function loadCheckInsSuccessReducer(
+  state: CheckInsState,
+  action: fromCheckIns.LoadCheckInsSuccess,
+): CheckInsState {
   const checkIns: CheckIn[] = action.payload.checkIns;
   return adapter.addMany(checkIns, {
     ...state,
@@ -45,62 +56,74 @@ function loadCheckInsSuccessReducer(state: CheckInsState, action: fromCheckIns.L
   });
 }
 
-function loadCustomerCheckInsSuccessReducer(state: CheckInsState, action: fromCheckIns.LoadCustomerCheckInsSuccess): CheckInsState {
-  const {checkIns, customer} = action.payload;
+function loadCustomerCheckInsSuccessReducer(
+  state: CheckInsState,
+  action: fromCheckIns.LoadCustomerCheckInsSuccess,
+): CheckInsState {
+  const { checkIns, customer } = action.payload;
   return adapter.addMany(checkIns, {
     ...state,
     idListByCustomerId: {
       ...state.idListByCustomerId,
       [customer.id]: checkIns.map(checkIn => checkIn.id),
-    }
+    },
   });
 }
 
-function createCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.CreateCheckInSuccess): CheckInsState {
+function createCheckInSuccessReducer(
+  state: CheckInsState,
+  action: fromCheckIns.CreateCheckInSuccess,
+): CheckInsState {
   const checkIn: CheckIn = action.payload.checkIn;
   const customerId = checkIn.customer.id;
   return adapter.addOne(checkIn, {
     ...state,
     // TODO sorting
-    listPageIds: !state.listPageIds ? state.listPageIds : [
-      checkIn.id,
-      ...state.listPageIds,
-    ],
-    idListByCustomerId: !state.idListByCustomerId[customerId] ? state.idListByCustomerId : {
-      ...state.idListByCustomerId,
-      // TODO sorting
-      [customerId]: [checkIn.id, ...state.idListByCustomerId[customerId]],
-    },
+    listPageIds: !state.listPageIds
+      ? state.listPageIds
+      : [checkIn.id, ...state.listPageIds],
+    idListByCustomerId: !state.idListByCustomerId[customerId]
+      ? state.idListByCustomerId
+      : {
+          ...state.idListByCustomerId,
+          // TODO sorting
+          [customerId]: [checkIn.id, ...state.idListByCustomerId[customerId]],
+        },
   });
 }
 
-function deleteCheckInSuccessReducer(state: CheckInsState, action: fromCheckIns.DeleteCheckInSuccess): CheckInsState {
+function deleteCheckInSuccessReducer(
+  state: CheckInsState,
+  action: fromCheckIns.DeleteCheckInSuccess,
+): CheckInsState {
   const checkIn: CheckIn = action.payload.checkIn;
   const customer = checkIn.customer;
   return adapter.removeOne(checkIn.id, {
     ...state,
-    listPageIds: !state.listPageIds ? state.listPageIds : state.listPageIds.filter(id => id !== checkIn.id),
-    idListByCustomerId: !customer || !state.idListByCustomerId[customer.id] ? state.idListByCustomerId : {
-      ...state.idListByCustomerId,
-      [customer.id]: state.idListByCustomerId[customer.id].filter(id => id !== checkIn.id),
-    },
+    listPageIds: !state.listPageIds
+      ? state.listPageIds
+      : state.listPageIds.filter(id => id !== checkIn.id),
+    idListByCustomerId:
+      !customer || !state.idListByCustomerId[customer.id]
+        ? state.idListByCustomerId
+        : {
+            ...state.idListByCustomerId,
+            [customer.id]: state.idListByCustomerId[customer.id].filter(
+              id => id !== checkIn.id,
+            ),
+          },
   });
 }
 
-function deleteCustomerSuccessReducer(state: CheckInsState, action: fromCustomers.DeleteCustomerSuccess): CheckInsState {
+function deleteCustomerSuccessReducer(
+  state: CheckInsState,
+  action: fromCustomers.DeleteCustomerSuccess,
+): CheckInsState {
   const customer = action.payload.customer;
-  const isDeletedCustomerCheckIn = checkIn => checkIn.customer && checkIn.customer.id === customer.id;
-  let updates = selectAll(state)
+  const isDeletedCustomerCheckIn = checkIn =>
+    checkIn.customer && checkIn.customer.id === customer.id;
+  const updates = selectAll(state)
     .filter(isDeletedCustomerCheckIn)
-    .map(checkIn => ({id: checkIn.id, changes: {customer: null}}));
-  return adapter.updateMany(
-    updates,
-    state
-  );
+    .map(checkIn => ({ id: checkIn.id, changes: { customer: null } }));
+  return adapter.updateMany(updates, state);
 }
-
-const {selectEntities, selectAll} = adapter.getSelectors();
-
-export const getCheckInsEntities = selectEntities;
-export const getCheckInListPageIds = (state: CheckInsState) => state.listPageIds;
-export const getCheckInsIdListByCustomerId = (state: CheckInsState) => state.idListByCustomerId;

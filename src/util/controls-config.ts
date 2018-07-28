@@ -1,3 +1,1 @@
-export type ControlsConfig<T> = {
-  [K in keyof T]: any
-};
+export type ControlsConfig<T> = { [K in keyof T]: any };

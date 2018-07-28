@@ -11,17 +11,17 @@ import { take, takeUntil } from 'rxjs/operators';
   selector: 'page-customer-update-form',
   templateUrl: 'customer-update-form.html',
 })
-export class CustomerUpdateFormPage {
+export class CustomerUpdateFormPageComponent {
+  customer: Customer = this.navParams.get('customer');
 
   private ionViewWillLeave$ = new Subject();
 
-  customer: Customer = this.navParams.get('customer');
-
-  constructor(public navCtrl: NavController,
-              public navParams: NavParams,
-              private actions$: Actions,
-              private store: Store<fromStore.MembershipState>) {
-  }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private actions$: Actions,
+    private store: Store<fromStore.MembershipState>,
+  ) {}
 
   ionViewWillLeave(): void {
     this.ionViewWillLeave$.next();
@@ -29,15 +29,25 @@ export class CustomerUpdateFormPage {
   }
 
   deleteCustomer() {
-    this.store.dispatch(new fromStore.CustomerUpdateFormPageDeleteCustomer({customer: this.customer}));
-    this.actions$.pipe(
-      ofType<fromStore.DeleteCustomerSuccess>(fromStore.DELETE_CUSTOMER_SUCCESS),
-      take(1),
-      takeUntil(this.ionViewWillLeave$),
-    ).subscribe(() => {
-      const tabs: Tabs = this.navCtrl.getActiveChildNav();
-      tabs.getSelected().popToRoot({animate: false})
-        .then(() => this.navCtrl.pop());
-    });
+    this.store.dispatch(
+      new fromStore.CustomerUpdateFormPageDeleteCustomer({
+        customer: this.customer,
+      }),
+    );
+    this.actions$
+      .pipe(
+        ofType<fromStore.DeleteCustomerSuccess>(
+          fromStore.DELETE_CUSTOMER_SUCCESS,
+        ),
+        take(1),
+        takeUntil(this.ionViewWillLeave$),
+      )
+      .subscribe(() => {
+        const tabs: Tabs = this.navCtrl.getActiveChildNav();
+        tabs
+          .getSelected()
+          .popToRoot({ animate: false })
+          .then(() => this.navCtrl.pop());
+      });
   }
 }

@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
-import { Card, CreateCustomerForm, Customer } from '../membership/models/customer.model';
+import {
+  Card,
+  CreateCustomerForm,
+  Customer,
+} from '../membership/models/customer.model';
 
 interface CardData {
   id: number;
@@ -34,20 +38,18 @@ const dataToCustomer = (data: CustomerData): Customer => ({
 
 @Injectable()
 export class CustomerService {
-
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   createCustomer(createCustomerForm: CreateCustomerForm): Observable<Customer> {
-    return this.httpClient.post<CustomerData>('/api/customers', createCustomerForm).pipe(
-      map(dataToCustomer),
-    );
+    return this.httpClient
+      .post<CustomerData>('/api/customers', createCustomerForm)
+      .pipe(map(dataToCustomer));
   }
 
   getCustomers(): Observable<Customer[]> {
-    return this.httpClient.get<{ customers: CustomerData[] }>('/api/customers').pipe(
-      map(response => response.customers.map(dataToCustomer)),
-    );
+    return this.httpClient
+      .get<{ customers: CustomerData[] }>('/api/customers')
+      .pipe(map(response => response.customers.map(dataToCustomer)));
   }
 
   deleteCustomer(customer: Customer): Observable<{}> {
@@ -55,10 +57,9 @@ export class CustomerService {
   }
 
   findCustomersByCardCode(cardCode: string): Observable<Customer[]> {
-    const params = new HttpParams()
-      .append('card_code', cardCode);
-    return this.httpClient.get<{ customers: CustomerData[] }>('/api/customers', {params}).pipe(
-      map(response => response.customers.map(dataToCustomer)),
-    );
+    const params = new HttpParams().append('card_code', cardCode);
+    return this.httpClient
+      .get<{ customers: CustomerData[] }>('/api/customers', { params })
+      .pipe(map(response => response.customers.map(dataToCustomer)));
   }
 }

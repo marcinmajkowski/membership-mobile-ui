@@ -6,9 +6,8 @@ import { reducers, effects } from './store';
 @NgModule({
   imports: [
     StoreModule.forFeature('membership', reducers),
-    EffectsModule.forFeature(effects)
+    EffectsModule.forFeature(effects),
   ],
   // TODO move feature services to this module
 })
-export class MembershipModule {
-}
+export class MembershipModule {}

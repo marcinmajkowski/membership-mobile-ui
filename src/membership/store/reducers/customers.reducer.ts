@@ -14,7 +14,7 @@ export const initialState: CustomersState = {
 
 export function reducer(
   state = initialState,
-  action: fromCustomers.CustomersAction
+  action: fromCustomers.CustomersAction,
 ): CustomersState {
   switch (action.type) {
     case fromCustomers.LOAD_CUSTOMERS_SUCCESS:
@@ -22,6 +22,7 @@ export function reducer(
     case fromCustomers.CREATE_CUSTOMER_SUCCESS:
       return createCustomerSuccessReducer(state, action);
     case fromCustomers.DELETE_CUSTOMER_SUCCESS:
+      // tslint:disable-next-line:max-line-length
       // TODO remove customer from check-ins and payments as well or change check-in/payment model
       return deleteCustomerSuccessReducer(state, action);
     default:
@@ -29,7 +30,10 @@ export function reducer(
   }
 }
 
-function loadCustomersSuccessReducer(state: CustomersState, action: fromCustomers.LoadCustomersSuccess): CustomersState {
+function loadCustomersSuccessReducer(
+  state: CustomersState,
+  action: fromCustomers.LoadCustomersSuccess,
+): CustomersState {
   const customers = action.payload.customers;
   return {
     ...state,
@@ -41,7 +45,10 @@ function loadCustomersSuccessReducer(state: CustomersState, action: fromCustomer
   };
 }
 
-function createCustomerSuccessReducer(state: CustomersState, action: fromCustomers.CreateCustomerSuccess): CustomersState {
+function createCustomerSuccessReducer(
+  state: CustomersState,
+  action: fromCustomers.CreateCustomerSuccess,
+): CustomersState {
   const customer = action.payload.customer;
   return {
     ...state,
@@ -49,19 +56,21 @@ function createCustomerSuccessReducer(state: CustomersState, action: fromCustome
       ...state.entities,
       [customer.id]: customer,
     },
-    idList: !state.idList ? state.idList : [
-      ...state.idList,
-      customer.id,
-    ],
+    idList: !state.idList ? state.idList : [...state.idList, customer.id],
   };
 }
 
-function deleteCustomerSuccessReducer(state: CustomersState, action: fromCustomers.DeleteCustomerSuccess): CustomersState {
+function deleteCustomerSuccessReducer(
+  state: CustomersState,
+  action: fromCustomers.DeleteCustomerSuccess,
+): CustomersState {
   const customer = action.payload.customer;
   return {
     ...state,
     entities: removeById(state.entities, customer),
-    idList: !state.idList ? state.idList : state.idList.filter(id => id !== customer.id),
+    idList: !state.idList
+      ? state.idList
+      : state.idList.filter(id => id !== customer.id),
   };
 }
 

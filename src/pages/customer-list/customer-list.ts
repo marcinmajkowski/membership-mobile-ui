@@ -1,29 +1,29 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { CustomerFormPage } from '../customer-form/customer-form';
+import { CustomerFormPageComponent } from '../customer-form/customer-form';
 import { Customer } from '../../membership/models/customer.model';
-import { CustomerPage } from '../customer/customer';
+import { CustomerPageComponent } from '../customer/customer';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../membership/store';
 
 @Component({
   selector: 'page-customer-list',
-  templateUrl: 'customer-list.html'
+  templateUrl: 'customer-list.html',
 })
-export class CustomerListPage {
-
+export class CustomerListPageComponent {
   customers$ = this.store.select(fromStore.getCustomerList);
 
-  constructor(public navCtrl: NavController,
-              private store: Store<fromStore.MembershipState>) {
-  }
+  constructor(
+    public navCtrl: NavController,
+    private store: Store<fromStore.MembershipState>,
+  ) {}
 
   addCustomer(): void {
-    this.navCtrl.parent.parent.push(CustomerFormPage);
+    this.navCtrl.parent.parent.push(CustomerFormPageComponent);
   }
 
   showCustomer(customer: Customer): void {
-    this.navCtrl.push(CustomerPage, {customer});
+    this.navCtrl.push(CustomerPageComponent, { customer });
   }
 
   ionViewDidLoad() {

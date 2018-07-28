@@ -4,17 +4,8 @@ import { ListSpinnerComponent } from './list-spinner/list-spinner';
 import { IonicModule } from 'ionic-angular';
 
 @NgModule({
-  declarations: [
-    CheckInListComponent,
-    ListSpinnerComponent,
-  ],
-  imports: [
-    IonicModule,
-  ],
-  exports: [
-    CheckInListComponent,
-    ListSpinnerComponent,
-  ]
+  declarations: [CheckInListComponent, ListSpinnerComponent],
+  imports: [IonicModule],
+  exports: [CheckInListComponent, ListSpinnerComponent],
 })
-export class ComponentsModule {
-}
+export class ComponentsModule {}

@@ -4,16 +4,15 @@ import { AuthService, User } from '../../services/auth.service';
 
 @Component({
   selector: 'page-settings',
-  templateUrl: 'settings.html'
+  templateUrl: 'settings.html',
 })
-export class SettingsPage {
-
-  constructor(public navCtrl: NavController,
-              private authService: AuthService) {
-  }
+export class SettingsPageComponent {
+  constructor(
+    public navCtrl: NavController,
+    private authService: AuthService,
+  ) {}
 
   getUser(): User {
     return this.authService.user;
   }
-
 }

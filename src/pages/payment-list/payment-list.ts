@@ -4,15 +4,15 @@ import { PaymentService } from '../../services/payment.service';
 
 @Component({
   selector: 'page-payment-list',
-  templateUrl: 'payment-list.html'
+  templateUrl: 'payment-list.html',
 })
-export class PaymentListPage {
-
+export class PaymentListPageComponent {
   payments$ = this.paymentService.payments$;
 
-  constructor(public navCtrl: NavController,
-              private paymentService: PaymentService) {
-  }
+  constructor(
+    public navCtrl: NavController,
+    private paymentService: PaymentService,
+  ) {}
 
   ionViewDidLoad() {
     this.paymentService.loadPayments().subscribe();

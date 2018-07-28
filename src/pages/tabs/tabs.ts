@@ -1,37 +1,38 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { SettingsPage } from '../settings/settings';
-import { CustomerListPage } from '../customer-list/customer-list';
-import { PaymentListPage } from '../payment-list/payment-list';
-import { CheckInListPage } from '../check-in-list/check-in-list';
-import { CustomerPage } from '../customer/customer';
+import { SettingsPageComponent } from '../settings/settings';
+import { CustomerListPageComponent } from '../customer-list/customer-list';
+import { PaymentListPageComponent } from '../payment-list/payment-list';
+import { CheckInListPageComponent } from '../check-in-list/check-in-list';
+import { CustomerPageComponent } from '../customer/customer';
 import { NavController, Tab, Tabs } from 'ionic-angular';
 import { CustomerService } from '../../services/customer.service';
 import { BarcodeScannerService } from '../../services/barcode-scanner.service';
-import { CustomerFormPage } from '../customer-form/customer-form';
+import { CustomerFormPageComponent } from '../customer-form/customer-form';
 
 @Component({
-  templateUrl: 'tabs.html'
+  templateUrl: 'tabs.html',
 })
-export class TabsPage {
-
+export class TabsPageComponent {
   @ViewChild('tabs') tabs: Tabs;
   @ViewChild('customerListTab') customerListTab: Tab;
 
   barcodeScannerEnabled$ = this.barcodeScannerService.enabled$;
 
-  customerListTabRoot = CustomerListPage;
-  checkInListTabRoot = CheckInListPage;
-  paymentListTabRoot = PaymentListPage;
-  settingsTabRoot = SettingsPage;
+  customerListTabRoot = CustomerListPageComponent;
+  checkInListTabRoot = CheckInListPageComponent;
+  paymentListTabRoot = PaymentListPageComponent;
+  settingsTabRoot = SettingsPageComponent;
 
-  constructor(private barcodeScannerService: BarcodeScannerService,
-              private customerService: CustomerService,
-              private navCtrl: NavController) {
-  }
+  constructor(
+    private barcodeScannerService: BarcodeScannerService,
+    private customerService: CustomerService,
+    private navCtrl: NavController,
+  ) {}
 
   scanBarcode(): void {
-    this.barcodeScannerService.scan()
+    this.barcodeScannerService
+      .scan()
       .then(result => this.handleCardCode(result))
       .catch(() => {});
   }
@@ -41,13 +42,14 @@ export class TabsPage {
       return;
     }
     this.tabs.select(this.customerListTab).then(() => {
-      this.customerService.findCustomersByCardCode(cardCode)
+      this.customerService
+        .findCustomersByCardCode(cardCode)
         .subscribe(customers => {
           if (customers.length === 1) {
             const customer = customers[0];
-            this.tabs.getSelected().push(CustomerPage, {customer});
+            this.tabs.getSelected().push(CustomerPageComponent, { customer });
           } else {
-            this.navCtrl.push(CustomerFormPage, {cardCode});
+            this.navCtrl.push(CustomerFormPageComponent, { cardCode });
           }
         });
     });

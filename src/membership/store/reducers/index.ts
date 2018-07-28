@@ -14,5 +14,5 @@ export const reducers: ActionReducerMap<MembershipState> = {
 };
 
 export const getMembershipState = createFeatureSelector<MembershipState>(
-  'membership'
+  'membership',
 );

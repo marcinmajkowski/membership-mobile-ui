@@ -44,10 +44,10 @@
   </ion-list>
   <h2 padding-horizontal>Wejścia</h2>
   <ng-container *ngIf="checkIns$ | async as checkIns; else spinner">
-    <check-in-list *ngIf="checkIns.length > 0; else noCheckIns"
+    <app-check-in-list *ngIf="checkIns.length > 0; else noCheckIns"
                    [checkIns]="checkIns"
                    (checkInDelete)="deleteCheckIn($event)">
-    </check-in-list>
+    </app-check-in-list>
   </ng-container>
   <h2 padding-horizontal>Płatności</h2>
   <ng-container *ngIf="payments$ | async as payments">
@@ -73,5 +73,5 @@
 </ng-template>
 
 <ng-template #spinner>
-  <list-spinner></list-spinner>
+  <app-list-spinner></app-list-spinner>
 </ng-template>
