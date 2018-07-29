@@ -1,28 +1,25 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { CustomerService } from '../../../services/customer.service';
 
 import * as customersActions from '../actions/customers.action';
 import { Observable } from 'rxjs/Observable';
 import { map, mapTo, switchMap, switchMapTo } from 'rxjs/operators';
 import { Action } from '@ngrx/store';
+import { ofAction } from 'ngrx-action-operators';
 
 @Injectable()
 export class CustomersEffects {
   @Effect()
   loadCustomers$: Observable<Action> = this.actions$.pipe(
-    ofType<customersActions.LoadCustomers>(
-      customersActions.CUSTOMER_LIST_PAGE_LOAD_CUSTOMERS,
-    ),
+    ofAction(customersActions.CustomerListPageLoadCustomers),
     switchMapTo(this.customerService.getCustomers()),
     map(customers => new customersActions.LoadCustomersSuccess({ customers })),
   );
 
   @Effect()
   createCustomer$: Observable<Action> = this.actions$.pipe(
-    ofType<customersActions.CreateCustomer>(
-      customersActions.CUSTOMER_FORM_PAGE_CREATE_CUSTOMER,
-    ),
+    ofAction(customersActions.CustomerFormPageCreateCustomer),
     map(action => action.payload.createCustomerForm),
     switchMap(createCustomerForm =>
       this.customerService.createCustomer(createCustomerForm),
@@ -32,9 +29,7 @@ export class CustomersEffects {
 
   @Effect()
   deleteCustomer$: Observable<Action> = this.actions$.pipe(
-    ofType<customersActions.DeleteCustomer>(
-      customersActions.CUSTOMER_UPDATE_FORM_PAGE_DELETE_CUSTOMER,
-    ),
+    ofAction(customersActions.CustomerUpdateFormPageDeleteCustomer),
     map(action => action.payload.customer),
     switchMap(customer =>
       this.customerService

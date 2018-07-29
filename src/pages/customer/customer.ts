@@ -9,9 +9,11 @@ import { Payment, PaymentService } from '../../services/payment.service';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../membership/store';
 import { Subject } from 'rxjs/Subject';
-import { Actions, ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { take, takeUntil } from 'rxjs/operators';
 import { CustomerUpdateFormPageComponent } from '../customer-update-form/customer-update-form';
+import { ofAction } from 'ngrx-action-operators';
+
 // tslint:enable:max-line-length
 
 @Component({
@@ -46,7 +48,7 @@ export class CustomerPageComponent {
     // TODO involve state into navigation
     this.actions$
       .pipe(
-        ofType(fromStore.CREATE_CHECK_IN_SUCCESS),
+        ofAction(fromStore.CreateCheckInSuccess),
         take(1),
         takeUntil(this.ionViewWillLeave$),
       )

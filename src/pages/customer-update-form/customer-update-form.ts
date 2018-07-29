@@ -4,8 +4,9 @@ import { Customer } from '../../membership/models/customer.model';
 import * as fromStore from '../../membership/store';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs/Subject';
-import { Actions, ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { take, takeUntil } from 'rxjs/operators';
+import { ofAction } from 'ngrx-action-operators';
 
 @Component({
   selector: 'page-customer-update-form',
@@ -36,9 +37,7 @@ export class CustomerUpdateFormPageComponent {
     );
     this.actions$
       .pipe(
-        ofType<fromStore.DeleteCustomerSuccess>(
-          fromStore.DELETE_CUSTOMER_SUCCESS,
-        ),
+        ofAction(fromStore.DeleteCustomerSuccess),
         take(1),
         takeUntil(this.ionViewWillLeave$),
       )

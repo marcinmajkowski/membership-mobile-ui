@@ -7,9 +7,10 @@ import { CustomerPageComponent } from '../customer/customer';
 import { ControlsConfig } from '../../util/controls-config';
 import * as fromStore from '../../membership/store';
 import { Store } from '@ngrx/store';
-import { Actions, ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs/Subject';
 import { map, take, takeUntil } from 'rxjs/operators';
+import { ofAction } from 'ngrx-action-operators';
 
 @Component({
   selector: 'page-customer-form',
@@ -47,9 +48,7 @@ export class CustomerFormPageComponent {
     );
     this.actions$
       .pipe(
-        ofType<fromStore.CreateCustomerSuccess>(
-          fromStore.CREATE_CUSTOMER_SUCCESS,
-        ),
+        ofAction(fromStore.CreateCustomerSuccess),
         map(action => action.payload.customer),
         take(1),
         takeUntil(this.ionViewWillLeave$),

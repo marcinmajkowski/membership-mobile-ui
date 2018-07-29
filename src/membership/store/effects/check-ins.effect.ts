@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { CheckInService } from '../../../services/check-in.service';
 
 import * as checkInsActions from '../actions/check-ins.action';
 import { map, mapTo, switchMap, switchMapTo } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Action } from '@ngrx/store';
+import { ofAction } from 'ngrx-action-operators';
 
 @Injectable()
 export class CheckInsEffects {
   @Effect()
   loadCheckIns$: Observable<Action> = this.actions$.pipe(
-    ofType<checkInsActions.CheckInListPageLoadCheckIns>(
-      checkInsActions.CHECK_IN_LIST_PAGE_LOAD_CHECK_INS,
-    ),
+    ofAction(checkInsActions.CheckInListPageLoadCheckIns),
     switchMapTo(this.checkInService.getCheckIns()),
     map(checkIns => new checkInsActions.LoadCheckInsSuccess({ checkIns })),
     // TODO catchError
@@ -22,9 +21,7 @@ export class CheckInsEffects {
   // TODO load and force load actions
   @Effect()
   loadCustomerCheckIns$: Observable<Action> = this.actions$.pipe(
-    ofType<checkInsActions.CustomerPageLoadCustomerCheckIns>(
-      checkInsActions.CUSTOMER_PAGE_LOAD_CUSTOMER_CHECK_INS,
-    ),
+    ofAction(checkInsActions.CustomerPageLoadCustomerCheckIns),
     map(action => action.payload.customer),
     switchMap(customer =>
       this.checkInService.getCustomerCheckIns(customer).pipe(
@@ -42,9 +39,7 @@ export class CheckInsEffects {
 
   @Effect()
   createCheckIn$: Observable<Action> = this.actions$.pipe(
-    ofType<checkInsActions.CustomerPageCreateCheckIn>(
-      checkInsActions.CUSTOMER_PAGE_CREATE_CHECK_IN,
-    ),
+    ofAction(checkInsActions.CustomerPageCreateCheckIn),
     switchMap(action =>
       this.checkInService.createCheckIn(action.payload.customer),
     ),
@@ -54,9 +49,9 @@ export class CheckInsEffects {
 
   @Effect()
   deleteCheckIn$: Observable<Action> = this.actions$.pipe(
-    ofType<checkInsActions.DeleteCheckIn>(
-      checkInsActions.CHECK_IN_LIST_PAGE_DELETE_CHECK_IN,
-      checkInsActions.CUSTOMER_PAGE_DELETE_CHECK_IN,
+    ofAction(
+      checkInsActions.CheckInListPageDeleteCheckIn,
+      checkInsActions.CustomerPageDeleteCheckIn,
     ),
     map(action => action.payload.checkIn),
     switchMap(checkIn =>
