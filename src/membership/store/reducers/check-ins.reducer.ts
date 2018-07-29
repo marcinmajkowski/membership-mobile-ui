@@ -2,6 +2,7 @@ import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { CheckIn } from '../../models/check-in.model';
 import * as fromCheckIns from '../actions/check-ins.action';
 import * as fromCustomers from '../actions/customers.action';
+import { Action } from '@ngrx/store';
 
 export interface CheckInsState extends EntityState<CheckIn> {
   listPageIds: number[];
@@ -23,24 +24,19 @@ export const getCheckInListPageIds = (state: CheckInsState) =>
 export const getCheckInsIdListByCustomerId = (state: CheckInsState) =>
   state.idListByCustomerId;
 
-export function reducer(
-  state = initialState,
-  action: fromCheckIns.CheckInsAction | fromCustomers.DeleteCustomerSuccess,
-): CheckInsState {
-  switch (action.type) {
-    case fromCheckIns.LOAD_CHECK_INS_SUCCESS:
-      return loadCheckInsSuccessReducer(state, action);
-    case fromCheckIns.LOAD_CUSTOMER_CHECK_INS_SUCCESS:
-      return loadCustomerCheckInsSuccessReducer(state, action);
-    case fromCheckIns.CREATE_CHECK_IN_SUCCESS:
-      return createCheckInSuccessReducer(state, action);
-    case fromCheckIns.DELETE_CHECK_IN_SUCCESS:
-      return deleteCheckInSuccessReducer(state, action);
-    // TODO not sure if it belongs here
-    case fromCustomers.DELETE_CUSTOMER_SUCCESS:
-      return deleteCustomerSuccessReducer(state, action);
-    default:
-      return state;
+export function reducer(state = initialState, action: Action): CheckInsState {
+  if (action instanceof fromCheckIns.LoadCheckInsSuccess) {
+    return loadCheckInsSuccessReducer(state, action);
+  } else if (action instanceof fromCheckIns.LoadCustomerCheckInsSuccess) {
+    return loadCustomerCheckInsSuccessReducer(state, action);
+  } else if (action instanceof fromCheckIns.CreateCheckInSuccess) {
+    return createCheckInSuccessReducer(state, action);
+  } else if (action instanceof fromCheckIns.DeleteCheckInSuccess) {
+    return deleteCheckInSuccessReducer(state, action);
+  } else if (action instanceof fromCustomers.DeleteCustomerSuccess) {
+    return deleteCustomerSuccessReducer(state, action);
+  } else {
+    return state;
   }
 }
 
