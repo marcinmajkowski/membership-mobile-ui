@@ -15,4 +15,8 @@ export class SettingsPageComponent {
   getUser(): User {
     return this.authService.user;
   }
+
+  signOut() {
+    this.authService.signOut();
+  }
 }

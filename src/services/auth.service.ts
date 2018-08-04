@@ -47,5 +47,9 @@ export class AuthService {
       );
   }
 
-  signOut(): void {}
+  // TODO this is not finished
+  // FIXME no state cleared, no navigation etc.
+  signOut(): void {
+    this.httpClient.post('/api/logout', {}).subscribe();
+  }
 }
