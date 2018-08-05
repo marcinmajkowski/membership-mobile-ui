@@ -1,20 +1,19 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { PaymentService } from '../../services/payment.service';
+import * as fromStore from '../../membership/store';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'page-payment-list',
   templateUrl: 'payment-list.html',
 })
 export class PaymentListPageComponent {
-  payments$ = this.paymentService.payments$;
+  payments$ = this.store.select(fromStore.getPaymentListPagePayments);
 
-  constructor(
-    public navCtrl: NavController,
-    private paymentService: PaymentService,
-  ) {}
+  constructor(private store: Store<fromStore.MembershipState>) {}
 
   ionViewDidLoad() {
-    this.paymentService.loadPayments().subscribe();
+    this.store.dispatch(new fromStore.PaymentListPageLoadPayments());
   }
+
+  // TODO deletePayment()
 }

@@ -2,11 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
-import {
-  Card,
-  CreateCustomerForm,
-  Customer,
-} from '../membership/models/customer.model';
+import { Card, CreateCustomerForm, Customer } from '../membership/models';
 
 interface CardData {
   id: string;

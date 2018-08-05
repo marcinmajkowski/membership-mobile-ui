@@ -1,11 +1,9 @@
 // tslint:disable:max-line-length
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { Customer } from '../../membership/models/customer.model';
-import { CheckIn } from '../../membership/models/check-in.model';
+import { CheckIn, Customer, Payment } from '../../membership/models';
 import { PaymentFormPageComponent } from '../payment-form/payment-form';
 import { Observable } from 'rxjs/Observable';
-import { Payment, PaymentService } from '../../services/payment.service';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../membership/store';
 import { Subject } from 'rxjs/Subject';
@@ -13,7 +11,6 @@ import { Actions } from '@ngrx/effects';
 import { take, takeUntil } from 'rxjs/operators';
 import { CustomerUpdateFormPageComponent } from '../customer-update-form/customer-update-form';
 import { ofAction } from 'ngrx-action-operators';
-
 // tslint:enable:max-line-length
 
 @Component({
@@ -32,12 +29,13 @@ export class CustomerPageComponent {
     public navParams: NavParams,
     private store: Store<fromStore.MembershipState>,
     private actions$: Actions,
-    private paymentService: PaymentService,
   ) {
     this.checkIns$ = this.store.select(
       fromStore.getCustomerCheckInList(this.customer.id),
     );
-    this.payments$ = this.paymentService.getCustomerPayments(this.customer);
+    this.payments$ = this.store.select(
+      fromStore.getCustomerPaymentList(this.customer.id),
+    );
   }
 
   // FIXME probably it should not be possible to dispatch twice
@@ -65,6 +63,8 @@ export class CustomerPageComponent {
     });
   }
 
+  // TODO deletePayment()
+
   updateCustomer() {
     this.navCtrl.parent.parent.push(CustomerUpdateFormPageComponent, {
       customer: this.customer,
@@ -74,6 +74,11 @@ export class CustomerPageComponent {
   ionViewWillEnter(): void {
     this.store.dispatch(
       new fromStore.CustomerPageLoadCustomerCheckIns({
+        customer: this.customer,
+      }),
+    );
+    this.store.dispatch(
+      new fromStore.CustomerPageLoadCustomerPayments({
         customer: this.customer,
       }),
     );

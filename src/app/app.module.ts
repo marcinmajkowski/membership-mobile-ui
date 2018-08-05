@@ -32,11 +32,10 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { AuthService } from '../services/auth.service';
-import { ApiCheckInService } from '../membership/api';
+import { ApiCheckInService, ApiPaymentService } from '../membership/api';
 import { XhrInterceptor } from '../services/xhr.interceptor';
 import { CustomerService } from '../services/customer.service';
 import { BarcodeScannerService } from '../services/barcode-scanner.service';
-import { PaymentService } from '../services/payment.service';
 
 import { MembershipModule } from '../membership/membership.module';
 import { ComponentsModule } from '../components/components.module';
@@ -100,7 +99,7 @@ export const metaReducers: MetaReducer<any>[] = isDevMode()
     BarcodeScannerService,
     AuthService,
     ApiCheckInService,
-    PaymentService,
+    ApiPaymentService,
     CustomerService,
     { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true },
     { provide: LOCALE_ID, useValue: 'pl' },
