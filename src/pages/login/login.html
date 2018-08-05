@@ -1,6 +1,5 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Log in</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -10,7 +9,7 @@
     <ion-list inset>
 
       <ion-item [class.invalid]="emailErrors.hasError('*', ['touched', 'dirty'])">
-        <ion-input type="text" placeholder="Email" formControlName="email"></ion-input>
+        <ion-input type="text" placeholder="Adres e-mail" formControlName="email"></ion-input>
       </ion-item>
 
       <div ngxErrors="email" #emailErrors="ngxErrors">
@@ -18,7 +17,7 @@
       </div>
 
       <ion-item [class.invalid]="passwordErrors.hasError('*', ['touched'])">
-        <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+        <ion-input type="password" placeholder="Hasło" formControlName="password"></ion-input>
       </ion-item>
 
       <div ngxErrors="password" #passwordErrors="ngxErrors">
@@ -26,10 +25,12 @@
       </div>
     </ion-list>
 
-    <div padding-horizontal>
-      <div class="form-error">{{loginError}}</div>
+    <p class="form-error">
+      {{loginError}}
+    </p>
 
-      <button ion-button full type="submit" [disabled]="!loginForm.valid">Log in</button>
-    </div>
+    <button ion-button round outline block type="submit" [disabled]="!loginForm.valid">
+      Zaloguj się
+    </button>
   </form>
 </ion-content>

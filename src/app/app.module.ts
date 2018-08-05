@@ -14,6 +14,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { storeFreeze } from 'ngrx-store-freeze';
 import { reducers, effects } from './store';
 
+import { WelcomePageComponent } from '../pages/welcome/welcome';
 import { SettingsPageComponent } from '../pages/settings/settings';
 import { CustomerListPageComponent } from '../pages/customer-list/customer-list';
 import { CustomerFormPageComponent } from '../pages/customer-form/customer-form';
@@ -49,6 +50,7 @@ export const metaReducers: MetaReducer<any>[] = isDevMode()
 @NgModule({
   declarations: [
     AppComponent,
+    WelcomePageComponent,
     SettingsPageComponent,
     CustomerListPageComponent,
     CustomerFormPageComponent,
@@ -75,6 +77,7 @@ export const metaReducers: MetaReducer<any>[] = isDevMode()
   bootstrap: [IonicApp],
   entryComponents: [
     AppComponent,
+    WelcomePageComponent,
     SettingsPageComponent,
     CustomerListPageComponent,
     CustomerFormPageComponent,

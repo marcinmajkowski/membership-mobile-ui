@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
@@ -8,7 +8,7 @@ import { TabsPageComponent } from '../tabs/tabs';
   selector: 'page-login',
   templateUrl: 'login.html',
 })
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent {
   loginForm: FormGroup;
   loginError: string;
 
@@ -25,12 +25,6 @@ export class LoginPageComponent implements OnInit {
         Validators.compose([Validators.required, Validators.minLength(6)]),
       ],
     });
-  }
-
-  ngOnInit(): void {
-    this.auth
-      .signInWithEmail(undefined)
-      .subscribe(() => this.navCtrl.setRoot(TabsPageComponent), () => {});
   }
 
   login(): void {
