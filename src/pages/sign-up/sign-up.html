@@ -3,17 +3,9 @@
   </ion-navbar>
 </ion-header>
 
-
 <ion-content padding>
-  <form (ngSubmit)="login()" [formGroup]="loginForm">
-    <ng-container *ngIf="signUpSuccessMessageVisible">
-      <h2 ion-text color="secondary" text-center>
-        Twoje konto zostało utworzone!
-      </h2>
-      <p>
-        Kiedy aktywacja przebiegnie pomyślnie, będziesz mógł się zalogować.
-      </p>
-    </ng-container>
+  <form (ngSubmit)="onSubmit()" [formGroup]="form">
+    <!-- TODO reuse login form -->
     <ion-list inset>
 
       <ion-item [class.invalid]="emailErrors.hasError('*', ['touched', 'dirty'])">
@@ -21,7 +13,7 @@
       </ion-item>
 
       <div ngxErrors="email" #emailErrors="ngxErrors">
-        <div [ngxError]="['email', 'required']" [when]="['touched', 'dirty']">It should be a valid email</div>
+        <div [ngxError]="['email', 'required']" [when]="['touched', 'dirty']">To nie jest poprawny adres e-mail</div>
       </div>
 
       <ion-item [class.invalid]="passwordErrors.hasError('*', ['touched'])">
@@ -33,12 +25,8 @@
       </div>
     </ion-list>
 
-    <p class="form-error">
-      {{loginError}}
-    </p>
-
-    <button ion-button round outline block type="submit" [disabled]="!loginForm.valid">
-      Zaloguj się
+    <button ion-button round outline block type="submit" [disabled]="!form.valid">
+      Załóż konto
     </button>
   </form>
 </ion-content>

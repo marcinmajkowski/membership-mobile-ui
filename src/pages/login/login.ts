@@ -11,6 +11,7 @@ import { TabsPageComponent } from '../tabs/tabs';
 export class LoginPageComponent {
   loginForm: FormGroup;
   loginError: string;
+  signUpSuccessMessageVisible = false;
 
   constructor(
     public navCtrl: NavController,
@@ -25,6 +26,8 @@ export class LoginPageComponent {
         Validators.compose([Validators.required, Validators.minLength(6)]),
       ],
     });
+    this.signUpSuccessMessageVisible =
+      this.navParams.get('signUpSuccessMessageVisible') || false;
   }
 
   login(): void {

@@ -15,6 +15,7 @@ import { storeFreeze } from 'ngrx-store-freeze';
 import { reducers, effects } from './store';
 
 import { WelcomePageComponent } from '../pages/welcome/welcome';
+import { SignUpPageComponent } from '../pages/sign-up/sign-up';
 import { SettingsPageComponent } from '../pages/settings/settings';
 import { CustomerListPageComponent } from '../pages/customer-list/customer-list';
 import { CustomerFormPageComponent } from '../pages/customer-form/customer-form';
@@ -51,6 +52,7 @@ export const metaReducers: MetaReducer<any>[] = isDevMode()
   declarations: [
     AppComponent,
     WelcomePageComponent,
+    SignUpPageComponent,
     SettingsPageComponent,
     CustomerListPageComponent,
     CustomerFormPageComponent,
@@ -78,6 +80,7 @@ export const metaReducers: MetaReducer<any>[] = isDevMode()
   entryComponents: [
     AppComponent,
     WelcomePageComponent,
+    SignUpPageComponent,
     SettingsPageComponent,
     CustomerListPageComponent,
     CustomerFormPageComponent,

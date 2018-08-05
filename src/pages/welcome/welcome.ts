@@ -3,6 +3,7 @@ import { TabsPageComponent } from '../tabs/tabs';
 import { NavController } from 'ionic-angular';
 import { AuthService } from '../../services/auth.service';
 import { LoginPageComponent } from '../login/login';
+import { SignUpPageComponent } from '../sign-up/sign-up';
 
 @Component({
   selector: 'page-welcome',
@@ -22,6 +23,6 @@ export class WelcomePageComponent {
   }
 
   onSignUpClick(): void {
-    // TODO sign up
+    this.navCtrl.push(SignUpPageComponent);
   }
 }

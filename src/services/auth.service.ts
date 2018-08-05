@@ -13,6 +13,11 @@ export interface User {
   name: string;
 }
 
+export interface CreateUserForm {
+  email: string;
+  password: string;
+}
+
 @Injectable()
 export class AuthService {
   public user: User;
@@ -45,6 +50,10 @@ export class AuthService {
           ErrorObservable.create({ message: 'An error occured' }),
         ),
       );
+  }
+
+  signUp(createUserForm: CreateUserForm): Observable<any> {
+    return this.httpClient.post('/api/users', createUserForm);
   }
 
   // TODO this is not finished
