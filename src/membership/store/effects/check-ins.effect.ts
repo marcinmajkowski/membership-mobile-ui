@@ -1,50 +1,57 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { CheckInService } from '../../../services/check-in.service';
 
 import * as checkInsActions from '../actions/check-ins.action';
-import { map, mapTo, switchMap, switchMapTo } from 'rxjs/operators';
+import { concatMap, map, switchMap, switchMapTo } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Action } from '@ngrx/store';
 import { ofAction } from 'ngrx-action-operators';
+import { ApiCheckInService } from '../../api';
 
 @Injectable()
 export class CheckInsEffects {
   @Effect()
   loadCheckIns$: Observable<Action> = this.actions$.pipe(
     ofAction(checkInsActions.CheckInListPageLoadCheckIns),
-    switchMapTo(this.checkInService.getCheckIns()),
-    map(checkIns => new checkInsActions.LoadCheckInsSuccess({ checkIns })),
-    // TODO catchError
+    switchMapTo(
+      this.checkInService.getCheckIns().pipe(
+        // TODO handle customers
+        map(response => response.checkIns),
+        map(checkIns => new checkInsActions.LoadCheckInsSuccess({ checkIns })),
+        // TODO catchError
+      ),
+    ),
   );
 
   // TODO load and force load actions
   @Effect()
   loadCustomerCheckIns$: Observable<Action> = this.actions$.pipe(
     ofAction(checkInsActions.CustomerPageLoadCustomerCheckIns),
-    map(action => action.payload.customer),
-    switchMap(customer =>
-      this.checkInService.getCustomerCheckIns(customer).pipe(
+    map(action => action.payload.customer.id),
+    switchMap(customerId =>
+      this.checkInService.getCustomerCheckIns(customerId).pipe(
         map(
           checkIns =>
             new checkInsActions.LoadCustomerCheckInsSuccess({
               checkIns,
-              customer,
+              customerId,
             }),
         ),
+        // TODO catchError
       ),
     ),
-    // TODO catchError
   );
 
   @Effect()
   createCheckIn$: Observable<Action> = this.actions$.pipe(
     ofAction(checkInsActions.CustomerPageCreateCheckIn),
-    switchMap(action =>
-      this.checkInService.createCheckIn(action.payload.customer),
+    map(action => action.payload.customer.id),
+    concatMap(customerId =>
+      this.checkInService.createCheckIn(customerId).pipe(
+        map(checkIn => new checkInsActions.CreateCheckInSuccess({ checkIn })),
+        // TODO catchError
+      ),
     ),
-    map(checkIn => new checkInsActions.CreateCheckInSuccess({ checkIn })),
-    // TODO catchError
   );
 
   @Effect()
@@ -53,17 +60,17 @@ export class CheckInsEffects {
       checkInsActions.CheckInListPageDeleteCheckIn,
       checkInsActions.CustomerPageDeleteCheckIn,
     ),
-    map(action => action.payload.checkIn),
-    switchMap(checkIn =>
-      this.checkInService
-        .deleteCheckIn(checkIn)
-        .pipe(mapTo(new checkInsActions.DeleteCheckInSuccess({ checkIn }))),
+    map(action => action.payload.checkIn.id),
+    switchMap(id =>
+      this.checkInService.deleteCheckIn(id).pipe(
+        map(checkIn => new checkInsActions.DeleteCheckInSuccess({ checkIn })),
+        // TODO catchError
+      ),
     ),
-    // TODO catchError
   );
 
   constructor(
     private actions$: Actions,
-    private checkInService: CheckInService,
+    private checkInService: ApiCheckInService,
   ) {}
 }

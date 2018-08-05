@@ -1,55 +1,56 @@
 import { Action } from '@ngrx/store';
 import { CheckIn } from '../../models/check-in.model';
 import { Customer } from '../../models/customer.model';
+import { ApiCheckIn } from '../../api/models';
 
 export class CheckInListPageLoadCheckIns implements Action {
-  readonly type = '[CheckInListPage][CheckIns] Load Check-Ins';
+  readonly type = '[CheckInListPage] Load Check-Ins';
 }
 
 export class LoadCheckInsSuccess implements Action {
-  readonly type = '[CheckIns] Load Check-Ins Success';
+  readonly type = '[Api] Load Check-Ins Success';
 
-  constructor(public payload: { checkIns: CheckIn[] }) {}
+  constructor(public payload: { checkIns: ApiCheckIn[] }) {}
 }
 
 export class CustomerPageCreateCheckIn implements Action {
-  readonly type = '[CustomerPage][CheckIns] Create Check-In';
+  readonly type = '[CustomerPage] Create Check-In';
 
   constructor(public payload: { customer: Customer }) {}
 }
 
 export class CreateCheckInSuccess implements Action {
-  readonly type = '[CheckIns] Create Check-In Success';
+  readonly type = '[Api] Create Check-In Success';
 
-  constructor(public payload: { checkIn: CheckIn }) {}
+  constructor(public payload: { checkIn: ApiCheckIn }) {}
 }
 
 export class CustomerPageLoadCustomerCheckIns implements Action {
-  readonly type = '[CustomerPage][CheckIns] Load Customer Check-Ins';
+  readonly type = '[CustomerPage] Load Customer Check-Ins';
 
   constructor(public payload: { customer: Customer }) {}
 }
 
 export class LoadCustomerCheckInsSuccess implements Action {
-  readonly type = '[CheckIns] Load Customer Check-Ins Success';
+  readonly type = '[Api] Load Customer Check-Ins Success';
 
-  constructor(public payload: { checkIns: CheckIn[]; customer: Customer }) {}
+  constructor(public payload: { checkIns: ApiCheckIn[]; customerId: number }) {}
 }
 
 export class CheckInListPageDeleteCheckIn implements Action {
-  readonly type = '[CheckInListPage][CheckIns] Delete Check-In';
+  readonly type = '[CheckInListPage] Delete Check-In';
 
   constructor(public payload: { checkIn: CheckIn }) {}
 }
 
 export class CustomerPageDeleteCheckIn implements Action {
-  readonly type = '[CustomerPage][CheckIns] Delete Check-In';
+  readonly type = '[CustomerPage] Delete Check-In';
 
   constructor(public payload: { checkIn: CheckIn }) {}
 }
 
 export class DeleteCheckInSuccess implements Action {
-  readonly type = '[CheckIns] Delete Check-In Success';
+  readonly type = '[Api] Delete Check-In Success';
 
-  constructor(public payload: { checkIn: CheckIn }) {}
+  constructor(public payload: { checkIn: ApiCheckIn }) {}
 }

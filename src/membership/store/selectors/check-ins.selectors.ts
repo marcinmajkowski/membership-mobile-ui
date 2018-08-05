@@ -5,6 +5,7 @@ import * as fromCheckIns from '../reducers/check-ins.reducer';
 import { getCustomersEntities } from './customers.selectors';
 import { CheckIn } from '../../models/check-in.model';
 import { Customer } from '../../models/customer.model';
+import { StoreCheckIn } from '../models';
 
 const getCheckInsState = createSelector(
   fromFeature.getMembershipState,
@@ -21,16 +22,17 @@ const getCheckInListPageIds = createSelector(
   fromCheckIns.getCheckInListPageIds,
 );
 
-const setCustomer = (
-  checkIn: CheckIn,
+const fromStoreCheckIn = (
+  storeCheckIn: StoreCheckIn,
   customersEntities: { [id: number]: Customer },
-): CheckIn =>
-  checkIn.customer === null
-    ? checkIn
-    : {
-        ...checkIn,
-        customer: customersEntities[checkIn.customer.id],
-      };
+): CheckIn => ({
+  id: storeCheckIn.id,
+  customer:
+    storeCheckIn.customerId === null
+      ? null
+      : customersEntities[storeCheckIn.customerId],
+  timestamp: storeCheckIn.timestamp,
+});
 
 export const getCheckInListPageCheckIns = createSelector(
   getCheckInsEntities,
@@ -40,7 +42,7 @@ export const getCheckInListPageCheckIns = createSelector(
     checkInListPageIds &&
     checkInListPageIds
       .map(id => checkInsEntities[id])
-      .map(checkIn => setCustomer(checkIn, customersEntities)),
+      .map(checkIn => fromStoreCheckIn(checkIn, customersEntities)),
 );
 
 const getCheckInsIdListByCustomerId = createSelector(
@@ -64,5 +66,5 @@ export const getCustomerCheckInList = (customerId: number) =>
       customerCheckInIdList &&
       customerCheckInIdList
         .map(id => checkInsEntities[id])
-        .map(checkIn => setCustomer(checkIn, customersEntities)),
+        .map(checkIn => fromStoreCheckIn(checkIn, customersEntities)),
   );

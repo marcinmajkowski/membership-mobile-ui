@@ -1,15 +1,16 @@
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
-import { CheckIn } from '../../models/check-in.model';
 import * as fromCheckIns from '../actions/check-ins.action';
 import * as fromCustomers from '../actions/customers.action';
 import { Action } from '@ngrx/store';
+import { StoreCheckIn } from '../models';
+import { ApiCheckIn } from '../../api/models';
 
-export interface CheckInsState extends EntityState<CheckIn> {
+export interface CheckInsState extends EntityState<StoreCheckIn> {
   listPageIds: number[];
   idListByCustomerId: { [customerId: number]: number[] };
 }
 
-const adapter = createEntityAdapter<CheckIn>();
+const adapter = createEntityAdapter<StoreCheckIn>();
 
 const initialState: CheckInsState = adapter.getInitialState({
   listPageIds: undefined,
@@ -44,7 +45,7 @@ function loadCheckInsSuccessReducer(
   state: CheckInsState,
   action: fromCheckIns.LoadCheckInsSuccess,
 ): CheckInsState {
-  const checkIns: CheckIn[] = action.payload.checkIns;
+  const checkIns: StoreCheckIn[] = action.payload.checkIns.map(fromApiCheckIn);
   return adapter.addMany(checkIns, {
     ...state,
     listPageIds: checkIns.map(checkIn => checkIn.id),
@@ -56,12 +57,13 @@ function loadCustomerCheckInsSuccessReducer(
   state: CheckInsState,
   action: fromCheckIns.LoadCustomerCheckInsSuccess,
 ): CheckInsState {
-  const { checkIns, customer } = action.payload;
+  const checkIns: StoreCheckIn[] = action.payload.checkIns.map(fromApiCheckIn);
+  const customerId: number = action.payload.customerId;
   return adapter.addMany(checkIns, {
     ...state,
     idListByCustomerId: {
       ...state.idListByCustomerId,
-      [customer.id]: checkIns.map(checkIn => checkIn.id),
+      [customerId]: checkIns.map(checkIn => checkIn.id),
     },
   });
 }
@@ -70,8 +72,8 @@ function createCheckInSuccessReducer(
   state: CheckInsState,
   action: fromCheckIns.CreateCheckInSuccess,
 ): CheckInsState {
-  const checkIn: CheckIn = action.payload.checkIn;
-  const customerId = checkIn.customer.id;
+  const checkIn: StoreCheckIn = fromApiCheckIn(action.payload.checkIn);
+  const customerId = checkIn.customerId;
   return adapter.addOne(checkIn, {
     ...state,
     // TODO sorting
@@ -92,19 +94,19 @@ function deleteCheckInSuccessReducer(
   state: CheckInsState,
   action: fromCheckIns.DeleteCheckInSuccess,
 ): CheckInsState {
-  const checkIn: CheckIn = action.payload.checkIn;
-  const customer = checkIn.customer;
+  const checkIn: StoreCheckIn = fromApiCheckIn(action.payload.checkIn);
+  const customerId = checkIn.customerId;
   return adapter.removeOne(checkIn.id, {
     ...state,
     listPageIds: !state.listPageIds
       ? state.listPageIds
       : state.listPageIds.filter(id => id !== checkIn.id),
     idListByCustomerId:
-      !customer || !state.idListByCustomerId[customer.id]
+      customerId === null || !state.idListByCustomerId[customerId]
         ? state.idListByCustomerId
         : {
             ...state.idListByCustomerId,
-            [customer.id]: state.idListByCustomerId[customer.id].filter(
+            [customerId]: state.idListByCustomerId[customerId].filter(
               id => id !== checkIn.id,
             ),
           },
@@ -116,10 +118,18 @@ function deleteCustomerSuccessReducer(
   action: fromCustomers.DeleteCustomerSuccess,
 ): CheckInsState {
   const customer = action.payload.customer;
-  const isDeletedCustomerCheckIn = checkIn =>
-    checkIn.customer && checkIn.customer.id === customer.id;
+  const isDeletedCustomerCheckIn = (checkIn: StoreCheckIn) =>
+    checkIn.customerId === customer.id;
   const updates = selectAll(state)
     .filter(isDeletedCustomerCheckIn)
-    .map(checkIn => ({ id: checkIn.id, changes: { customer: null } }));
+    .map(checkIn => ({ id: checkIn.id, changes: { customerId: null } }));
   return adapter.updateMany(updates, state);
+}
+
+function fromApiCheckIn(apiCheckIn: ApiCheckIn): StoreCheckIn {
+  return {
+    id: apiCheckIn.id,
+    customerId: apiCheckIn.customerId,
+    timestamp: apiCheckIn.timestamp,
+  };
 }
