@@ -34,7 +34,7 @@ export class CustomerPageLoadCustomerCheckIns implements Action {
 export class LoadCustomerCheckInsSuccess implements Action {
   readonly type = '[Api] Load Customer Check-Ins Success';
 
-  constructor(public payload: { checkIns: ApiCheckIn[]; customerId: number }) {}
+  constructor(public payload: { checkIns: ApiCheckIn[]; customerId: string }) {}
 }
 
 export class CheckInListPageDeleteCheckIn implements Action {

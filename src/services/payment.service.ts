@@ -11,15 +11,15 @@ import * as fromStore from '../membership/store';
 import { Store } from '@ngrx/store';
 
 interface PaymentData {
-  id: number;
-  customerId: number;
+  id: string;
+  customerId: string;
   amount: number;
   timestamp: Iso8601String;
 }
 
 export class Payment {
   private constructor(
-    public id: number,
+    public id: string,
     public customer: Customer,
     public amount: number,
     public timestamp: Iso8601String,

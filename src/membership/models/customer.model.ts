@@ -1,10 +1,10 @@
 export interface Card {
-  id: number;
+  id: string;
   code: string;
 }
 
 export interface Customer {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   fullName: string;

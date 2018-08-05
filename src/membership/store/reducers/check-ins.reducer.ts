@@ -6,8 +6,8 @@ import { StoreCheckIn } from '../models';
 import { ApiCheckIn } from '../../api/models';
 
 export interface CheckInsState extends EntityState<StoreCheckIn> {
-  listPageIds: number[];
-  idListByCustomerId: { [customerId: number]: number[] };
+  listPageIds: string[];
+  idListByCustomerId: { [customerId: string]: string[] };
 }
 
 const adapter = createEntityAdapter<StoreCheckIn>();
@@ -58,7 +58,7 @@ function loadCustomerCheckInsSuccessReducer(
   action: fromCheckIns.LoadCustomerCheckInsSuccess,
 ): CheckInsState {
   const checkIns: StoreCheckIn[] = action.payload.checkIns.map(fromApiCheckIn);
-  const customerId: number = action.payload.customerId;
+  const customerId: string = action.payload.customerId;
   return adapter.addMany(checkIns, {
     ...state,
     idListByCustomerId: {

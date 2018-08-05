@@ -3,8 +3,8 @@ import * as fromCustomers from '../actions/customers.action';
 import { mapById, removeById } from '../../../util/redux';
 
 export interface CustomersState {
-  entities: { [id: number]: Customer };
-  idList: number[];
+  entities: { [id: string]: Customer };
+  idList: string[];
 }
 
 export const initialState: CustomersState = {

@@ -24,7 +24,7 @@ const getCheckInListPageIds = createSelector(
 
 const fromStoreCheckIn = (
   storeCheckIn: StoreCheckIn,
-  customersEntities: { [id: number]: Customer },
+  customersEntities: { [id: string]: Customer },
 ): CheckIn => ({
   id: storeCheckIn.id,
   customer:
@@ -51,13 +51,13 @@ const getCheckInsIdListByCustomerId = createSelector(
 );
 
 // TODO get selected customerId from store
-const getCustomerCheckInIdList = (customerId: number) =>
+const getCustomerCheckInIdList = (customerId: string) =>
   createSelector(
     getCheckInsIdListByCustomerId,
     checkInsIdListByCustomerId => checkInsIdListByCustomerId[customerId],
   );
 
-export const getCustomerCheckInList = (customerId: number) =>
+export const getCustomerCheckInList = (customerId: string) =>
   createSelector(
     getCheckInsEntities,
     getCustomerCheckInIdList(customerId),

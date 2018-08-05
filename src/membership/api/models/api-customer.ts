@@ -1,7 +1,7 @@
 import { ApiCard } from './api-card';
 
 export interface ApiCustomer {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   cards: ApiCard[];

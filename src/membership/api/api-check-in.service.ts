@@ -22,7 +22,7 @@ export class ApiCheckInService {
     }>('/api/check-ins');
   }
 
-  createCheckIn(customerId: number): Observable<ApiCheckIn> {
+  createCheckIn(customerId: string): Observable<ApiCheckIn> {
     return this.httpClient
       .post<ApiCheckIn>(`/api/customers/${customerId}/check-ins`, {})
       .pipe(
@@ -32,13 +32,13 @@ export class ApiCheckInService {
       );
   }
 
-  getCustomerCheckIns(customerId: number): Observable<ApiCheckIn[]> {
+  getCustomerCheckIns(customerId: string): Observable<ApiCheckIn[]> {
     return this.httpClient
       .get<{ checkIns: ApiCheckIn[] }>(`/api/customers/${customerId}/check-ins`)
       .pipe(map(response => response.checkIns));
   }
 
-  deleteCheckIn(id: number): Observable<ApiCheckIn> {
+  deleteCheckIn(id: string): Observable<ApiCheckIn> {
     return this.httpClient.delete<ApiCheckIn>(`/api/check-ins/${id}`).pipe(
       // TODO move toasts to ngrx, add customer information to to message
       tap(() => this.presentToast(`Wejście zostało usunięte`)),

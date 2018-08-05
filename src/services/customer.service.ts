@@ -9,12 +9,12 @@ import {
 } from '../membership/models/customer.model';
 
 interface CardData {
-  id: number;
+  id: string;
   code: string;
 }
 
 interface CustomerData {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   cards: CardData[];

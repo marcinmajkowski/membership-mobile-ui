@@ -1,4 +1,4 @@
 export interface StoreCard {
-  id: number;
+  id: string;
   code: string;
 }

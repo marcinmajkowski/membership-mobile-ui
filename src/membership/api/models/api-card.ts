@@ -1,4 +1,4 @@
 export interface ApiCard {
-  id: number;
+  id: string;
   code: string;
 }
