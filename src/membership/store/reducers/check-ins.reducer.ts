@@ -27,21 +27,21 @@ export const getCheckInsIdListByCustomerId = (state: CheckInsState) =>
 
 export function reducer(state = initialState, action: Action): CheckInsState {
   if (action instanceof fromCheckIns.LoadCheckInsSuccess) {
-    return loadCheckInsSuccessReducer(state, action);
+    return loadCheckIns(state, action);
   } else if (action instanceof fromCheckIns.LoadCustomerCheckInsSuccess) {
-    return loadCustomerCheckInsSuccessReducer(state, action);
+    return loadCustomerCheckIns(state, action);
   } else if (action instanceof fromCheckIns.CreateCheckInSuccess) {
-    return createCheckInSuccessReducer(state, action);
+    return createCheckIn(state, action);
   } else if (action instanceof fromCheckIns.DeleteCheckInSuccess) {
-    return deleteCheckInSuccessReducer(state, action);
+    return deleteCheckIn(state, action);
   } else if (action instanceof fromCustomers.DeleteCustomerSuccess) {
-    return deleteCustomerSuccessReducer(state, action);
+    return deleteCustomer(state, action);
   } else {
     return state;
   }
 }
 
-function loadCheckInsSuccessReducer(
+function loadCheckIns(
   state: CheckInsState,
   action: fromCheckIns.LoadCheckInsSuccess,
 ): CheckInsState {
@@ -53,7 +53,7 @@ function loadCheckInsSuccessReducer(
   });
 }
 
-function loadCustomerCheckInsSuccessReducer(
+function loadCustomerCheckIns(
   state: CheckInsState,
   action: fromCheckIns.LoadCustomerCheckInsSuccess,
 ): CheckInsState {
@@ -68,7 +68,7 @@ function loadCustomerCheckInsSuccessReducer(
   });
 }
 
-function createCheckInSuccessReducer(
+function createCheckIn(
   state: CheckInsState,
   action: fromCheckIns.CreateCheckInSuccess,
 ): CheckInsState {
@@ -90,7 +90,7 @@ function createCheckInSuccessReducer(
   });
 }
 
-function deleteCheckInSuccessReducer(
+function deleteCheckIn(
   state: CheckInsState,
   action: fromCheckIns.DeleteCheckInSuccess,
 ): CheckInsState {
@@ -113,7 +113,7 @@ function deleteCheckInSuccessReducer(
   });
 }
 
-function deleteCustomerSuccessReducer(
+function deleteCustomer(
   state: CheckInsState,
   action: fromCustomers.DeleteCustomerSuccess,
 ): CheckInsState {
