@@ -1,6 +1,6 @@
 import { ActionReducerMap, createFeatureSelector } from '@ngrx/store';
 
-import * as fromCheckIns from './check-ins.reducer';
+import * as fromCheckIns from './check-ins';
 import * as fromCustomers from './customers.reducer';
 import * as fromPayments from './payments.reducer';
 

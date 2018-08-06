@@ -1,10 +1,9 @@
 import { createSelector } from '@ngrx/store';
 
 import * as fromFeature from '../reducers';
-import * as fromCheckIns from '../reducers/check-ins.reducer';
+import * as fromCheckIns from '../reducers/check-ins';
 import { getCustomersEntities } from './customers.selectors';
-import { CheckIn } from '../../models/check-in.model';
-import { Customer } from '../../models/customer.model';
+import { CheckIn, Customer } from '../../models';
 import { StoreCheckIn } from '../models';
 
 const getCheckInsState = createSelector(

@@ -1,9 +1,9 @@
-import { EntityState, createEntityAdapter } from '@ngrx/entity';
-import * as fromCheckIns from '../actions/check-ins.action';
-import * as fromCustomers from '../actions/customers.action';
+import { createEntityAdapter, EntityState } from '@ngrx/entity';
+import * as fromCheckIns from '../../actions/check-ins.action';
+import * as fromCustomers from '../../actions/customers.action';
 import { Action } from '@ngrx/store';
-import { StoreCheckIn } from '../models';
-import { ApiCheckIn } from '../../api/models';
+import { StoreCheckIn } from '../../models';
+import { ApiCheckIn } from '../../../api/models';
 
 export interface CheckInsState extends EntityState<StoreCheckIn> {
   listPageIds: string[];
