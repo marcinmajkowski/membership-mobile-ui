@@ -34,6 +34,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { AuthService } from '../services/auth.service';
 import { ApiCheckInService, ApiPaymentService } from '../membership/api';
 import { XhrInterceptor } from '../services/xhr.interceptor';
+import { StoreHttpInterceptor } from '../services/store.http-interceptor';
 import { CustomerService } from '../services/customer.service';
 import { BarcodeScannerService } from '../services/barcode-scanner.service';
 
@@ -102,6 +103,7 @@ export const metaReducers: MetaReducer<any>[] = isDevMode()
     ApiPaymentService,
     CustomerService,
     { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: StoreHttpInterceptor, multi: true },
     { provide: LOCALE_ID, useValue: 'pl' },
     CurrencyPipe,
   ],
