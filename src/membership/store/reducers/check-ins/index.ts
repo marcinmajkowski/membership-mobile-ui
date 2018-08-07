@@ -4,10 +4,15 @@ import * as fromCustomers from '../../actions/customers.action';
 import { Action } from '@ngrx/store';
 import { StoreCheckIn } from '../../models';
 import { ApiCheckIn } from '../../../api/models';
+import {
+  customerIdToIdsReducer,
+  CustomerIdToIdsState,
+} from './customer-id-to-ids.reducer';
+import { listPageIdsReducer, ListPageIdsState } from './list-page-ids.reducer';
 
 export interface CheckInsState extends EntityState<StoreCheckIn> {
-  listPageIds: string[];
-  idListByCustomerId: { [customerId: string]: string[] };
+  listPageIds: ListPageIdsState;
+  idListByCustomerId: CustomerIdToIdsState;
 }
 
 const adapter = createEntityAdapter<StoreCheckIn>();
@@ -20,24 +25,35 @@ const initialState: CheckInsState = adapter.getInitialState({
 const { selectEntities, selectAll } = adapter.getSelectors();
 
 export const getCheckInsEntities = selectEntities;
+
 export const getCheckInListPageIds = (state: CheckInsState) =>
   state.listPageIds;
+
 export const getCheckInsIdListByCustomerId = (state: CheckInsState) =>
   state.idListByCustomerId;
 
 export function reducer(state = initialState, action: Action): CheckInsState {
+  const intermediateState = {
+    ...state,
+    listPageIds: listPageIdsReducer(state.listPageIds, action),
+    idListByCustomerId: customerIdToIdsReducer(
+      state.idListByCustomerId,
+      action,
+    ),
+  };
+
   if (action instanceof fromCheckIns.LoadCheckInsSuccess) {
-    return loadCheckIns(state, action);
+    return loadCheckIns(intermediateState, action);
   } else if (action instanceof fromCheckIns.LoadCustomerCheckInsSuccess) {
-    return loadCustomerCheckIns(state, action);
+    return loadCustomerCheckIns(intermediateState, action);
   } else if (action instanceof fromCheckIns.CreateCheckInSuccess) {
-    return createCheckIn(state, action);
+    return createCheckIn(intermediateState, action);
   } else if (action instanceof fromCheckIns.DeleteCheckInSuccess) {
-    return deleteCheckIn(state, action);
+    return deleteCheckIn(intermediateState, action);
   } else if (action instanceof fromCustomers.DeleteCustomerSuccess) {
-    return deleteCustomer(state, action);
+    return deleteCustomer(intermediateState, action);
   } else {
-    return state;
+    return intermediateState;
   }
 }
 
@@ -46,11 +62,7 @@ function loadCheckIns(
   action: fromCheckIns.LoadCheckInsSuccess,
 ): CheckInsState {
   const checkIns: StoreCheckIn[] = action.payload.checkIns.map(fromApiCheckIn);
-  return adapter.addMany(checkIns, {
-    ...state,
-    listPageIds: checkIns.map(checkIn => checkIn.id),
-    // FIXME maintain idListByCustomerId
-  });
+  return adapter.addMany(checkIns, state);
 }
 
 function loadCustomerCheckIns(
@@ -58,14 +70,7 @@ function loadCustomerCheckIns(
   action: fromCheckIns.LoadCustomerCheckInsSuccess,
 ): CheckInsState {
   const checkIns: StoreCheckIn[] = action.payload.checkIns.map(fromApiCheckIn);
-  const customerId: string = action.payload.customerId;
-  return adapter.addMany(checkIns, {
-    ...state,
-    idListByCustomerId: {
-      ...state.idListByCustomerId,
-      [customerId]: checkIns.map(checkIn => checkIn.id),
-    },
-  });
+  return adapter.addMany(checkIns, state);
 }
 
 function createCheckIn(
@@ -73,44 +78,14 @@ function createCheckIn(
   action: fromCheckIns.CreateCheckInSuccess,
 ): CheckInsState {
   const checkIn: StoreCheckIn = fromApiCheckIn(action.payload.checkIn);
-  const customerId = checkIn.customerId;
-  return adapter.addOne(checkIn, {
-    ...state,
-    // TODO sorting
-    listPageIds: !state.listPageIds
-      ? state.listPageIds
-      : [checkIn.id, ...state.listPageIds],
-    idListByCustomerId: !state.idListByCustomerId[customerId]
-      ? state.idListByCustomerId
-      : {
-          ...state.idListByCustomerId,
-          // TODO sorting
-          [customerId]: [checkIn.id, ...state.idListByCustomerId[customerId]],
-        },
-  });
+  return adapter.addOne(checkIn, state);
 }
 
 function deleteCheckIn(
   state: CheckInsState,
   action: fromCheckIns.DeleteCheckInSuccess,
 ): CheckInsState {
-  const checkIn: StoreCheckIn = fromApiCheckIn(action.payload.checkIn);
-  const customerId = checkIn.customerId;
-  return adapter.removeOne(checkIn.id, {
-    ...state,
-    listPageIds: !state.listPageIds
-      ? state.listPageIds
-      : state.listPageIds.filter(id => id !== checkIn.id),
-    idListByCustomerId:
-      customerId === null || !state.idListByCustomerId[customerId]
-        ? state.idListByCustomerId
-        : {
-            ...state.idListByCustomerId,
-            [customerId]: state.idListByCustomerId[customerId].filter(
-              id => id !== checkIn.id,
-            ),
-          },
-  });
+  return adapter.removeOne(action.payload.checkIn.id, state);
 }
 
 function deleteCustomer(
