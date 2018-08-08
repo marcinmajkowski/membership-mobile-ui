@@ -1,11 +1,12 @@
 // tslint:disable:max-line-length
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Refresher } from 'ionic-angular';
 import { CheckIn, Customer, Payment } from '../../membership/models';
 import { PaymentFormPageComponent } from '../payment-form/payment-form';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import * as fromStore from '../../membership/store';
+import * as fromMembership from '../../membership/store';
+import * as fromApp from '../../app/store';
 import { Subject } from 'rxjs/Subject';
 import { Actions } from '@ngrx/effects';
 import { take, takeUntil } from 'rxjs/operators';
@@ -27,26 +28,45 @@ export class CustomerPageComponent {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private store: Store<fromStore.MembershipState>,
+    private membershipStore: Store<fromMembership.MembershipState>,
+    private appStore: Store<fromApp.State>,
     private actions$: Actions,
   ) {
-    this.checkIns$ = this.store.select(
-      fromStore.getCustomerCheckInList(this.customer.id),
+    this.checkIns$ = this.membershipStore.select(
+      fromMembership.getCustomerCheckInList(this.customer.id),
     );
-    this.payments$ = this.store.select(
-      fromStore.getCustomerPaymentList(this.customer.id),
+    this.payments$ = this.membershipStore.select(
+      fromMembership.getCustomerPaymentList(this.customer.id),
     );
+  }
+
+  ionViewWillEnter(): void {
+    this.membershipStore.dispatch(
+      new fromMembership.CustomerPageLoadCustomerCheckIns({
+        customer: this.customer,
+      }),
+    );
+    this.membershipStore.dispatch(
+      new fromMembership.CustomerPageLoadCustomerPayments({
+        customer: this.customer,
+      }),
+    );
+  }
+
+  ionViewWillLeave(): void {
+    this.ionViewWillLeave$.next();
+    this.ionViewWillLeave$.complete();
   }
 
   // FIXME probably it should not be possible to dispatch twice
   createCheckIn() {
-    this.store.dispatch(
-      new fromStore.CustomerPageCreateCheckIn({ customer: this.customer }),
+    this.membershipStore.dispatch(
+      new fromMembership.CustomerPageCreateCheckIn({ customer: this.customer }),
     );
     // TODO involve state into navigation
     this.actions$
       .pipe(
-        ofAction(fromStore.CreateCheckInSuccess),
+        ofAction(fromMembership.CreateCheckInSuccess),
         take(1),
         takeUntil(this.ionViewWillLeave$),
       )
@@ -54,7 +74,9 @@ export class CustomerPageComponent {
   }
 
   deleteCheckIn(checkIn: CheckIn): void {
-    this.store.dispatch(new fromStore.CustomerPageDeleteCheckIn({ checkIn }));
+    this.membershipStore.dispatch(
+      new fromMembership.CustomerPageDeleteCheckIn({ checkIn }),
+    );
   }
 
   createPayment() {
@@ -71,21 +93,11 @@ export class CustomerPageComponent {
     });
   }
 
-  ionViewWillEnter(): void {
-    this.store.dispatch(
-      new fromStore.CustomerPageLoadCustomerCheckIns({
-        customer: this.customer,
-      }),
+  refresh(refresher: Refresher): void {
+    this.appStore.dispatch(
+      new fromApp.RefreshCustomerPage({ customer: this.customer }),
     );
-    this.store.dispatch(
-      new fromStore.CustomerPageLoadCustomerPayments({
-        customer: this.customer,
-      }),
-    );
-  }
-
-  ionViewWillLeave(): void {
-    this.ionViewWillLeave$.next();
-    this.ionViewWillLeave$.complete();
+    // TODO complete after async actions complete
+    setTimeout(() => refresher.complete(), 500);
   }
 }

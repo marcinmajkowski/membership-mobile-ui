@@ -43,21 +43,21 @@ export function reducer(state = initialState, action: Action): CheckInsState {
   };
 
   if (action instanceof fromCheckIns.LoadCheckInsSuccess) {
-    return loadCheckIns(intermediateState, action);
+    return loadCheckInsSuccess(intermediateState, action);
   } else if (action instanceof fromCheckIns.LoadCustomerCheckInsSuccess) {
-    return loadCustomerCheckIns(intermediateState, action);
+    return loadCustomerCheckInsSuccess(intermediateState, action);
   } else if (action instanceof fromCheckIns.CreateCheckInSuccess) {
-    return createCheckIn(intermediateState, action);
+    return createCheckInSuccess(intermediateState, action);
   } else if (action instanceof fromCheckIns.DeleteCheckInSuccess) {
-    return deleteCheckIn(intermediateState, action);
+    return deleteCheckInSuccess(intermediateState, action);
   } else if (action instanceof fromCustomers.DeleteCustomerSuccess) {
-    return deleteCustomer(intermediateState, action);
+    return deleteCustomerSuccess(intermediateState, action);
   } else {
     return intermediateState;
   }
 }
 
-function loadCheckIns(
+function loadCheckInsSuccess(
   state: CheckInsState,
   action: fromCheckIns.LoadCheckInsSuccess,
 ): CheckInsState {
@@ -65,7 +65,7 @@ function loadCheckIns(
   return adapter.addMany(checkIns, state);
 }
 
-function loadCustomerCheckIns(
+function loadCustomerCheckInsSuccess(
   state: CheckInsState,
   action: fromCheckIns.LoadCustomerCheckInsSuccess,
 ): CheckInsState {
@@ -73,7 +73,7 @@ function loadCustomerCheckIns(
   return adapter.addMany(checkIns, state);
 }
 
-function createCheckIn(
+function createCheckInSuccess(
   state: CheckInsState,
   action: fromCheckIns.CreateCheckInSuccess,
 ): CheckInsState {
@@ -81,14 +81,14 @@ function createCheckIn(
   return adapter.addOne(checkIn, state);
 }
 
-function deleteCheckIn(
+function deleteCheckInSuccess(
   state: CheckInsState,
   action: fromCheckIns.DeleteCheckInSuccess,
 ): CheckInsState {
   return adapter.removeOne(action.payload.checkIn.id, state);
 }
 
-function deleteCustomer(
+function deleteCustomerSuccess(
   state: CheckInsState,
   action: fromCustomers.DeleteCustomerSuccess,
 ): CheckInsState {
