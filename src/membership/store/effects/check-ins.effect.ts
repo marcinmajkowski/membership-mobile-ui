@@ -61,7 +61,7 @@ export class CheckInsEffects {
       checkInsActions.CustomerPageDeleteCheckIn,
     ),
     map(action => action.payload.checkIn.id),
-    switchMap(id =>
+    concatMap(id =>
       this.checkInService.deleteCheckIn(id).pipe(
         map(checkIn => new checkInsActions.DeleteCheckInSuccess({ checkIn })),
         // TODO catchError

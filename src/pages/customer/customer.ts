@@ -9,7 +9,7 @@ import * as fromMembership from '../../membership/store';
 import * as fromApp from '../../app/store';
 import { Subject } from 'rxjs/Subject';
 import { Actions } from '@ngrx/effects';
-import { take, takeUntil } from 'rxjs/operators';
+import { filter, take, takeUntil } from 'rxjs/operators';
 import { CustomerUpdateFormPageComponent } from '../customer-update-form/customer-update-form';
 import { ofAction } from 'ngrx-action-operators';
 // tslint:enable:max-line-length
@@ -21,6 +21,7 @@ import { ofAction } from 'ngrx-action-operators';
 export class CustomerPageComponent {
   customer: Customer = this.navParams.get('customer');
   checkIns$: Observable<CheckIn[]>;
+  isCustomerCheckInsLoading$: Observable<boolean>;
   payments$: Observable<Payment[]>;
 
   private ionViewWillLeave$ = new Subject();
@@ -34,6 +35,9 @@ export class CustomerPageComponent {
   ) {
     this.checkIns$ = this.membershipStore.select(
       fromMembership.getCustomerCheckInList(this.customer.id),
+    );
+    this.isCustomerCheckInsLoading$ = this.membershipStore.select(
+      fromMembership.isCustomerCheckInsLoading(this.customer.id),
     );
     this.payments$ = this.membershipStore.select(
       fromMembership.getCustomerPaymentList(this.customer.id),
@@ -97,7 +101,13 @@ export class CustomerPageComponent {
     this.appStore.dispatch(
       new fromApp.RefreshCustomerPage({ customer: this.customer }),
     );
-    // TODO complete after async actions complete
-    setTimeout(() => refresher.complete(), 500);
+    // TODO take payments into account (combineLatest)
+    this.isCustomerCheckInsLoading$
+      .pipe(
+        filter(isCustomerCheckInsLoading => !isCustomerCheckInsLoading),
+        take(1),
+        takeUntil(this.ionViewWillLeave$),
+      )
+      .subscribe(() => refresher.complete());
   }
 }

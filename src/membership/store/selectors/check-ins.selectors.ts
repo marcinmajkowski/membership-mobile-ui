@@ -1,9 +1,9 @@
 import { createSelector } from '@ngrx/store';
 
 import * as fromFeature from '../reducers';
-import * as fromCheckIns from '../reducers/check-ins';
+import * as fromCheckIns from '../reducers/check-ins.reducer';
 import { getCustomersEntities } from './customers.selectors';
-import { CheckIn, Customer } from '../../models';
+import { CheckIn, Customer, Iso8601String } from '../../models';
 import { StoreCheckIn } from '../models';
 
 const getCheckInsState = createSelector(
@@ -16,14 +16,28 @@ const getCheckInsEntities = createSelector(
   fromCheckIns.getCheckInsEntities,
 );
 
+const getAllCheckIns = createSelector(
+  getCheckInsState,
+  fromCheckIns.getAllCheckIns,
+);
+
 const getCheckInListPageIds = createSelector(
   getCheckInsState,
   fromCheckIns.getCheckInListPageIds,
 );
 
-const fromStoreCheckIn = (
+const getLoadedCustomerIds = createSelector(
+  getCheckInsState,
+  fromCheckIns.getLoadedCustomerIds,
+);
+
+const getLoadingCustomerIds = createSelector(
+  getCheckInsState,
+  fromCheckIns.getLoadingCustomerIds,
+);
+
+const fromStoreCheckIn = (customersEntities: { [id: string]: Customer }) => (
   storeCheckIn: StoreCheckIn,
-  customersEntities: { [id: string]: Customer },
 ): CheckIn => ({
   id: storeCheckIn.id,
   customer:
@@ -41,29 +55,34 @@ export const getCheckInListPageCheckIns = createSelector(
     checkInListPageIds &&
     checkInListPageIds
       .map(id => checkInsEntities[id])
-      .map(checkIn => fromStoreCheckIn(checkIn, customersEntities)),
-);
-
-const getCheckInsIdListByCustomerId = createSelector(
-  getCheckInsState,
-  fromCheckIns.getCheckInsIdListByCustomerId,
+      .map(fromStoreCheckIn(customersEntities))
+      .sort(byTimestampDesc),
 );
 
 // TODO get selected customerId from store
-const getCustomerCheckInIdList = (customerId: string) =>
-  createSelector(
-    getCheckInsIdListByCustomerId,
-    checkInsIdListByCustomerId => checkInsIdListByCustomerId[customerId],
-  );
-
 export const getCustomerCheckInList = (customerId: string) =>
   createSelector(
-    getCheckInsEntities,
-    getCustomerCheckInIdList(customerId),
+    getAllCheckIns,
+    getLoadedCustomerIds,
     getCustomersEntities,
-    (checkInsEntities, customerCheckInIdList, customersEntities) =>
-      customerCheckInIdList &&
-      customerCheckInIdList
-        .map(id => checkInsEntities[id])
-        .map(checkIn => fromStoreCheckIn(checkIn, customersEntities)),
+    (allCheckIns, loadedCustomerIds, customersEntities) =>
+      loadedCustomerIds.indexOf(customerId) > -1
+        ? allCheckIns
+            .filter(checkIn => checkIn.customerId === customerId)
+            .map(fromStoreCheckIn(customersEntities))
+            .sort(byTimestampDesc)
+        : null,
   );
+
+export const isCustomerCheckInsLoading = (customerId: string) =>
+  createSelector(
+    getLoadingCustomerIds,
+    loadingCustomerIds => loadingCustomerIds.indexOf(customerId) > -1,
+  );
+
+function byTimestampDesc(
+  a: { timestamp: Iso8601String },
+  b: { timestamp: Iso8601String },
+): number {
+  return b.timestamp.localeCompare(a.timestamp);
+}
