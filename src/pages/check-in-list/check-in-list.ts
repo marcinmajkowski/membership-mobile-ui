@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { CheckIn } from '../../membership/models/check-in.model';
+import { CheckIn } from '../../membership/models';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../membership/store';
+import { InfiniteScroll } from 'ionic-angular';
 
 @Component({
   selector: 'page-check-in-list',
@@ -20,5 +21,10 @@ export class CheckInListPageComponent {
     this.store.dispatch(
       new fromStore.CheckInListPageDeleteCheckIn({ checkIn }),
     );
+  }
+
+  infinite(infiniteScroll: InfiniteScroll): void {
+    // TODO implement
+    setTimeout(() => infiniteScroll.complete(), 2000);
   }
 }
