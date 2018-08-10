@@ -2,9 +2,16 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 
 import * as checkInsActions from '../actions/check-ins.action';
-import { concatMap, map, switchMap, switchMapTo } from 'rxjs/operators';
+import * as fromStore from '../../store';
+import {
+  concatMap,
+  map,
+  switchMap,
+  switchMapTo,
+  withLatestFrom,
+} from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
-import { Action } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { ofAction } from 'ngrx-action-operators';
 import { ApiCheckInService } from '../../api';
 
@@ -19,6 +26,25 @@ export class CheckInsEffects {
         map(response => response.checkIns),
         map(checkIns => new checkInsActions.LoadCheckInsSuccess({ checkIns })),
         // TODO catchError
+      ),
+    ),
+  );
+
+  @Effect()
+  loadMoreCheckIns$: Observable<Action> = this.actions$.pipe(
+    ofAction(checkInsActions.CheckInListPageLoadMoreCheckIns),
+    withLatestFrom(
+      this.store.select(fromStore.getCheckInListPageOldestCheckIn),
+    ),
+    switchMap(([action, oldestCheckIn]) =>
+      this.checkInService.getCheckIns(oldestCheckIn.timestamp).pipe(
+        map(response => response.checkIns),
+        map(
+          checkIns =>
+            new checkInsActions.CheckInListPageLoadMoreCheckInsSuccess({
+              checkIns,
+            }),
+        ),
       ),
     ),
   );
@@ -72,5 +98,6 @@ export class CheckInsEffects {
   constructor(
     private actions$: Actions,
     private checkInService: ApiCheckInService,
+    private store: Store<fromStore.MembershipState>,
   ) {}
 }

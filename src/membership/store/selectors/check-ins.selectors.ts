@@ -59,6 +59,12 @@ export const getCheckInListPageCheckIns = createSelector(
       .sort(byTimestampDesc),
 );
 
+export const getCheckInListPageOldestCheckIn = createSelector(
+  getCheckInListPageCheckIns,
+  checkIns =>
+    checkIns && checkIns.length > 0 ? checkIns[checkIns.length - 1] : null,
+);
+
 // TODO get selected customerId from store
 export const getCustomerCheckInList = (customerId: string) =>
   createSelector(

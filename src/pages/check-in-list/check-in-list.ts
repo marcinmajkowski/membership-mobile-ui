@@ -25,6 +25,7 @@ export class CheckInListPageComponent {
 
   infinite(infiniteScroll: InfiniteScroll): void {
     // TODO implement
+    this.store.dispatch(new fromStore.CheckInListPageLoadMoreCheckIns());
     setTimeout(() => infiniteScroll.complete(), 2000);
   }
 }

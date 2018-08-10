@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
 import { ToastController } from 'ionic-angular';
 import { ApiCheckIn, ApiCustomer } from './models';
+import { Iso8601String } from '../models';
 
 @Injectable()
 export class ApiCheckInService {
@@ -12,14 +13,20 @@ export class ApiCheckInService {
     private toastController: ToastController,
   ) {}
 
-  getCheckIns(): Observable<{
+  getCheckIns(
+    beforeTimestamp?: Iso8601String,
+  ): Observable<{
     checkIns: ApiCheckIn[];
     customers: ApiCustomer[];
   }> {
+    let params = new HttpParams();
+    if (beforeTimestamp !== undefined) {
+      params = params.set('beforeTimestamp', beforeTimestamp);
+    }
     return this.httpClient.get<{
       checkIns: ApiCheckIn[];
       customers: ApiCustomer[];
-    }>('/api/check-ins');
+    }>('/api/check-ins', { params });
   }
 
   createCheckIn(customerId: string): Observable<ApiCheckIn> {
