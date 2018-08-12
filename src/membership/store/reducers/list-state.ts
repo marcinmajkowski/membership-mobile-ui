@@ -1,4 +1,5 @@
 import { EntityState } from '@ngrx/entity';
+import { createSelector } from '@ngrx/store';
 
 export type Comparer<T> = (a: T, b: T) => number;
 
@@ -11,6 +12,12 @@ export interface ListState {
   ids: string[] | number[];
   loading: boolean;
   complete: boolean;
+}
+
+export interface ListSelectors {
+  selectIds(listState: ListState): string[] | number[];
+  selectLoading(listState: ListState): boolean;
+  selectComplete(lsitState: ListState): boolean;
 }
 
 export class ListAdapter<T> {
@@ -65,8 +72,20 @@ export class ListAdapter<T> {
     };
   }
 
-  // TODO
-  getSelectors() {}
+  // TODO typing
+  getSelectors(listSelector: (state: any) => ListState): ListSelectors {
+    return {
+      selectIds: createSelector(listSelector, listState => listState.ids),
+      selectLoading: createSelector(
+        listSelector,
+        listState => listState.loading,
+      ),
+      selectComplete: createSelector(
+        listSelector,
+        listState => listState.complete,
+      ),
+    };
+  }
 }
 
 export function createListAdapter<T>(options?: {

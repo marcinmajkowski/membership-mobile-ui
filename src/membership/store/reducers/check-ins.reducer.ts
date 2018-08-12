@@ -1,7 +1,7 @@
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import * as fromCheckIns from '../actions/check-ins.action';
 import * as fromCustomers from '../actions/customers.action';
-import { Action } from '@ngrx/store';
+import { Action, createSelector } from '@ngrx/store';
 import { StoreCheckIn } from '../models';
 import { ApiCheckIn } from '../../api/models';
 import { Iso8601String } from '../../models';
@@ -34,6 +34,15 @@ const initialState: CheckInsState = adapter.getInitialState({
 });
 
 const { selectEntities, selectAll } = adapter.getSelectors();
+const selectList = (state: CheckInsState) => state.list;
+const {
+  selectIds: getListIds,
+  selectLoading: getListLoading,
+  selectComplete: getListComplete,
+} = listAdapter.getSelectors(selectList);
+const selectCustomerList = (customerId: string) => (state: CheckInsState) =>
+  state.customerLists[customerId];
+// TODO selectCustomerListIds(customerId), selectCustomerListLoading(customerId), selectCustomerListComplete(customerId)
 
 export const getCheckInsEntities = selectEntities;
 
