@@ -1,7 +1,7 @@
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import * as fromCheckIns from '../actions/check-ins.action';
 import * as fromCustomers from '../actions/customers.action';
-import { Action, createSelector } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 import { StoreCheckIn } from '../models';
 import { ApiCheckIn } from '../../api/models';
 import { Iso8601String } from '../../models';
