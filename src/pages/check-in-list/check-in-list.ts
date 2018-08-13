@@ -3,6 +3,7 @@ import { CheckIn } from '../../membership/models';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../membership/store';
 import { InfiniteScroll } from 'ionic-angular';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'page-check-in-list',
@@ -10,6 +11,9 @@ import { InfiniteScroll } from 'ionic-angular';
 })
 export class CheckInListPageComponent {
   checkIns$ = this.store.select(fromStore.getCheckInListPageCheckIns);
+  isCheckInsLoaded$ = this.store
+    .select(fromStore.isCheckInListPageCheckInsLoading)
+    .pipe(map(isLoading => !isLoading));
 
   constructor(private store: Store<fromStore.MembershipState>) {}
 

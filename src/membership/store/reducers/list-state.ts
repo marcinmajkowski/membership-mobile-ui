@@ -11,13 +11,16 @@ export interface Dictionary<T> {
 export interface ListState {
   ids: string[] | number[];
   loading: boolean;
+  loadingMore: boolean;
   complete: boolean;
 }
 
-export interface ListSelectors {
-  selectIds(listState: ListState): string[] | number[];
-  selectLoading(listState: ListState): boolean;
-  selectComplete(lsitState: ListState): boolean;
+export interface ListSelectors<S, T> {
+  selectIds(state: S): string[] | number[];
+  selectAll(state: S): T[];
+  selectLoading(state: S): boolean;
+  selectLoadingMore(state: S): boolean;
+  selectComplete(state: S): boolean;
 }
 
 export class ListAdapter<T> {
@@ -30,6 +33,7 @@ export class ListAdapter<T> {
     return {
       ids: [],
       loading: false,
+      loadingMore: false,
       complete: false,
     };
   }
@@ -72,18 +76,34 @@ export class ListAdapter<T> {
     };
   }
 
-  // TODO typing
-  getSelectors(listSelector: (state: any) => ListState): ListSelectors {
+  getSelectors<S>(
+    listSelector: (state: S) => ListState,
+    entitiesSelector: (state: S) => Dictionary<T>,
+  ): ListSelectors<S, T> {
+    const selectIds = createSelector(listSelector, listState => listState.ids);
+    const selectAll = createSelector(
+      selectIds,
+      entitiesSelector,
+      (ids, entities) => (<any>ids).map(id => entities[id]),
+    );
+    const selectLoading = createSelector(
+      listSelector,
+      listState => listState.loading,
+    );
+    const selectLoadingMore = createSelector(
+      listSelector,
+      listState => listState.loadingMore,
+    );
+    const selectComplete = createSelector(
+      listSelector,
+      listState => listState.complete,
+    );
     return {
-      selectIds: createSelector(listSelector, listState => listState.ids),
-      selectLoading: createSelector(
-        listSelector,
-        listState => listState.loading,
-      ),
-      selectComplete: createSelector(
-        listSelector,
-        listState => listState.complete,
-      ),
+      selectIds,
+      selectAll,
+      selectLoading,
+      selectLoadingMore,
+      selectComplete,
     };
   }
 }

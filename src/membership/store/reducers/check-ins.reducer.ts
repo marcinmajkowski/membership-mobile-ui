@@ -33,25 +33,31 @@ const initialState: CheckInsState = adapter.getInitialState({
   customerLists: {},
 });
 
-const { selectEntities, selectAll } = adapter.getSelectors();
+export const { selectEntities, selectAll } = adapter.getSelectors();
+
 const selectList = (state: CheckInsState) => state.list;
-const {
+export const {
   selectIds: getListIds,
+  selectAll: getListAll,
   selectLoading: getListLoading,
+  selectLoadingMore: getListLoadingMore,
   selectComplete: getListComplete,
-} = listAdapter.getSelectors(selectList);
+} = listAdapter.getSelectors(selectList, selectEntities);
+
 const selectCustomerList = (customerId: string) => (state: CheckInsState) =>
   state.customerLists[customerId];
-// TODO selectCustomerListIds(customerId), selectCustomerListLoading(customerId), selectCustomerListComplete(customerId)
-
-export const getCheckInsEntities = selectEntities;
-
-export const getAllCheckIns = selectAll;
-
-// TODO
-export const getCheckInListPageIds = (state: CheckInsState) => [];
-export const getLoadedCustomerIds = (state: CheckInsState) => [];
-export const getLoadingCustomerIds = (state: CheckInsState) => [];
+const getCustomerListSelectors = (customerId: string) =>
+  listAdapter.getSelectors(selectCustomerList(customerId), selectEntities);
+export const getCustomerListIds = (customerId: string) =>
+  getCustomerListSelectors(customerId).selectIds;
+export const getCustomerListAll = (customerId: string) =>
+  getCustomerListSelectors(customerId).selectAll;
+export const getCustomerListLoading = (customerId: string) =>
+  getCustomerListSelectors(customerId).selectLoading;
+export const getCustomerListLoadingMore = (customerId: string) =>
+  getCustomerListSelectors(customerId).selectLoadingMore;
+export const getCustomerListComplete = (customerId: string) =>
+  getCustomerListSelectors(customerId).selectComplete;
 
 export function reducer(state = initialState, action: Action): CheckInsState {
   if (action instanceof fromCheckIns.CheckInListPageLoadCheckIns) {
