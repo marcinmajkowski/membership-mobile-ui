@@ -63,10 +63,7 @@ export class ListAdapter<T> {
           return newEntities;
         }, {}),
       };
-      ids = ids
-        .map(id => allEntities[id])
-        .sort(this.sortComparer)
-        .map((entity: any) => entity.id);
+      ids = this.sort(ids, allEntities);
     }
     return {
       ...listState,
@@ -92,10 +89,7 @@ export class ListAdapter<T> {
         ...state.entities,
         [(<any>entity).id]: entity,
       };
-      ids = ids
-        .map(id => allEntities[id])
-        .sort(this.sortComparer)
-        .map((entity: any) => entity.id);
+      ids = this.sort(ids, allEntities);
     }
     return { ...listState, ids };
   }
@@ -132,6 +126,18 @@ export class ListAdapter<T> {
       selectTotal,
       selectLoaded,
     };
+  }
+
+  // TODO typing
+  private sort(ids: any[], entities: Dictionary<any>): any[] {
+    if (this.sortComparer) {
+      return ids
+        .map(id => entities[id])
+        .sort(this.sortComparer)
+        .map(entity => entity.id);
+    } else {
+      return ids;
+    }
   }
 }
 
