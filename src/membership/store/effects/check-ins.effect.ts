@@ -33,9 +33,10 @@ export class CheckInsEffects {
 
   @Effect()
   loadCustomerCheckIns$: Observable<Action> = this.actions$.pipe(
-    ofAction(checkInsActions.CustomerPageLoadCustomerCheckIns),
+    ofAction(checkInsActions.LoadCustomerCheckIns),
     map(action => action.payload.customer.id),
     switchMap(customerId =>
+      // TODO beforeTimestamp
       this.checkInService.getCustomerCheckIns(customerId).pipe(
         map(
           checkIns =>

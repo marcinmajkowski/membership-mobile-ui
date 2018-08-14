@@ -12,6 +12,7 @@ import { Actions } from '@ngrx/effects';
 import { filter, take, takeUntil } from 'rxjs/operators';
 import { CustomerUpdateFormPageComponent } from '../customer-update-form/customer-update-form';
 import { ofAction } from 'ngrx-action-operators';
+
 // tslint:enable:max-line-length
 
 @Component({
@@ -19,7 +20,7 @@ import { ofAction } from 'ngrx-action-operators';
   templateUrl: 'customer.html',
 })
 export class CustomerPageComponent {
-  customer: Customer = this.navParams.get('customer');
+  customer: Customer;
   checkIns$: Observable<CheckIn[]>;
   isCustomerCheckInsLoading$: Observable<boolean>;
   payments$: Observable<Payment[]>;
@@ -33,8 +34,9 @@ export class CustomerPageComponent {
     private appStore: Store<fromApp.State>,
     private actions$: Actions,
   ) {
+    this.customer = this.navParams.get('customer');
     this.checkIns$ = this.membershipStore.select(
-      fromMembership.getCustomerCheckInList(this.customer.id),
+      fromMembership.getCustomerCheckIns(this.customer.id),
     );
     this.isCustomerCheckInsLoading$ = this.membershipStore.select(
       fromMembership.isCustomerCheckInsLoading(this.customer.id),
@@ -46,12 +48,7 @@ export class CustomerPageComponent {
 
   ionViewWillEnter(): void {
     this.membershipStore.dispatch(
-      new fromMembership.CustomerPageLoadCustomerCheckIns({
-        customer: this.customer,
-      }),
-    );
-    this.membershipStore.dispatch(
-      new fromMembership.CustomerPageLoadCustomerPayments({
+      new fromApp.CustomerPageLoad({
         customer: this.customer,
       }),
     );
@@ -99,7 +96,7 @@ export class CustomerPageComponent {
 
   refresh(refresher: Refresher): void {
     this.appStore.dispatch(
-      new fromApp.RefreshCustomerPage({ customer: this.customer }),
+      new fromApp.CustomerPageRefresh({ customer: this.customer }),
     );
     // TODO take payments into account (combineLatest)
     this.isCustomerCheckInsLoading$

@@ -45,7 +45,7 @@ export const {
 } = listAdapter.getSelectors(selectList, selectEntities);
 
 const selectCustomerList = (customerId: string) => (state: CheckInsState) =>
-  state.customerLists[customerId];
+  state.customerLists[customerId] || listAdapter.getInitialState();
 const getCustomerListSelectors = (customerId: string) =>
   listAdapter.getSelectors(selectCustomerList(customerId), selectEntities);
 export const getCustomerListIds = (customerId: string) =>
@@ -66,8 +66,8 @@ export function reducer(state = initialState, action: Action): CheckInsState {
   if (action instanceof fromCheckIns.LoadCheckInsSuccess) {
     return loadCheckInsSuccess(state, action);
   }
-  if (action instanceof fromCheckIns.CustomerPageLoadCustomerCheckIns) {
-    return customerPageLoadCustomerCheckIns(state, action);
+  if (action instanceof fromCheckIns.LoadCustomerCheckIns) {
+    return loadCustomerCheckIns(state, action);
   }
   if (action instanceof fromCheckIns.LoadCustomerCheckInsSuccess) {
     return loadCustomerCheckInsSuccess(state, action);
@@ -109,23 +109,37 @@ function loadCheckInsSuccess(
   return adapter.addMany(checkIns, { ...state, list });
 }
 
-function customerPageLoadCustomerCheckIns(
+function loadCustomerCheckIns(
   state: CheckInsState,
-  action: fromCheckIns.CustomerPageLoadCustomerCheckIns,
+  action: fromCheckIns.LoadCustomerCheckIns,
 ): CheckInsState {
-  // TODO
   const customerId = action.payload.customer.id;
-  return { ...state };
+  const customerList = listAdapter.load(selectCustomerList(customerId)(state));
+  const customerLists = {
+    ...state.customerLists,
+    [customerId]: customerList,
+  };
+  return { ...state, customerLists };
 }
 
 function loadCustomerCheckInsSuccess(
   state: CheckInsState,
   action: fromCheckIns.LoadCustomerCheckInsSuccess,
 ): CheckInsState {
-  // TODO
   const checkIns: StoreCheckIn[] = action.payload.checkIns.map(fromApiCheckIn);
+  const beforeTimestamp = action.payload.beforeTimestamp;
   const customerId = action.payload.customerId;
-  return adapter.addMany(checkIns, state);
+  const customerList = listAdapter.loadSuccess(
+    checkIns,
+    !!beforeTimestamp,
+    state,
+    selectCustomerList(customerId)(state),
+  );
+  const customerLists = {
+    ...state.customerLists,
+    [customerId]: customerList,
+  };
+  return adapter.addMany(checkIns, { ...state, customerLists });
 }
 
 function createCheckInSuccess(

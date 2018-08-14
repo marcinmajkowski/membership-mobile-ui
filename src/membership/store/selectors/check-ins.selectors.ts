@@ -52,20 +52,38 @@ export const getOldestLoadedCheckIn = createSelector(
     checkIns && checkIns.length > 0 ? checkIns[checkIns.length - 1] : null,
 );
 
-// TODO get selected customerId from store
-const getCustomerListAll = (customerId: string) =>
+const getCustomerListAll = customerId =>
   createSelector(getCheckInsState, fromCheckIns.getCustomerListAll(customerId));
 
-export const getCustomerCheckInList = (customerId: string) =>
+export const getCustomerCheckIns = customerId =>
   createSelector(
     getCustomerListAll(customerId),
     getCustomersEntities,
-    (customerListAll, customerEntities) =>
-      customerListAll.map(fromStoreCheckIn(customerEntities)),
+    (listAll, customerEntities) =>
+      listAll.map(fromStoreCheckIn(customerEntities)),
   );
 
-export const isCustomerCheckInsLoading = (customerId: string) =>
+export const isCustomerCheckInsLoading = customerId =>
   createSelector(
     getCheckInsState,
     fromCheckIns.getCustomerListLoading(customerId),
+  );
+
+export const isCustomerCheckInsLoaded = customerId =>
+  createSelector(
+    getCheckInsState,
+    fromCheckIns.getCustomerListLoaded(customerId),
+  );
+
+export const isCustomerCheckInsComplete = customerId =>
+  createSelector(
+    getCheckInsState,
+    fromCheckIns.getCustomerListComplete(customerId),
+  );
+
+export const getCustomerOldestLoadedCheckIn = customerId =>
+  createSelector(
+    getCustomerCheckIns(customerId),
+    checkIns =>
+      checkIns && checkIns.length > 0 ? checkIns[checkIns.length - 1] : null,
   );

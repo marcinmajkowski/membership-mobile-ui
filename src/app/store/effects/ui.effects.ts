@@ -6,9 +6,8 @@ import { ofAction } from 'ngrx-action-operators';
 import * as uiActions from '../actions/ui.actions';
 import * as membershipActions from '../../../membership/store/actions';
 import * as fromMembership from '../../../membership/store';
-import { map, mapTo, switchMap, withLatestFrom } from 'rxjs/operators';
-import { empty } from 'rxjs/Observable/empty';
-import { of } from 'rxjs/Observable/of';
+import { filter, map, mapTo, switchMap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/Observable/combineLatest';
 
 @Injectable()
 export class UiEffects {
@@ -16,10 +15,8 @@ export class UiEffects {
   checkInListPageLoadCheckIns$: Observable<Action> = this.actions$.pipe(
     ofAction(uiActions.CheckInListPageLoadCheckIns),
     withLatestFrom(this.store.select(fromMembership.isCheckInsLoaded)),
-    switchMap(
-      ([action, isCheckInsLoaded]) =>
-        isCheckInsLoaded ? empty() : of(new membershipActions.LoadCheckIns({})),
-    ),
+    filter(([action, isCheckInsLoaded]) => !isCheckInsLoaded),
+    mapTo(new membershipActions.LoadCheckIns({})),
   );
 
   @Effect()
@@ -41,13 +38,61 @@ export class UiEffects {
   );
 
   @Effect()
+  customerPageLoadCheckIns$: Observable<Action> = this.actions$.pipe(
+    ofAction(uiActions.CustomerPageLoad),
+    map(action => action.payload.customer),
+    // TODO put selected user in store and use 'withLatestFrom' here
+    switchMap(customer =>
+      combineLatest(
+        this.store.select(fromMembership.isCustomerCheckInsLoaded(customer.id)),
+      ).pipe(
+        filter(([isCustomerCheckInsLoaded]) => !isCustomerCheckInsLoaded),
+        mapTo(new fromMembership.LoadCustomerCheckIns({ customer })),
+      ),
+    ),
+  );
+
+  // TODO load only if not already loaded
+  @Effect()
+  customerPageLoadPayments$: Observable<Action> = this.actions$.pipe(
+    ofAction(uiActions.CustomerPageLoad),
+    map(action => action.payload.customer),
+    map(
+      customer =>
+        new fromMembership.CustomerPageLoadCustomerPayments({ customer }),
+    ),
+  );
+
+  @Effect()
   customerPageRefresh$: Observable<Action> = this.actions$.pipe(
-    ofAction(uiActions.RefreshCustomerPage),
+    ofAction(uiActions.CustomerPageRefresh),
     map(action => action.payload.customer),
     switchMap(customer => [
-      new membershipActions.CustomerPageLoadCustomerCheckIns({ customer }),
+      new membershipActions.LoadCustomerCheckIns({ customer }),
       new membershipActions.CustomerPageLoadCustomerPayments({ customer }),
     ]),
+  );
+
+  @Effect()
+  customerPageLoadMoreCheckIns$: Observable<Action> = this.actions$.pipe(
+    ofAction(uiActions.CustomerPageLoadMoreCheckIns),
+    map(action => action.payload.customer),
+    switchMap(customer =>
+      // TODO put selected customer in store
+      combineLatest(
+        this.store.select(
+          fromMembership.getCustomerOldestLoadedCheckIn(customer.id),
+        ),
+      ).pipe(
+        map(
+          ([oldestLoadedCheckIn]) =>
+            new membershipActions.LoadCustomerCheckIns({
+              customer,
+              beforeTimestamp: oldestLoadedCheckIn.timestamp,
+            }),
+        ),
+      ),
+    ),
   );
 
   constructor(

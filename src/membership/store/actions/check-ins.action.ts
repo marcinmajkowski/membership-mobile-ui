@@ -3,7 +3,7 @@ import { CheckIn, Customer, Iso8601String } from '../../models';
 import { ApiCheckIn } from '../../api/models';
 
 export class LoadCheckIns implements Action {
-  readonly type = '[CheckInListPage] Load Check-Ins';
+  readonly type = '[Api] Load Check-Ins';
   constructor(public payload: { beforeTimestamp?: Iso8601String }) {}
 }
 
@@ -12,15 +12,6 @@ export class LoadCheckInsSuccess implements Action {
   constructor(
     public payload: { checkIns: ApiCheckIn[]; beforeTimestamp?: Iso8601String },
   ) {}
-}
-
-export class CheckInListPageLoadMoreCheckIns implements Action {
-  readonly type = '[CheckInListPage] Load More Check-Ins';
-}
-
-export class CheckInListPageLoadMoreCheckInsSuccess implements Action {
-  readonly type = '[CheckInListPage] Load More Check-Ins Success';
-  constructor(public payload: { checkIns: ApiCheckIn[] }) {}
 }
 
 export class CustomerPageCreateCheckIn implements Action {
@@ -33,14 +24,22 @@ export class CreateCheckInSuccess implements Action {
   constructor(public payload: { checkIn: ApiCheckIn }) {}
 }
 
-export class CustomerPageLoadCustomerCheckIns implements Action {
-  readonly type = '[CustomerPage] Load Customer Check-Ins';
-  constructor(public payload: { customer: Customer }) {}
+export class LoadCustomerCheckIns implements Action {
+  readonly type = '[Api] Load Customer Check-Ins';
+  constructor(
+    public payload: { customer: Customer; beforeTimestamp?: Iso8601String },
+  ) {}
 }
 
 export class LoadCustomerCheckInsSuccess implements Action {
   readonly type = '[Api] Load Customer Check-Ins Success';
-  constructor(public payload: { checkIns: ApiCheckIn[]; customerId: string }) {}
+  constructor(
+    public payload: {
+      checkIns: ApiCheckIn[];
+      customerId: string;
+      beforeTimestamp?: Iso8601String;
+    },
+  ) {}
 }
 
 export class CheckInListPageDeleteCheckIn implements Action {

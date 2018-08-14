@@ -51,6 +51,7 @@
                    [checkIns]="checkIns"
                    (checkInDelete)="deleteCheckIn($event)">
     </app-check-in-list>
+    <!-- TODO load more button -->
   </ng-container>
   <h2 padding-horizontal>Płatności</h2>
   <ng-container *ngIf="payments$ | async as payments">
@@ -60,6 +61,7 @@
         <p>{{payment.timestamp | date:'d LLLL y, H:mm'}}</p>
       </ion-item>
     </ion-list>
+    <!-- TODO load more button -->
   </ng-container>
 </ion-content>
 
