@@ -83,6 +83,23 @@ export class ListAdapter<T> {
     };
   }
 
+  addOne(entity: T, state: EntityState<T>, listState: ListState): ListState {
+    // TODO useIdSelector, remove any
+    let ids = [...listState.ids, (<any>entity).id];
+    if (this.sortComparer) {
+      // TODO use idSelector, remove any
+      const allEntities = {
+        ...state.entities,
+        [(<any>entity).id]: entity,
+      };
+      ids = ids
+        .map(id => allEntities[id])
+        .sort(this.sortComparer)
+        .map((entity: any) => entity.id);
+    }
+    return { ...listState, ids };
+  }
+
   getSelectors<S>(
     listSelector: (state: S) => ListState,
     entitiesSelector: (state: S) => Dictionary<T>,
