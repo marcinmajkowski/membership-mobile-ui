@@ -40,7 +40,7 @@ export const {
   selectIds: getListIds,
   selectAll: getListAll,
   selectLoading: getListLoading,
-  selectLoadingMore: getListLoadingMore,
+  selectLoaded: getListLoaded,
   selectComplete: getListComplete,
 } = listAdapter.getSelectors(selectList, selectEntities);
 
@@ -54,13 +54,13 @@ export const getCustomerListAll = (customerId: string) =>
   getCustomerListSelectors(customerId).selectAll;
 export const getCustomerListLoading = (customerId: string) =>
   getCustomerListSelectors(customerId).selectLoading;
-export const getCustomerListLoadingMore = (customerId: string) =>
-  getCustomerListSelectors(customerId).selectLoadingMore;
+export const getCustomerListLoaded = (customerId: string) =>
+  getCustomerListSelectors(customerId).selectLoaded;
 export const getCustomerListComplete = (customerId: string) =>
   getCustomerListSelectors(customerId).selectComplete;
 
 export function reducer(state = initialState, action: Action): CheckInsState {
-  if (action instanceof fromCheckIns.CheckInListPageLoadCheckIns) {
+  if (action instanceof fromCheckIns.LoadCheckIns) {
     return loadCheckIns(state, action);
   }
   if (action instanceof fromCheckIns.LoadCheckInsSuccess) {
@@ -86,7 +86,7 @@ export function reducer(state = initialState, action: Action): CheckInsState {
 
 function loadCheckIns(
   state: CheckInsState,
-  action: fromCheckIns.CheckInListPageLoadCheckIns,
+  action: fromCheckIns.LoadCheckIns,
 ): CheckInsState {
   return {
     ...state,
@@ -99,7 +99,13 @@ function loadCheckInsSuccess(
   action: fromCheckIns.LoadCheckInsSuccess,
 ): CheckInsState {
   const checkIns: StoreCheckIn[] = action.payload.checkIns.map(fromApiCheckIn);
-  const list = listAdapter.loadSuccess(checkIns, state, state.list);
+  const beforeTimestamp = action.payload.beforeTimestamp;
+  const list = listAdapter.loadSuccess(
+    checkIns,
+    !!beforeTimestamp,
+    state,
+    state.list,
+  );
   return adapter.addMany(checkIns, { ...state, list });
 }
 

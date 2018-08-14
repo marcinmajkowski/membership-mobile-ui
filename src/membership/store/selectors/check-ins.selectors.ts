@@ -24,20 +24,30 @@ const fromStoreCheckIn = (customersEntities: { [id: string]: Customer }) => (
 
 const getListAll = createSelector(getCheckInsState, fromCheckIns.getListAll);
 
-export const getCheckInListPageCheckIns = createSelector(
+export const getCheckIns = createSelector(
   getListAll,
   getCustomersEntities,
   (listAll, customerEntities) =>
     listAll.map(fromStoreCheckIn(customerEntities)),
 );
 
-export const isCheckInListPageCheckInsLoading = createSelector(
+export const isCheckInsLoading = createSelector(
   getCheckInsState,
   fromCheckIns.getListLoading,
 );
 
-export const getCheckInListPageOldestCheckIn = createSelector(
-  getCheckInListPageCheckIns,
+export const isCheckInsLoaded = createSelector(
+  getCheckInsState,
+  fromCheckIns.getListLoaded,
+);
+
+export const isCheckInsComplete = createSelector(
+  getCheckInsState,
+  fromCheckIns.getListComplete,
+);
+
+export const getOldestLoadedCheckIn = createSelector(
+  getCheckIns,
   checkIns =>
     checkIns && checkIns.length > 0 ? checkIns[checkIns.length - 1] : null,
 );

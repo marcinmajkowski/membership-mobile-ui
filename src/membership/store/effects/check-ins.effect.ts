@@ -3,13 +3,7 @@ import { Actions, Effect } from '@ngrx/effects';
 
 import * as checkInsActions from '../actions/check-ins.action';
 import * as fromStore from '../../store';
-import {
-  concatMap,
-  map,
-  switchMap,
-  switchMapTo,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { concatMap, map, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Action, Store } from '@ngrx/store';
 import { ofAction } from 'ngrx-action-operators';
@@ -19,37 +13,24 @@ import { ApiCheckInService } from '../../api';
 export class CheckInsEffects {
   @Effect()
   loadCheckIns$: Observable<Action> = this.actions$.pipe(
-    ofAction(checkInsActions.CheckInListPageLoadCheckIns),
-    switchMapTo(
-      this.checkInService.getCheckIns().pipe(
+    ofAction(checkInsActions.LoadCheckIns),
+    map(action => action.payload.beforeTimestamp),
+    switchMap(beforeTimestamp =>
+      this.checkInService.getCheckIns(beforeTimestamp).pipe(
         // TODO handle customers
         map(response => response.checkIns),
-        map(checkIns => new checkInsActions.LoadCheckInsSuccess({ checkIns })),
+        map(
+          checkIns =>
+            new checkInsActions.LoadCheckInsSuccess({
+              checkIns,
+              beforeTimestamp,
+            }),
+        ),
         // TODO catchError
       ),
     ),
   );
 
-  @Effect()
-  loadMoreCheckIns$: Observable<Action> = this.actions$.pipe(
-    ofAction(checkInsActions.CheckInListPageLoadMoreCheckIns),
-    withLatestFrom(
-      this.store.select(fromStore.getCheckInListPageOldestCheckIn),
-    ),
-    switchMap(([action, oldestCheckIn]) =>
-      this.checkInService.getCheckIns(oldestCheckIn.timestamp).pipe(
-        map(response => response.checkIns),
-        map(
-          checkIns =>
-            new checkInsActions.CheckInListPageLoadMoreCheckInsSuccess({
-              checkIns,
-            }),
-        ),
-      ),
-    ),
-  );
-
-  // TODO load and force load actions
   @Effect()
   loadCustomerCheckIns$: Observable<Action> = this.actions$.pipe(
     ofAction(checkInsActions.CustomerPageLoadCustomerCheckIns),

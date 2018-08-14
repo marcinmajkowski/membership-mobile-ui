@@ -7,6 +7,9 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher (ionRefresh)="refresh($event)" [enabled]="isCheckInsLoaded$ | async">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ng-container *ngIf="isCheckInsLoaded$ | async; else spinner">
     <ng-container *ngIf="checkIns$ | async as checkIns">
       <ion-list *ngIf="checkIns.length > 0; else noCheckIns">
@@ -22,7 +25,7 @@
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
-      <ion-infinite-scroll (ionInfinite)="infinite($event)">
+      <ion-infinite-scroll [enabled]="!(isCheckInsComplete$ | async)" (ionInfinite)="infinite($event)">
         <ion-infinite-scroll-content></ion-infinite-scroll-content>
       </ion-infinite-scroll>
     </ng-container>

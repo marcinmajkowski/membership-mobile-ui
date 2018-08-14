@@ -1,14 +1,17 @@
 import { Action } from '@ngrx/store';
-import { CheckIn, Customer } from '../../models';
+import { CheckIn, Customer, Iso8601String } from '../../models';
 import { ApiCheckIn } from '../../api/models';
 
-export class CheckInListPageLoadCheckIns implements Action {
+export class LoadCheckIns implements Action {
   readonly type = '[CheckInListPage] Load Check-Ins';
+  constructor(public payload: { beforeTimestamp?: Iso8601String }) {}
 }
 
 export class LoadCheckInsSuccess implements Action {
   readonly type = '[Api] Load Check-Ins Success';
-  constructor(public payload: { checkIns: ApiCheckIn[] }) {}
+  constructor(
+    public payload: { checkIns: ApiCheckIn[]; beforeTimestamp?: Iso8601String },
+  ) {}
 }
 
 export class CheckInListPageLoadMoreCheckIns implements Action {

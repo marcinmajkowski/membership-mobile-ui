@@ -11,7 +11,6 @@ export interface Dictionary<T> {
 export interface ListState {
   ids: string[] | number[];
   loading: boolean;
-  loadingMore: boolean;
   complete: boolean;
 }
 
@@ -19,8 +18,9 @@ export interface ListSelectors<S, T> {
   selectIds(state: S): string[] | number[];
   selectAll(state: S): T[];
   selectLoading(state: S): boolean;
-  selectLoadingMore(state: S): boolean;
   selectComplete(state: S): boolean;
+  selectTotal(state: S): number;
+  selectLoaded(state: S): boolean;
 }
 
 export class ListAdapter<T> {
@@ -33,7 +33,6 @@ export class ListAdapter<T> {
     return {
       ids: [],
       loading: false,
-      loadingMore: false,
       complete: false,
     };
   }
@@ -47,13 +46,14 @@ export class ListAdapter<T> {
 
   loadSuccess(
     entities: T[],
+    append: boolean,
     state: EntityState<T>,
     listState: ListState,
   ): ListState {
     // TODO use idSelector, remove any
     const keys = entities.map((entity: any) => entity.id);
     // TODO remove conversion
-    let ids = <any[]>[...listState.ids, ...keys];
+    let ids = append ? <any[]>[...listState.ids, ...keys] : keys;
     if (this.sortComparer) {
       // TODO use idSelector, remove any
       const allEntities = {
@@ -76,6 +76,13 @@ export class ListAdapter<T> {
     };
   }
 
+  loadFail(listState: ListState): ListState {
+    return {
+      ...listState,
+      loading: false,
+    };
+  }
+
   getSelectors<S>(
     listSelector: (state: S) => ListState,
     entitiesSelector: (state: S) => Dictionary<T>,
@@ -90,20 +97,23 @@ export class ListAdapter<T> {
       listSelector,
       listState => listState.loading,
     );
-    const selectLoadingMore = createSelector(
-      listSelector,
-      listState => listState.loadingMore,
-    );
     const selectComplete = createSelector(
       listSelector,
       listState => listState.complete,
+    );
+    const selectTotal = createSelector(selectIds, ids => ids.length);
+    const selectLoaded = createSelector(
+      selectComplete,
+      selectTotal,
+      (complete, total) => complete || total > 0,
     );
     return {
       selectIds,
       selectAll,
       selectLoading,
-      selectLoadingMore,
       selectComplete,
+      selectTotal,
+      selectLoaded,
     };
   }
 }
