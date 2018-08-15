@@ -38,10 +38,7 @@ export class ListAdapter<T> {
   }
 
   load(listState: ListState): ListState {
-    return {
-      ...listState,
-      loading: true,
-    };
+    return { ...listState, loading: true };
   }
 
   loadSuccess(
@@ -74,13 +71,13 @@ export class ListAdapter<T> {
   }
 
   loadFail(listState: ListState): ListState {
-    return {
-      ...listState,
-      loading: false,
-    };
+    return { ...listState, loading: false };
   }
 
   addOne(entity: T, state: EntityState<T>, listState: ListState): ListState {
+    if (!isListLoaded(listState)) {
+      return listState;
+    }
     // TODO useIdSelector, remove any
     let ids = [...listState.ids, (<any>entity).id];
     if (this.sortComparer) {
@@ -95,6 +92,9 @@ export class ListAdapter<T> {
   }
 
   removeOne(key: string, listState: ListState): ListState {
+    if (!isListLoaded(listState)) {
+      return listState;
+    }
     // TODO remove conversion
     const ids = (<string[]>listState.ids).filter(id => id !== key);
     return { ...listState, ids };

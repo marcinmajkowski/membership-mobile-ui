@@ -147,11 +147,7 @@ function createCheckInSuccess(
   action: fromCheckIns.CreateCheckInSuccess,
 ): CheckInsState {
   const checkIn: StoreCheckIn = fromApiCheckIn(action.payload.checkIn);
-  let list = state.list;
-  // TODO maybe check should occur inside addOne?
-  if (getListLoaded(state)) {
-    list = listAdapter.addOne(checkIn, state, list);
-  }
+  const list = listAdapter.addOne(checkIn, state, state.list);
   const customerId = checkIn.customerId;
   let customerLists = state.customerLists;
   if (getCustomerListLoaded(customerId)(state)) {
@@ -177,10 +173,7 @@ function deleteCheckInSuccess(
   action: fromCheckIns.DeleteCheckInSuccess,
 ): CheckInsState {
   const checkInId = action.payload.checkIn.id;
-  let list = state.list;
-  if (getListLoaded(state)) {
-    list = listAdapter.removeOne(checkInId, list);
-  }
+  const list = listAdapter.removeOne(checkInId, state.list);
   let customerLists = state.customerLists;
   const customerId = action.payload.checkIn.customerId;
   if (customerId !== null && getCustomerListLoaded(customerId)(state)) {
