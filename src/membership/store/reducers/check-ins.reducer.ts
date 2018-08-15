@@ -210,7 +210,11 @@ function deleteCustomerSuccess(
   const updates = selectAll(state)
     .filter(isDeletedCustomerCheckIn)
     .map(checkIn => ({ id: checkIn.id, changes: { customerId: null } }));
-  return adapter.updateMany(updates, state);
+  const {
+    [customerId]: deletedCustomerList,
+    ...customerLists
+  } = state.customerLists;
+  return adapter.updateMany(updates, { ...state, customerLists });
 }
 
 function fromApiCheckIn(apiCheckIn: ApiCheckIn): StoreCheckIn {

@@ -6,7 +6,14 @@ import { ofAction } from 'ngrx-action-operators';
 import * as uiActions from '../actions/ui.actions';
 import * as membershipActions from '../../../membership/store/actions';
 import * as fromMembership from '../../../membership/store';
-import { filter, map, mapTo, switchMap, withLatestFrom } from 'rxjs/operators';
+import {
+  filter,
+  map,
+  mapTo,
+  switchMap,
+  take,
+  withLatestFrom,
+} from 'rxjs/operators';
 import { combineLatest } from 'rxjs/Observable/combineLatest';
 
 @Injectable()
@@ -46,6 +53,7 @@ export class UiEffects {
       combineLatest(
         this.store.select(fromMembership.isCustomerCheckInsLoaded(customer.id)),
       ).pipe(
+        take(1),
         filter(([isCustomerCheckInsLoaded]) => !isCustomerCheckInsLoaded),
         mapTo(new fromMembership.LoadCustomerCheckIns({ customer })),
       ),
@@ -84,6 +92,7 @@ export class UiEffects {
           fromMembership.getCustomerOldestLoadedCheckIn(customer.id),
         ),
       ).pipe(
+        take(1),
         map(
           ([oldestLoadedCheckIn]) =>
             new membershipActions.LoadCustomerCheckIns({
