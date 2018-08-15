@@ -119,11 +119,7 @@ export class ListAdapter<T> {
       listState => listState.complete,
     );
     const selectTotal = createSelector(selectIds, ids => ids.length);
-    const selectLoaded = createSelector(
-      selectComplete,
-      selectTotal,
-      (complete, total) => complete || total > 0,
-    );
+    const selectLoaded = createSelector(listSelector, isListLoaded);
     return {
       selectIds,
       selectAll,
@@ -154,4 +150,8 @@ export function createListAdapter<T>(options?: {
   const sortComparer = (options && options.sortComparer) || false;
   const pageSize = (options && options.pageSize) || false;
   return new ListAdapter(sortComparer, pageSize);
+}
+
+function isListLoaded(listState: ListState): boolean {
+  return listState.complete || listState.ids.length > 0;
 }
