@@ -177,8 +177,27 @@ function deleteCheckInSuccess(
   action: fromCheckIns.DeleteCheckInSuccess,
 ): CheckInsState {
   const checkInId = action.payload.checkIn.id;
-  // TODO listAdapter.removeOne
-  return adapter.removeOne(checkInId, state);
+  let list = state.list;
+  if (getListLoaded(state)) {
+    list = listAdapter.removeOne(checkInId, list);
+  }
+  let customerLists = state.customerLists;
+  const customerId = action.payload.checkIn.customerId;
+  if (customerId !== null && getCustomerListLoaded(customerId)(state)) {
+    const customerList = listAdapter.removeOne(
+      checkInId,
+      selectCustomerList(customerId)(state),
+    );
+    customerLists = {
+      ...customerLists,
+      [customerId]: customerList,
+    };
+  }
+  return adapter.removeOne(checkInId, {
+    ...state,
+    list,
+    customerLists,
+  });
 }
 
 function deleteCustomerSuccess(

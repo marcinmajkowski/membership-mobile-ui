@@ -94,6 +94,12 @@ export class ListAdapter<T> {
     return { ...listState, ids };
   }
 
+  removeOne(key: string, listState: ListState): ListState {
+    // TODO remove conversion
+    const ids = (<string[]>listState.ids).filter(id => id !== key);
+    return { ...listState, ids };
+  }
+
   getSelectors<S>(
     listSelector: (state: S) => ListState,
     entitiesSelector: (state: S) => Dictionary<T>,
