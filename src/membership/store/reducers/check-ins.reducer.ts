@@ -88,10 +88,8 @@ function loadCheckIns(
   state: CheckInsState,
   action: fromCheckIns.LoadCheckIns,
 ): CheckInsState {
-  return {
-    ...state,
-    list: listAdapter.load(state.list),
-  };
+  const list = listAdapter.load(state.list);
+  return { ...state, list };
 }
 
 function loadCheckInsSuccess(
@@ -147,25 +145,18 @@ function createCheckInSuccess(
   action: fromCheckIns.CreateCheckInSuccess,
 ): CheckInsState {
   const checkIn: StoreCheckIn = fromApiCheckIn(action.payload.checkIn);
-  const list = listAdapter.addOne(checkIn, state, state.list);
   const customerId = checkIn.customerId;
+  const list = listAdapter.addOne(checkIn, state, state.list);
   let customerLists = state.customerLists;
-  if (getCustomerListLoaded(customerId)(state)) {
+  if (customerLists[customerId]) {
     const customerList = listAdapter.addOne(
       checkIn,
       state,
-      selectCustomerList(customerId)(state),
+      customerLists[customerId],
     );
-    customerLists = {
-      ...customerLists,
-      [customerId]: customerList,
-    };
+    customerLists = { ...customerLists, [customerId]: customerList };
   }
-  return adapter.addOne(checkIn, {
-    ...state,
-    list,
-    customerLists,
-  });
+  return adapter.addOne(checkIn, { ...state, list, customerLists });
 }
 
 function deleteCheckInSuccess(
@@ -173,24 +164,17 @@ function deleteCheckInSuccess(
   action: fromCheckIns.DeleteCheckInSuccess,
 ): CheckInsState {
   const checkInId = action.payload.checkIn.id;
+  const customerId = action.payload.checkIn.customerId;
   const list = listAdapter.removeOne(checkInId, state.list);
   let customerLists = state.customerLists;
-  const customerId = action.payload.checkIn.customerId;
-  if (customerId !== null && getCustomerListLoaded(customerId)(state)) {
+  if (customerLists[customerId]) {
     const customerList = listAdapter.removeOne(
       checkInId,
-      selectCustomerList(customerId)(state),
+      customerLists[customerId],
     );
-    customerLists = {
-      ...customerLists,
-      [customerId]: customerList,
-    };
+    customerLists = { ...customerLists, [customerId]: customerList };
   }
-  return adapter.removeOne(checkInId, {
-    ...state,
-    list,
-    customerLists,
-  });
+  return adapter.removeOne(checkInId, { ...state, list, customerLists });
 }
 
 function deleteCustomerSuccess(
@@ -203,10 +187,7 @@ function deleteCustomerSuccess(
   const updates = selectAll(state)
     .filter(isDeletedCustomerCheckIn)
     .map(checkIn => ({ id: checkIn.id, changes: { customerId: null } }));
-  const {
-    [customerId]: deletedCustomerList,
-    ...customerLists
-  } = state.customerLists;
+  const { [customerId]: deleted, ...customerLists } = state.customerLists;
   return adapter.updateMany(updates, { ...state, customerLists });
 }
 
