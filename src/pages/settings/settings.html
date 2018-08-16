@@ -6,7 +6,21 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <p>Jesteś zalogowany jako {{getUser().name}}.</p>
-  <button ion-button full (click)="signOut()">Wyloguj</button>
+<ion-content padding-top class="outer-content">
+  <ion-list margin-top>
+    <button ion-item text-center>
+      <!-- TODO show user fullName -->
+      <span class="full-name">Jan Kowalski</span><br><span class="email">{{getUser().name}}</span>
+    </button>
+  </ion-list>
+  <ion-list>
+    <button ion-item>
+      Działalności
+    </button>
+  </ion-list>
+  <ion-list>
+    <button ion-item detail-none (click)="signOut()">
+      <span ion-text color="primary">Wyloguj</span>
+    </button>
+  </ion-list>
 </ion-content>
