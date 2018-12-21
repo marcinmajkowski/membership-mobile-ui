@@ -14,7 +14,7 @@ import {
   take,
   withLatestFrom,
 } from 'rxjs/operators';
-import { combineLatest } from 'rxjs/Observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Injectable()
 export class UiEffects {
